@@ -6,6 +6,84 @@ All notable changes to Roll Coal Make Hole will be documented in this file.
 
 
 
+\## \[1.1.0] - 2025-11-30
+
+
+
+\### Added
+
+\- \*\*5 Playable Wells\*\*: Powder River, Williston, Eagle Ford, STACK, Delaware
+
+\- \*\*Casing System\*\*: Surface, intermediate, and production casing strings
+
+&nbsp; - Casing resets bit and motor health to 100%
+
+&nbsp; - Adds realistic casing costs ($65k-$750k depending on depth)
+
+&nbsp; - Notifications pause game until acknowledged
+
+\- \*\*Toast Notification System\*\*: Non-blocking notifications for minor events
+
+&nbsp; - Toolface flop alerts when sliding direction changes
+
+&nbsp; - Periodic loss rate updates every few seconds
+
+&nbsp; - DP spike warnings (non-blocking)
+
+\- \*\*Horizontal Well Select Screen\*\*: Scrollable card layout with high scores
+
+\- \*\*Formation-Specific Challenges\*\*:
+
+&nbsp; - Kibbey formation (Williston) extremely abrasive (destroys bits)
+
+&nbsp; - Gas kicks in Red Fork and Chester (STACK)
+
+&nbsp; - Major losses in Wilcox (Eagle Ford)
+
+&nbsp; - Loss zone in Mission Canyon (Williston)
+
+
+
+\### Changed
+
+\- Motor stall threshold increased to 110% max DP (1650 psi from 1450 psi)
+
+\- DP spikes now toast notifications instead of blocking popups
+
+\- DP spikes take 5-10% motor health (random) instead of fixed amount
+
+\- Spike probability increases with damaged motor health
+
+\- WOB automatically resets to 0 on motor stall
+
+\- Lateral sections have wavering paths for realism
+
+\- Well difficulty reordered: Powder (1★) → Williston (2★) → Eagle Ford (3★) → STACK (4★) → Delaware (5★)
+
+
+
+\### Improved
+
+\- PDC bit graphics with realistic cutter layout
+
+\- Formation transitions scroll smoothly
+
+\- Digital readouts fixed width (no bouncing)
+
+\- High scores show on well selection cards
+
+
+
+\### Removed
+
+\- Three Forks formation from Williston well
+
+\- Pepper Shale and Buda Limestone from Eagle Ford
+
+\- Pierre Shale, Greenhorn, Mowry, Dakota from Powder River (replaced with Shallow Sands)
+
+
+
 \## \[1.0.1] - 2025-11-30
 
 
