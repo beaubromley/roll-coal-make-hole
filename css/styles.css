@@ -182,6 +182,48 @@ body {
     color: #888;
 }
 
+/* High Score Menu Screen */
+#highscore-menu-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+#highscore-menu-content {
+    text-align: center;
+    max-width: 600px;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 4px solid #76ff03;
+    box-shadow: 0 0 30px rgba(118, 255, 3, 0.3);
+}
+
+#highscore-menu-title {
+    font-size: 32px;
+    color: #76ff03;
+    margin-bottom: 10px;
+    text-shadow: 3px 3px #000, 0 0 20px #76ff03;
+}
+
+#highscore-menu-subtitle {
+    font-size: 12px;
+    color: #aaa;
+    margin-bottom: 30px;
+}
+
+#highscore-menu-wells {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 /* High Score Screen */
 #highscore-screen {
     position: fixed;
@@ -198,7 +240,7 @@ body {
 
 #highscore-content {
     text-align: center;
-    max-width: 800px;
+    max-width: 900px;
     padding: 40px;
     background: rgba(0, 0, 0, 0.7);
     border: 4px solid #76ff03;
@@ -222,7 +264,7 @@ body {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
-    font-size: 10px;
+    font-size: 9px;
 }
 
 #highscore-table th {
@@ -282,10 +324,11 @@ body {
 }
 
 #score-details {
-    font-size: 12px;
+    font-size: 11px;
     color: #ccc;
     margin-bottom: 30px;
     line-height: 1.8;
+    white-space: pre-line;
 }
 
 #name-entry-form {
@@ -357,10 +400,11 @@ canvas {
 
 #digital-readouts {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     margin-top: 5px;
     font-size: 9px;
     text-shadow: 1px 1px #000;
+    padding: 0 10px;
 }
 
 .readout {
@@ -368,6 +412,8 @@ canvas {
     flex-direction: column;
     align-items: center;
     gap: 2px;
+    width: 140px;
+    min-width: 140px;
 }
 
 .readout-label {
@@ -377,6 +423,9 @@ canvas {
 .readout-value {
     font-size: 10px;
     font-weight: bold;
+    font-variant-numeric: tabular-nums;
+    min-width: 100px;
+    text-align: center;
 }
 
 #drilling-window {
@@ -534,4 +583,55 @@ canvas {
 .sliding {
     border-color: #ffeb3b !important;
     color: #ffeb3b !important;
+}
+
+/* Toast Notification Styles */
+.toast-notification {
+    position: absolute;
+    top: 430px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #ffeb3b;
+    padding: 12px 20px;
+    font-size: 11px;
+    color: #ffeb3b;
+    text-shadow: 1px 1px #000;
+    z-index: 8;
+    animation: slideInFade 3s ease-out forwards;
+    max-width: 250px;
+    text-align: center;
+}
+
+@keyframes slideInFade {
+    0% {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    10% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    80% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(0);
+    }
+}
+
+.toast-warning {
+    border-color: #ff9800;
+    color: #ff9800;
+}
+
+.toast-error {
+    border-color: #ff1744;
+    color: #ff1744;
+}
+
+.toast-success {
+    border-color: #76ff03;
+    color: #76ff03;
 }

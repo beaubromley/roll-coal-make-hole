@@ -22,7 +22,6 @@ class DrillingMechanics {
     }
 
     static calculateMudROPFactor(currentMW) {
-        // Reduced impact: 8.0 ppg (1.1x) to 17.0 ppg (0.85x)
         return 1.1 - (currentMW * 0.015);
     }
 
@@ -54,32 +53,43 @@ class DrillingMechanics {
         
         baseDP *= spikeMultiplier;
         
-        let variation = 1 + (Math.random() * 0.1 - 0.05);
+        // Increased variation: ±50-100 psi range
+        let variation = 1 + (Math.random() * 0.15 - 0.075);
         
         return Math.min(baseDP * variation, CONSTANTS.MOTOR_MAX_DP);
     }
 
+    static calculateMotorHealthDrain(currentDP) {
+        if (currentDP < CONSTANTS.MOTOR_50_PERCENT_DP) return 0;
+        
+        if (currentDP >= CONSTANTS.MOTOR_90_PERCENT_DP) {
+            return CONSTANTS.MOTOR_DRAIN_FAST;
+        } else if (currentDP >= CONSTANTS.MOTOR_RECOMMENDED_DP) {
+            return CONSTANTS.MOTOR_DRAIN_MEDIUM;
+        } else {
+            return CONSTANTS.MOTOR_DRAIN_SLOW;
+        }
+    }
+
     static checkForDPSpike(currentDP, spikeMultiplier, motorSpikeCount) {
-        if (currentDP < CONSTANTS.MOTOR_RECOMMENDED_DP) return false;
+        // Only check if we're above 90% threshold (1350 psi)
+        if (currentDP < CONSTANTS.MOTOR_90_PERCENT_DP) return false;
         
-        let overThreshold = (currentDP - CONSTANTS.MOTOR_RECOMMENDED_DP) / 
-                           (CONSTANTS.MOTOR_MAX_DP - CONSTANTS.MOTOR_RECOMMENDED_DP);
+        // Calculate spike probability based on how far over 90% we are
+        let overThreshold = (currentDP - CONSTANTS.MOTOR_90_PERCENT_DP) / 
+                           (CONSTANTS.MOTOR_MAX_DP - CONSTANTS.MOTOR_90_PERCENT_DP);
         
-        let baseProbability = 0.001 * spikeMultiplier;
+        // Base probability increases with spike history
+        let baseProbability = 0.002 * spikeMultiplier;
+        
+        // Probability increases exponentially as we approach max DP
         let spikeProbability = baseProbability * (1 + Math.pow(overThreshold, 2) * 10);
         
         return Math.random() < spikeProbability;
     }
 
-    static shouldMotorFail(motorSpikeCount) {
-        if (motorSpikeCount < CONSTANTS.MOTOR_MIN_SPIKES_TO_FAIL) return false;
-        if (motorSpikeCount >= CONSTANTS.MOTOR_MAX_SPIKES) return true;
-        
-        let failureRange = CONSTANTS.MOTOR_MAX_SPIKES - CONSTANTS.MOTOR_MIN_SPIKES_TO_FAIL;
-        let spikesOverMin = motorSpikeCount - CONSTANTS.MOTOR_MIN_SPIKES_TO_FAIL;
-        let failureProbability = spikesOverMin / failureRange;
-        
-        return Math.random() < failureProbability * 0.1;
+    static shouldMotorFail(motorHealth) {
+        return motorHealth <= 0;
     }
 
     static calculateFormationDrift(formation, formationDriftDirection) {

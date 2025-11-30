@@ -25,6 +25,7 @@
                 </ul>
             </div>
             <button id="start-button" class="menu-button">PRESS ENTER TO START</button>
+            <button id="view-scores-button" class="menu-button" style="margin-top: 15px;">VIEW HIGH SCORES [H]</button>
             <div id="start-credits">v1.0 | Educational Simulator</div>
         </div>
     </div>
@@ -62,6 +63,16 @@
         </div>
     </div>
 
+    <!-- High Score Menu Screen -->
+    <div id="highscore-menu-screen">
+        <div id="highscore-menu-content">
+            <h2 id="highscore-menu-title">HIGH SCORES</h2>
+            <div id="highscore-menu-subtitle">Select a well to view scores</div>
+            <div id="highscore-menu-wells"></div>
+            <button id="back-from-scores-button" class="menu-button" style="margin-top: 30px;">BACK TO MENU [ESC]</button>
+        </div>
+    </div>
+
     <!-- High Score Screen -->
     <div id="highscore-screen">
         <div id="highscore-content">
@@ -74,6 +85,8 @@
                         <th>NAME</th>
                         <th>COST</th>
                         <th>TIME</th>
+                        <th>FT/DAY</th>
+                        <th>$/FT</th>
                         <th>DATE</th>
                     </tr>
                 </thead>
@@ -195,6 +208,7 @@
     </div>
 
     <!-- Load JavaScript modules -->
+    <script src="js/config/version.js"></script>
     <script src="js/config/constants.js"></script>
     <script src="js/config/wellConfigs.js"></script>
     <script src="js/core/DrillingMechanics.js"></script>
@@ -206,6 +220,17 @@
     <script src="js/ui/MenuManager.js"></script>
     <script src="js/core/GameEngine.js"></script>
     <script src="js/main.js"></script>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof GAME_VERSION !== 'undefined') {
+                const credits = document.getElementById('start-credits');
+                if (credits) {
+                    credits.innerText = `${GAME_VERSION.toString()} | Educational Simulator`;
+                }
+            }
+        });
+    </script>
 
 </body>
 </html>

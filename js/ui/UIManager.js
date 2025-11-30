@@ -26,7 +26,7 @@ class UIManager {
         document.getElementById('formationDisplay').innerText = formation.name.toUpperCase();
         document.getElementById('kickRiskDisplay').innerText = Math.floor(state.kickRisk) + '%';
         document.getElementById('lossRateDisplay').innerText = Math.floor(state.currentLossRate);
-        document.getElementById('lcmDisplay').innerText = state.lcmConcentration;
+        document.getElementById('lcmDisplay').innerText = Math.floor(state.lcmConcentration);
         
         const slideFtPercent = state.depth > 0 ? (state.totalSlideDepth / state.depth * 100) : 0;
         const slideTimePercent = state.totalDrillingTime > 0 ? (state.totalSlideTime / state.totalDrillingTime * 100) : 0;
@@ -108,6 +108,23 @@ class UIManager {
 
     static togglePause(isPaused) {
         document.getElementById('pause-overlay').style.display = isPaused ? 'flex' : 'none';
+    }
+
+    static showToast(message, type = 'default') {
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification';
+        
+        if (type === 'warning') toast.classList.add('toast-warning');
+        if (type === 'error') toast.classList.add('toast-error');
+        if (type === 'success') toast.classList.add('toast-success');
+        
+        toast.innerText = message;
+        
+        document.getElementById('game-container').appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
     }
 
     static showDPSpikeWarning() {

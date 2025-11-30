@@ -16,6 +16,7 @@ class GameEngine {
         this.isRunning = false;
         this.loopStarted = false;
         this.currentWellType = null;
+        this.kickZoneTriggered = {};
     }
 
     loadWell(wellType) {
@@ -23,6 +24,7 @@ class GameEngine {
         this.wellConfig = WELL_CONFIGS[wellType];
         this.state = new GameState(this.wellConfig);
         this.lossWarningShown = false;
+        this.kickZoneTriggered = {};
         this.isRunning = true;
         
         document.getElementById('start-prompt').style.display = 'block';
@@ -43,30 +45,86 @@ class GameEngine {
     handleKeyDown(e) {
         if (!this.isRunning) return;
 
+        // ALWAYS allow WOB, MW, and LCM adjustments (even during notifications)
+        if (e.code === 'ArrowUp') {
+            if (this.state) {
+                if (this.state.wob < CONSTANTS.MAX_WOB) this.state.wob++;
+                if (!this.state.hasStarted && this.state.wob > 0) {
+                    this.state.hasStarted = true;
+                    document.getElementById('start-prompt').style.display = 'none';
+                }
+            }
+            return;
+        }
+        if (e.code === 'ArrowDown') {
+            if (this.state && this.state.wob > 0) this.state.wob--;
+            return;
+        }
+
+        if (e.code === 'KeyM') {
+            if (this.state) {
+                const newMW = Math.min(CONSTANTS.MAX_MUD_WEIGHT, this.state.baseMudWeight + 0.1);
+                const mwChange = Math.abs(newMW - this.state.baseMudWeight);
+                this.state.totalCost += (mwChange / 0.1) * CONSTANTS.MW_CHANGE_COST;
+                this.state.baseMudWeight = newMW;
+                this.updateTotalMudWeight();
+            }
+            return;
+        }
+        if (e.code === 'KeyN') {
+            if (this.state) {
+                const newMW = Math.max(8.0, this.state.baseMudWeight - 0.1);
+                const mwChange = Math.abs(newMW - this.state.baseMudWeight);
+                this.state.totalCost += (mwChange / 0.1) * CONSTANTS.MW_CHANGE_COST;
+                this.state.baseMudWeight = newMW;
+                this.updateTotalMudWeight();
+            }
+            return;
+        }
+
+        if (e.code === 'KeyI') {
+            if (this.state) {
+                const newLCM = Math.min(100, this.state.lcmConcentration + 5);
+                const lcmAdded = newLCM - this.state.lcmConcentration;
+                
+                const lcmCost = (lcmAdded / 10) * CONSTANTS.LCM_COST_PER_10_LB;
+                this.state.totalCost += lcmCost;
+                
+                this.state.lcmConcentration = newLCM;
+                this.updateTotalMudWeight();
+            }
+            return;
+        }
+        if (e.code === 'KeyK') {
+            if (this.state) {
+                const newLCM = Math.max(0, this.state.lcmConcentration - 5);
+                this.state.lcmConcentration = newLCM;
+                this.updateTotalMudWeight();
+            }
+            return;
+        }
+
+        // Handle notification acknowledgment
+        if (this.state && this.state.waitingForAcknowledge && e.code === 'Space') {
+            this.state.waitingForAcknowledge = false;
+            this.state.isPaused = false;
+            UIManager.hideMessage();
+            return;
+        }
+
         if (e.code === 'KeyP') {
-            if (this.state.hasStarted && !this.state.isGameOver) {
+            if (this.state && this.state.hasStarted && !this.state.isGameOver && !this.state.waitingForAcknowledge) {
                 this.state.isPaused = !this.state.isPaused;
                 UIManager.togglePause(this.state.isPaused);
             }
             return;
         }
 
-        if (this.state.isPaused) return;
+        if (!this.state || this.state.isPaused || this.state.waitingForAcknowledge) return;
 
         if (this.state.isGameOver && e.code === 'KeyR') {
             this.reset();
             return;
-        }
-        
-        if (e.code === 'ArrowUp') {
-            if (this.state.wob < CONSTANTS.MAX_WOB) this.state.wob++;
-            if (!this.state.hasStarted && this.state.wob > 0) {
-                this.state.hasStarted = true;
-                document.getElementById('start-prompt').style.display = 'none';
-            }
-        }
-        if (e.code === 'ArrowDown') {
-            if (this.state.wob > 0) this.state.wob--;
         }
 
         if (e.code === 'KeyA') {
@@ -83,20 +141,6 @@ class GameEngine {
             this.state.drillingMode = 'rotating';
             this.state.rotateDriftTimer = 0;
         }
-
-        if (e.code === 'KeyM') {
-            this.state.mudWeight = Math.min(CONSTANTS.MAX_MUD_WEIGHT, this.state.mudWeight + 0.1);
-        }
-        if (e.code === 'KeyN') {
-            this.state.mudWeight = Math.max(8.0, this.state.mudWeight - 0.1);
-        }
-        
-        if (e.code === 'KeyI') {
-            this.state.lcmConcentration = Math.min(100, this.state.lcmConcentration + 5);
-        }
-        if (e.code === 'KeyK') {
-            this.state.lcmConcentration = Math.max(0, this.state.lcmConcentration - 5);
-        }
         
         if (e.code === 'KeyR') {
             this.reset();
@@ -107,14 +151,24 @@ class GameEngine {
         // No key-up actions needed
     }
 
+    updateTotalMudWeight() {
+        const lcmMWIncrease = (this.state.lcmConcentration / CONSTANTS.LCM_MW_INCREASE_RATIO) * 0.1;
+        this.state.mudWeight = Math.min(CONSTANTS.MAX_MUD_WEIGHT, this.state.baseMudWeight + lcmMWIncrease);
+    }
+
     resetSlideTimer() {
-        this.state.slideChangeInterval = Math.floor(Math.random() * (10 * 60 - 1 * 60) + 1 * 60);
+        const formation = DrillingMechanics.getFormation(this.state.depth, this.state.wellConfig.formations);
+        const flopFactor = formation.toolfaceFlopFactor || 1.0;
+        
+        const baseInterval = Math.floor(Math.random() * (10 * 60 - 1 * 60) + 1 * 60);
+        this.state.slideChangeInterval = Math.floor(baseInterval / flopFactor);
         this.state.slideChangeTimer = 0;
     }
 
     reset() {
         this.state.reset();
         this.lossWarningShown = false;
+        this.kickZoneTriggered = {};
         UIManager.hideMessage();
         document.getElementById('deviation-warning').style.display = 'none';
         document.getElementById('start-prompt').style.display = 'block';
@@ -128,23 +182,29 @@ class GameEngine {
         const tripCost = CONSTANTS.BIT_ASSEMBLY_COST + CONSTANTS.MOTOR_COST;
         this.state.totalCost += tripCost;
         
-        const tripDurationHours = (this.state.depth / CONSTANTS.TRIP_SPEED_FT_PER_HR) * 2;
-        this.state.tripTimeRemaining = tripDurationHours * CONSTANTS.FRAMES_PER_GAME_HOUR;
+        // Calculate actual trip time, then speed it up for gameplay
+        const actualTripHours = (this.state.depth / CONSTANTS.TRIP_SPEED_FT_PER_HR) * 2;
+        const gameplayTripFrames = (actualTripHours * CONSTANTS.FRAMES_PER_GAME_HOUR) / CONSTANTS.TRIP_SPEED_MULTIPLIER;
+        this.state.tripTimeRemaining = gameplayTripFrames;
         
         document.getElementById('statusDisplay').innerText = "TRIPPING";
         
         let title = reason === 'motor' ? "MOTOR FAILURE" : "BIT FAILURE";
         let detail = `${reason === 'motor' ? 'Motor' : 'Bit'} failure at ${Math.floor(this.state.depth).toLocaleString()} ft.\n` +
                     `Cost: $${CONSTANTS.BIT_ASSEMBLY_COST.toLocaleString()} bit + $${CONSTANTS.MOTOR_COST.toLocaleString()} motor\n` +
-                    `Trip time: ${tripDurationHours.toFixed(1)} hours`;
+                    `Trip time: ${actualTripHours.toFixed(1)} hours\n\n` +
+                    `Press SPACE when trip complete to continue`;
+        
+        this.state.waitingForAcknowledge = true;
+        this.state.isPaused = true;
         
         UIManager.showMessage(title, detail, '#f44336', false);
-
-        setTimeout(() => UIManager.hideMessage(), 5000);
     }
 
     handleKickEvent(kickZone) {
         this.state.isKickActive = true;
+        this.state.waitingForAcknowledge = true;
+        this.state.isPaused = true;
         
         const kickDurationHours = (this.state.depth / 1000) * CONSTANTS.KICK_TIME_PER_1000FT;
         this.state.kickControlTimeRemaining = kickDurationHours * CONSTANTS.FRAMES_PER_GAME_HOUR;
@@ -154,32 +214,53 @@ class GameEngine {
 
         UIManager.showMessage(
             "KICK DETECTED!",
-            `Kick at ${Math.floor(this.state.depth).toLocaleString()} ft!\nIncrease MW to ${kickZone.minMW.toFixed(1)} ppg\nControl time: ${kickDurationHours.toFixed(1)} hours\nCost: $${kickCostPenalty.toLocaleString('en-US', { maximumFractionDigits: 0 })}.`,
+            `Kick at ${Math.floor(this.state.depth).toLocaleString()} ft!\n\n` +
+            `Calculated Kill Weight: ${kickZone.minMW.toFixed(1)} ppg\n` +
+            `Current MW: ${this.state.mudWeight.toFixed(1)} ppg\n\n` +
+            `Control time: ${kickDurationHours.toFixed(1)} hours\n` +
+            `Cost: $${kickCostPenalty.toLocaleString('en-US', { maximumFractionDigits: 0 })}\n\n` +
+            `Adjust MW with [M/N], then press SPACE`,
             '#ff1744',
             false
         );
-        
-        setTimeout(() => UIManager.hideMessage(), 5000);
     }
 
     handleLossEvent(lossZone) {
         if (!this.lossWarningShown) {
             this.lossWarningShown = true;
+            this.state.waitingForAcknowledge = true;
+            this.state.isPaused = true;
             
-            UIManager.showLossWarning(lossZone.maxMW);
-            
-            setTimeout(() => {
-                this.lossWarningShown = false;
-            }, 5000);
+            UIManager.showMessage(
+                "MUD LOSSES DETECTED!",
+                `Losses at ${Math.floor(this.state.depth).toLocaleString()} ft\n\n` +
+                `Loss Rate: ${Math.floor(this.state.currentLossRate)} bbl/hr\n` +
+                `Max Safe MW: ${lossZone.maxMW.toFixed(1)} ppg\n` +
+                `Current MW: ${this.state.mudWeight.toFixed(1)} ppg\n\n` +
+                `Reduce MW [N] or add LCM [I]\n` +
+                `Then press SPACE to continue`,
+                '#ff9800',
+                false
+            );
         }
     }
 
     handleDPSpike() {
         this.state.motorSpikeCount++;
         this.state.spikeMultiplier += 0.05;
-        this.state.motorHealth = Math.max(0, 100 - (this.state.motorSpikeCount / CONSTANTS.MOTOR_MAX_SPIKES * 100));
+        this.state.waitingForAcknowledge = true;
+        this.state.isPaused = true;
         
-        UIManager.showDPSpikeWarning();
+        UIManager.showMessage(
+            "DIFF PRESSURE SPIKE!",
+            `DP Spike at ${Math.floor(this.state.depth).toLocaleString()} ft\n\n` +
+            `Current DP: ${Math.floor(this.state.diffPressure)} psi\n` +
+            `Max DP: ${CONSTANTS.MOTOR_MAX_DP} psi\n\n` +
+            `Reduce WOB [DOWN] to prevent motor damage\n\n` +
+            `Press SPACE to acknowledge`,
+            '#ff1744',
+            false
+        );
     }
 
     handleMotorStall() {
@@ -187,9 +268,20 @@ class GameEngine {
             this.state.isMotorStalled = true;
             this.state.motorStallStartDepth = this.state.depth;
             this.state.motorSpikeCount++;
-            this.state.motorHealth = Math.max(0, 100 - (this.state.motorSpikeCount / CONSTANTS.MOTOR_MAX_SPIKES * 100));
+            this.state.waitingForAcknowledge = true;
+            this.state.isPaused = true;
             
-            UIManager.showMotorStallWarning();
+            UIManager.showMessage(
+                "MOTOR STALLED!",
+                `Motor stalled at ${Math.floor(this.state.depth).toLocaleString()} ft\n\n` +
+                `Current DP: ${Math.floor(this.state.diffPressure)} psi\n` +
+                `Max DP: ${CONSTANTS.MOTOR_MAX_DP} psi\n` +
+                `Current WOB: ${this.state.wob} klbs\n\n` +
+                `Reduce WOB [DOWN ARROW] below stall threshold\n` +
+                `Then press SPACE to continue drilling`,
+                '#ff0000',
+                false
+            );
         }
     }
 
@@ -203,13 +295,24 @@ class GameEngine {
             const gameTime = `${days}d ${hours}h`;
             
             const finalCost = Math.floor(this.state.totalCost);
+            const totalDepth = this.state.wellConfig.targetDepth;
             
             if (MenuManager.checkHighScore(this.currentWellType, finalCost, gameTime)) {
-                MenuManager.showNameEntry(this.currentWellType, finalCost, gameTime);
+                MenuManager.showNameEntry(this.currentWellType, finalCost, gameTime, totalDepth);
             } else {
+                const totalDays = days + (hours / 24);
+                const ftPerDay = Math.floor(totalDepth / totalDays);
+                const costPerFt = Math.floor(finalCost / totalDepth);
+                
                 UIManager.showMessage(
                     "TD REACHED!",
-                    `Total Depth: ${this.state.wellConfig.targetDepth.toLocaleString()} ft\nFinal Cost: $${finalCost.toLocaleString()}\nTime: ${gameTime}\nMud Lost: ${Math.floor(this.state.totalMudLost)} bbls.`,
+                    `Total Depth: ${totalDepth.toLocaleString()} ft\n` +
+                    `Final Cost: $${finalCost.toLocaleString()}\n` +
+                    `Time: ${gameTime}\n` +
+                    `Mud Lost: ${Math.floor(this.state.totalMudLost)} bbls\n\n` +
+                    `Performance:\n` +
+                    `${ftPerDay.toLocaleString()} ft/day\n` +
+                    `$${costPerFt.toLocaleString()}/ft`,
                     '#76ff03',
                     true
                 );
@@ -237,9 +340,15 @@ class GameEngine {
         const costPerFrame = (CONSTANTS.SPREAD_RATE_PER_DAY / 24) / CONSTANTS.FRAMES_PER_GAME_HOUR;
         this.state.totalCost += costPerFrame;
 
+        if (this.state.lcmConcentration > 0) {
+            this.state.lcmConcentration = Math.max(0, this.state.lcmConcentration - CONSTANTS.LCM_DECAY_RATE);
+            this.updateTotalMudWeight();
+        }
+
         if (this.state.isTripping) {
             document.getElementById('statusDisplay').innerText = "TRIPPING";
-            this.state.tripTimeRemaining--;
+            // Speed up trip time by multiplier
+            this.state.tripTimeRemaining -= CONSTANTS.TRIP_SPEED_MULTIPLIER;
             this.state.wob = 0;
             this.state.diffPressure = 0;
 
@@ -251,7 +360,19 @@ class GameEngine {
                 this.state.motorSpikeCount = 0;
                 this.state.spikeMultiplier = 1.0;
                 this.state.isMotorStalled = false;
-                document.getElementById('statusDisplay').innerText = "DRILLING";
+                
+                this.state.waitingForAcknowledge = true;
+                this.state.isPaused = true;
+                
+                UIManager.showMessage(
+                    "TRIP COMPLETE",
+                    `New bit and motor installed\n\n` +
+                    `Bit Health: 100%\n` +
+                    `Motor Health: 100%\n\n` +
+                    `Press SPACE to acknowledge, then add WOB to continue`,
+                    '#76ff03',
+                    false
+                );
             }
             return;
         }
@@ -272,18 +393,31 @@ class GameEngine {
             this.state.wob = 0;
             
             if (DrillingMechanics.isKickControlled(this.state.mudWeight, kickZone)) {
-                this.state.kickControlTimeRemaining--;
+                this.state.kickControlTimeRemaining -= CONSTANTS.KICK_CONTROL_SPEED_MULTIPLIER;
                 
                 if (this.state.kickControlTimeRemaining <= 0) {
                     this.state.isKickActive = false;
-                    document.getElementById('statusDisplay').innerText = "DRILLING";
+                    this.state.waitingForAcknowledge = true;
+                    this.state.isPaused = true;
+                    
+                    UIManager.showMessage(
+                        "KICK CONTROLLED",
+                        `Kick successfully controlled\n\n` +
+                        `Final MW: ${this.state.mudWeight.toFixed(1)} ppg\n\n` +
+                        `Press SPACE to acknowledge, then add WOB to continue`,
+                        '#76ff03',
+                        false
+                    );
                 }
             }
             return;
         }
         
-        if (this.state.isInKickZone && !this.state.isKickActive) {
-            if (!DrillingMechanics.isKickControlled(this.state.mudWeight, kickZone)) {
+        if (this.state.isInKickZone && !this.state.isKickActive && kickZone) {
+            const zoneKey = `${kickZone.start}-${kickZone.end}`;
+            
+            if (!this.kickZoneTriggered[zoneKey] && !DrillingMechanics.isKickControlled(this.state.mudWeight, kickZone)) {
+                this.kickZoneTriggered[zoneKey] = true;
                 this.handleKickEvent(kickZone);
                 return;
             }
@@ -313,12 +447,7 @@ class GameEngine {
         } else {
             this.state.currentLossRate = 0;
             this.state.lossHealPercentage = 0;
-        }
-        
-        if (this.state.lcmConcentration > 0) {
-            const lcmCostPerFrame = (this.state.lcmConcentration * 500 * CONSTANTS.LCM_COST_PER_LB) / 
-                                   (CONSTANTS.FRAMES_PER_GAME_HOUR * 24);
-            this.state.totalCost += lcmCostPerFrame;
+            this.lossWarningShown = false;
         }
         
         document.getElementById('statusDisplay').innerText = "DRILLING";
@@ -329,6 +458,9 @@ class GameEngine {
             this.state.spikeMultiplier,
             this.state.drillingMode === 'sliding'
         );
+        
+        const healthDrain = DrillingMechanics.calculateMotorHealthDrain(this.state.diffPressure);
+        this.state.motorHealth = Math.max(0, this.state.motorHealth - healthDrain);
         
         if (this.state.diffPressure >= CONSTANTS.MOTOR_STALL_DP && this.state.wob > 0) {
             this.handleMotorStall();
@@ -343,9 +475,10 @@ class GameEngine {
             this.state.motorSpikeCount
         )) {
             this.handleDPSpike();
+            return;
         }
         
-        if (DrillingMechanics.shouldMotorFail(this.state.motorSpikeCount)) {
+        if (DrillingMechanics.shouldMotorFail(this.state.motorHealth)) {
             this.startTrip('motor');
             return;
         }
@@ -394,6 +527,8 @@ class GameEngine {
             if (this.state.slideChangeTimer >= this.state.slideChangeInterval) {
                 this.state.slideDirection *= -1;
                 this.resetSlideTimer();
+                
+                UIManager.showToast('⚠ TOOLFACE FLOP', 'warning');
             }
             
             const ropScale = rop / 100;

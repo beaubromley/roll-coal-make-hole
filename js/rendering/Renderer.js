@@ -7,15 +7,48 @@ class Renderer {
     draw(state) {
         const currentFormation = DrillingMechanics.getFormation(state.depth, state.wellConfig.formations);
         
+        // Fill with current formation color
         this.ctx.fillStyle = currentFormation.color;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
+        // Draw current formation particles
         this.drawRocks(currentFormation, state.dirtOffset, 0, this.canvas.height);
         
-        const transitionY = this.drawFormationTransition(state, currentFormation);
+        // Draw previous formations above (already drilled through)
+        this.drawPreviousFormations(state, currentFormation);
+        
+        // Draw upcoming formation transition
+        this.drawFormationTransition(state, currentFormation);
         
         this.drawTargetPath(state);
         this.drawDrill(state.currentX);
+    }
+
+    drawPreviousFormations(state, currentFormation) {
+        // Find all formations we've already drilled through
+        const formations = state.wellConfig.formations;
+        
+        for (let i = 0; i < formations.length; i++) {
+            const formation = formations[i];
+            
+            // Skip if this is the current formation or deeper
+            if (state.depth < formation.limit) break;
+            
+            // Calculate where this formation's bottom boundary is on screen
+            const boundaryDepth = formation.limit;
+            const depthDifference = boundaryDepth - state.depth;
+            const screenY = (CONSTANTS.DRILL_Y + 50) + (depthDifference * 0.5);
+            
+            // Only draw if the formation is visible above the bit
+            if (screenY < CONSTANTS.DRILL_Y + 50 && screenY > -500) {
+                // Draw this old formation above its boundary
+                this.ctx.fillStyle = formation.color;
+                this.ctx.fillRect(0, 0, this.canvas.width, screenY);
+                
+                // Draw particles for this formation
+                this.drawRocks(formation, state.dirtOffset, 0, screenY);
+            }
+        }
     }
 
     drawFormationTransition(state, currentFormation) {
@@ -35,16 +68,20 @@ class Renderer {
         
         const distanceToBoundary = boundaryDepth - state.depth;
         
-        if (distanceToBoundary > 500 || distanceToBoundary < -100) return null;
+        // Only draw transition when approaching (not after passing)
+        if (distanceToBoundary > 500 || distanceToBoundary < 0) return null;
         
         const screenY = (CONSTANTS.DRILL_Y + 50) + (distanceToBoundary * 0.5);
         
         if (screenY > 0 && screenY < this.canvas.height) {
+            // Draw the next formation below the boundary line
             this.ctx.fillStyle = nextFormation.color;
             this.ctx.fillRect(0, screenY, this.canvas.width, this.canvas.height - screenY);
             
+            // Draw particles for next formation
             this.drawRocks(nextFormation, state.dirtOffset, screenY, this.canvas.height);
             
+            // Draw boundary line
             this.ctx.strokeStyle = '#ffeb3b';
             this.ctx.lineWidth = 3;
             this.ctx.setLineDash([10, 5]);
@@ -54,11 +91,13 @@ class Renderer {
             this.ctx.stroke();
             this.ctx.setLineDash([]);
             
+            // Draw formation label
             this.ctx.fillStyle = '#ffeb3b';
             this.ctx.font = '10px "Press Start 2P"';
             this.ctx.textAlign = 'right';
             this.ctx.fillText(nextFormation.name.toUpperCase(), this.canvas.width - 10, screenY - 10);
             
+            // Draw distance to boundary
             this.ctx.fillStyle = '#fff';
             this.ctx.font = '8px "Press Start 2P"';
             this.ctx.fillText(`${Math.floor(distanceToBoundary)} ft`, this.canvas.width - 10, screenY + 20);
