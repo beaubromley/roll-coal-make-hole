@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roll Coal Make Hole</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Start Screen -->
+    <div id="start-screen">
+        <div id="start-content">
+            <h1 id="game-title">ROLL COAL<br>MAKE HOLE</h1>
+            <div id="start-subtitle">A Directional Drilling Game</div>
+            <div id="start-instructions">
+                <p>Drill to total depth while managing:</p>
+                <ul>
+                    <li>Weight on Bit & Rate of Penetration</li>
+                    <li>Directional Control & Wellbore Path</li>
+                    <li>Mud Weight & Pressure Control</li>
+                    <li>Motor Performance & Bit Health</li>
+                    <li>Costs, Losses & Kicks</li>
+                </ul>
+            </div>
+            <button id="start-button" class="menu-button">PRESS ENTER TO START</button>
+            <div id="start-credits">v1.0 | Educational Simulator</div>
+        </div>
+    </div>
+
+    <!-- Well Select Screen -->
+    <div id="well-select-screen">
+        <div id="well-select-content">
+            <h2 id="select-title">SELECT WELL</h2>
+            <div id="well-options">
+                <div class="well-card" data-well="standard">
+                    <h3>STANDARD WELL</h3>
+                    <div class="well-details">
+                        <p><strong>Location:</strong> Generic Basin</p>
+                        <p><strong>Target Depth:</strong> 10,000 ft</p>
+                        <p><strong>Profile:</strong> Vertical to 3,000 ft, then build</p>
+                        <p><strong>Challenges:</strong> Mixed formations, moderate losses</p>
+                        <p><strong>Difficulty:</strong> ★★☆☆☆</p>
+                    </div>
+                    <button class="select-button" data-well="standard">SELECT [1]</button>
+                </div>
+
+                <div class="well-card" data-well="bakken">
+                    <h3>BAKKEN HORIZONTAL</h3>
+                    <div class="well-details">
+                        <p><strong>Location:</strong> Williston Basin, ND</p>
+                        <p><strong>Target Depth:</strong> 12,000 ft MD</p>
+                        <p><strong>Profile:</strong> Vertical, curve, horizontal lateral</p>
+                        <p><strong>Challenges:</strong> Hard limestone, tight curve</p>
+                        <p><strong>Difficulty:</strong> ★★★☆☆</p>
+                    </div>
+                    <button class="select-button" data-well="bakken">SELECT [2]</button>
+                </div>
+            </div>
+            <div id="select-instructions">Use number keys [1-2] or click to select</div>
+        </div>
+    </div>
+
+    <!-- High Score Screen -->
+    <div id="highscore-screen">
+        <div id="highscore-content">
+            <h2 id="highscore-title">HIGH SCORES</h2>
+            <div id="highscore-well-name"></div>
+            <table id="highscore-table">
+                <thead>
+                    <tr>
+                        <th>RANK</th>
+                        <th>NAME</th>
+                        <th>COST</th>
+                        <th>TIME</th>
+                        <th>DATE</th>
+                    </tr>
+                </thead>
+                <tbody id="highscore-list">
+                </tbody>
+            </table>
+            <button id="back-to-menu-button" class="menu-button">BACK TO MENU</button>
+        </div>
+    </div>
+
+    <!-- Name Entry Screen -->
+    <div id="name-entry-screen">
+        <div id="name-entry-content">
+            <h2>NEW HIGH SCORE!</h2>
+            <p id="score-details"></p>
+            <div id="name-entry-form">
+                <label for="player-name">ENTER YOUR NAME:</label>
+                <input type="text" id="player-name" maxlength="10" placeholder="DRILLER">
+                <button id="submit-score-button" class="menu-button">SUBMIT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Container -->
+    <div id="game-container">
+        <canvas id="gameCanvas" width="800" height="900"></canvas>
+        
+        <!-- Drilling Recorder Panel -->
+        <div id="recorder-panel">
+            <div id="recorder-title">◆ DRILLING RECORDER ◆</div>
+            <canvas id="recorder-canvas" width="764" height="150"></canvas>
+            <div id="digital-readouts">
+                <div class="readout">
+                    <div class="readout-label" style="color: #00ffff;">DEPTH</div>
+                    <div class="readout-value" id="depth-readout" style="color: #00ffff;">0 ft</div>
+                </div>
+                <div class="readout">
+                    <div class="readout-label" style="color: #76ff03;">ROP</div>
+                    <div class="readout-value" id="rop-readout" style="color: #76ff03;">0 ft/hr</div>
+                </div>
+                <div class="readout">
+                    <div class="readout-label" style="color: #ffeb3b;">WOB</div>
+                    <div class="readout-value" id="wob-readout" style="color: #ffeb3b;">0 klbs</div>
+                </div>
+                <div class="readout">
+                    <div class="readout-label" style="color: #ff00ff;">DIFF PRESS</div>
+                    <div class="readout-value" id="dp-readout" style="color: #ff00ff;">0 psi</div>
+                </div>
+                <div class="readout">
+                    <div class="readout-label" style="color: #aaa;">MUD WT</div>
+                    <div class="readout-value" id="mw-readout" style="color: #aaa;">10.0 ppg</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drilling Window -->
+        <div id="drilling-window">
+            <div id="drilling-window-title">DRILLING WINDOW</div>
+            <canvas id="drilling-window-canvas" width="180" height="180"></canvas>
+        </div>
+
+        <div class="mode-indicator" id="mode-indicator">ROTATING</div>
+
+        <!-- Bottom Stats -->
+        <div id="bottom-stats">
+            <div class="stat-group">
+                <div><span class="label">COST:</span> <span id="costDisplay" class="value cost">$0</span></div>
+                <div><span class="label">STATUS:</span> <span id="statusDisplay" class="value">READY</span></div>
+                <div><span class="label">BIT HEALTH:</span> <span id="healthDisplay" class="value">100</span>%</div>
+                <div><span class="label">MOTOR HEALTH:</span> <span id="motorHealthDisplay" class="value">100</span>%</div>
+            </div>
+            <div class="stat-group">
+                <div><span class="label">KICK RISK:</span> <span id="kickRiskDisplay" class="value risk">0</span>%</div>
+                <div><span class="label">MOTOR SPIKES:</span> <span id="motorSpikesDisplay" class="value">0</span></div>
+                <div><span class="label">MUD LOSSES:</span> <span id="lossRateDisplay" class="value">0</span> bbl/hr</div>
+                <div><span class="label">LCM:</span> <span id="lcmDisplay" class="value">0</span> lb/bbl</div>
+            </div>
+            <div class="stat-group">
+                <div><span class="label">FORMATION:</span> <span id="formationDisplay" class="value" style="color:#ffd54f">SURFACE</span></div>
+                <div><span class="label">TIME:</span> <span id="timeDisplay" class="value">Day 1 00:00</span></div>
+                <div><span class="label">SLIDE FT %:</span> <span id="slideFtDisplay" class="value">0</span>%</div>
+                <div><span class="label">SLIDE TIME %:</span> <span id="slideTimeDisplay" class="value">0</span>%</div>
+            </div>
+        </div>
+
+        <!-- Message Box -->
+        <div id="message">
+            <h2 id="msg-title">ALERT</h2>
+            <p id="msg-detail">...</p>
+            <p id="msg-restart" style="font-size: 14px; margin-top:20px; color:#aaa;">Press R to Restart</p>
+        </div>
+
+        <!-- Start Prompt -->
+        <div id="start-prompt">
+            <h2>READY TO DRILL</h2>
+            <p style="margin-top: 15px; font-size: 12px;">Press UP ARROW to add WOB and start drilling</p>
+        </div>
+
+        <!-- Pause Overlay -->
+        <div id="pause-overlay">
+            <div id="pause-text">
+                ⏸ PAUSED ⏸
+                <div style="font-size: 12px; margin-top: 20px;">Press P to Resume</div>
+                <button id="quit-to-menu-button" class="menu-button" style="margin-top: 30px;">QUIT TO MENU [ESC]</button>
+            </div>
+        </div>
+
+        <!-- Deviation Warning -->
+        <div id="deviation-warning">
+            <div>⚠ OFF TARGET ⚠</div>
+            <div id="deviation-amount" style="font-size: 10px; margin-top: 5px;">Deviation: 0 ft</div>
+        </div>
+
+        <!-- Controls -->
+        <div id="controls">
+            [UP/DWN] WOB | [A] Slide Left | [S] Rotate | [D] Slide Right<br>
+            [M/N] Mud Wt | [I/K] LCM | [P] Pause | [R] Restart
+        </div>
+    </div>
+
+    <!-- Load JavaScript modules -->
+    <script src="js/config/constants.js"></script>
+    <script src="js/config/wellConfigs.js"></script>
+    <script src="js/core/DrillingMechanics.js"></script>
+    <script src="js/core/GameState.js"></script>
+    <script src="js/rendering/Recorder.js"></script>
+    <script src="js/rendering/Renderer.js"></script>
+    <script src="js/rendering/DrillingWindow.js"></script>
+    <script src="js/ui/UIManager.js"></script>
+    <script src="js/ui/MenuManager.js"></script>
+    <script src="js/core/GameEngine.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>
