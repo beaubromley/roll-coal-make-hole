@@ -13,17 +13,21 @@ class GameEngine {
         this.setupEventListeners();
         
         this.lossWarningShown = false;
+        this.lossToastTimer = 0;
         this.isRunning = false;
         this.loopStarted = false;
         this.currentWellType = null;
         this.kickZoneTriggered = {};
+        this.showTDAfterCasing = false; // *** ADD THIS LINE ***
     }
+
 
     loadWell(wellType) {
         this.currentWellType = wellType;
         this.wellConfig = WELL_CONFIGS[wellType];
         this.state = new GameState(this.wellConfig);
         this.lossWarningShown = false;
+        this.lossToastTimer = 0;
         this.kickZoneTriggered = {};
         this.isRunning = true;
         
@@ -45,7 +49,6 @@ class GameEngine {
     handleKeyDown(e) {
         if (!this.isRunning) return;
 
-        // ALWAYS allow WOB, MW, and LCM adjustments (even during notifications)
         if (e.code === 'ArrowUp') {
             if (this.state) {
                 if (this.state.wob < CONSTANTS.MAX_WOB) this.state.wob++;
@@ -104,11 +107,19 @@ class GameEngine {
             return;
         }
 
-        // Handle notification acknowledgment
         if (this.state && this.state.waitingForAcknowledge && e.code === 'Space') {
             this.state.waitingForAcknowledge = false;
             this.state.isPaused = false;
             UIManager.hideMessage();
+            
+            // Check if we need to show TD message after production casing
+            if (this.showTDAfterCasing) {
+                this.showTDAfterCasing = false;
+                // Trigger TD completion
+                setTimeout(() => {
+                    this.endGame(true);
+                }, 100);
+            }
             return;
         }
 
@@ -168,6 +179,7 @@ class GameEngine {
     reset() {
         this.state.reset();
         this.lossWarningShown = false;
+        this.lossToastTimer = 0;
         this.kickZoneTriggered = {};
         UIManager.hideMessage();
         document.getElementById('deviation-warning').style.display = 'none';
@@ -182,7 +194,6 @@ class GameEngine {
         const tripCost = CONSTANTS.BIT_ASSEMBLY_COST + CONSTANTS.MOTOR_COST;
         this.state.totalCost += tripCost;
         
-        // Calculate actual trip time, then speed it up for gameplay
         const actualTripHours = (this.state.depth / CONSTANTS.TRIP_SPEED_FT_PER_HR) * 2;
         const gameplayTripFrames = (actualTripHours * CONSTANTS.FRAMES_PER_GAME_HOUR) / CONSTANTS.TRIP_SPEED_MULTIPLIER;
         this.state.tripTimeRemaining = gameplayTripFrames;
@@ -246,20 +257,17 @@ class GameEngine {
     }
 
     handleDPSpike() {
+        // Random damage: 5-10% of motor health
+        const healthLoss = Math.floor(Math.random() * 6) + 5; // 5-10%
+        this.state.motorHealth = Math.max(0, this.state.motorHealth - healthLoss);
+        
         this.state.motorSpikeCount++;
         this.state.spikeMultiplier += 0.05;
-        this.state.waitingForAcknowledge = true;
-        this.state.isPaused = true;
         
-        UIManager.showMessage(
-            "DIFF PRESSURE SPIKE!",
-            `DP Spike at ${Math.floor(this.state.depth).toLocaleString()} ft\n\n` +
-            `Current DP: ${Math.floor(this.state.diffPressure)} psi\n` +
-            `Max DP: ${CONSTANTS.MOTOR_MAX_DP} psi\n\n` +
-            `Reduce WOB [DOWN] to prevent motor damage\n\n` +
-            `Press SPACE to acknowledge`,
-            '#ff1744',
-            false
+        // Show toast notification (doesn't pause)
+        UIManager.showToast(
+            `⚠ DP SPIKE!\n-${healthLoss}% Motor Health\nCurrent DP: ${Math.floor(this.state.diffPressure)} psi`,
+            'error'
         );
     }
 
@@ -268,6 +276,7 @@ class GameEngine {
             this.state.isMotorStalled = true;
             this.state.motorStallStartDepth = this.state.depth;
             this.state.motorSpikeCount++;
+            this.state.wob = 0; // Reset WOB to 0
             this.state.waitingForAcknowledge = true;
             this.state.isPaused = true;
             
@@ -275,9 +284,9 @@ class GameEngine {
                 "MOTOR STALLED!",
                 `Motor stalled at ${Math.floor(this.state.depth).toLocaleString()} ft\n\n` +
                 `Current DP: ${Math.floor(this.state.diffPressure)} psi\n` +
-                `Max DP: ${CONSTANTS.MOTOR_MAX_DP} psi\n` +
-                `Current WOB: ${this.state.wob} klbs\n\n` +
-                `Reduce WOB [DOWN ARROW] below stall threshold\n` +
+                `Stall Threshold: ${CONSTANTS.MOTOR_STALL_DP} psi\n` +
+                `WOB reset to 0 klbs\n\n` +
+                `Reduce WOB [DOWN ARROW] to lower DP\n` +
                 `Then press SPACE to continue drilling`,
                 '#ff0000',
                 false
@@ -285,10 +294,78 @@ class GameEngine {
         }
     }
 
+	
+    handleCasingPoint(casingPoint) {
+        // Mark this casing as reached
+        this.state.casingPointsReached.push(casingPoint.depth);
+        
+        this.state.waitingForAcknowledge = true;
+        this.state.isPaused = true;
+        this.state.wob = 0;
+        
+        // Reset bit and motor health
+        this.state.bitHealth = 100;
+        this.state.motorHealth = 100;
+        this.state.motorSpikeCount = 0;
+        this.state.spikeMultiplier = 1.0;
+        
+        // Add casing cost
+        this.state.totalCost += casingPoint.cost;
+        
+        UIManager.showMessage(
+            `${casingPoint.name.toUpperCase()} SET`,
+            `Casing set at ${Math.floor(this.state.depth).toLocaleString()} ft\n\n` +
+            `Cost: $${casingPoint.cost.toLocaleString()}\n\n` +
+            `New bit and motor installed\n` +
+            `Bit Health: 100%\n` +
+            `Motor Health: 100%\n\n` +
+            `Press SPACE to continue drilling`,
+            '#00bcd4',
+            false
+        );
+    }
+	
     endGame(win) {
-        this.state.isGameOver = true;
+		this.state.isGameOver = true;
         
         if (win) {
+            // Check if we need to show production casing notification first
+            if (this.state.wellConfig.casingPoints) {
+                const prodCasing = this.state.wellConfig.casingPoints.find(c => c.depth === this.state.wellConfig.targetDepth);
+                
+                // Only show if we haven't already shown it (check using nextCasingIndex)
+                if (prodCasing && !this.state.casingPointsReached.includes(prodCasing.depth)) {
+                    // Mark as reached
+                    this.state.casingPointsReached.push(prodCasing.depth);
+                    
+                    // Show production casing notification first
+                    this.state.totalCost += prodCasing.cost;
+                    this.state.bitHealth = 100;
+                    this.state.motorHealth = 100;
+                    this.state.motorSpikeCount = 0;
+                    this.state.spikeMultiplier = 1.0;
+                    
+                    this.state.waitingForAcknowledge = true;
+                    this.state.isPaused = true;
+                    
+                    UIManager.showMessage(
+                        `${prodCasing.name.toUpperCase()} SET`,
+                        `Casing set at ${Math.floor(this.state.depth).toLocaleString()} ft\n\n` +
+                        `Cost: $${prodCasing.cost.toLocaleString()}\n\n` +
+                        `New bit and motor installed\n` +
+                        `Bit Health: 100%\n` +
+                        `Motor Health: 100%\n\n` +
+                        `Press SPACE to continue`,
+                        '#00bcd4',
+                        false
+                    );
+                    
+                    // Set flag to show TD message after acknowledgment
+                    this.showTDAfterCasing = true;
+                    return;
+                }
+            }
+            
             const totalHours = Math.floor(this.state.gameFrameCount / CONSTANTS.FRAMES_PER_GAME_HOUR);
             const days = Math.floor(totalHours / 24);
             const hours = totalHours % 24;
@@ -331,6 +408,7 @@ class GameEngine {
         }
     }
 
+
     update() {
         if (!this.isRunning || !this.state) return;
         if (this.state.isGameOver || !this.state.hasStarted || this.state.isPaused) return;
@@ -347,7 +425,6 @@ class GameEngine {
 
         if (this.state.isTripping) {
             document.getElementById('statusDisplay').innerText = "TRIPPING";
-            // Speed up trip time by multiplier
             this.state.tripTimeRemaining -= CONSTANTS.TRIP_SPEED_MULTIPLIER;
             this.state.wob = 0;
             this.state.diffPressure = 0;
@@ -385,6 +462,18 @@ class GameEngine {
             this.state.rotateDriftTimer = 0;
         }
         
+		        // Check for casing points
+        if (this.state.wellConfig.casingPoints && this.state.nextCasingIndex < this.state.wellConfig.casingPoints.length) {
+            const nextCasing = this.state.wellConfig.casingPoints[this.state.nextCasingIndex];
+            
+            // Check if we've reached this casing point (not at TD, those are handled by endGame)
+            if (this.state.depth >= nextCasing.depth && nextCasing.depth < this.state.wellConfig.targetDepth) {
+                this.state.nextCasingIndex++;
+                this.handleCasingPoint(nextCasing);
+                return;
+            }
+        }
+		
         const kickZone = DrillingMechanics.checkKickZone(this.state.depth, formation);
         this.state.isInKickZone = kickZone !== null;
         
@@ -437,6 +526,19 @@ class GameEngine {
             
             if (this.state.currentLossRate > 0) {
                 this.handleLossEvent(lossZone);
+                
+                // Show periodic toast notifications while losses are active
+                this.lossToastTimer++;
+                if (this.lossToastTimer >= 180) { // Every 180 frames (~1.2 seconds)
+                    UIManager.showToast(
+                        `⚠ LOSSES: ${Math.floor(this.state.currentLossRate)} bbl/hr\n` +
+                        `Healed: ${Math.floor(this.state.lossHealPercentage)}%`,
+                        'warning'
+                    );
+                    this.lossToastTimer = 0;
+                }
+            } else {
+                this.lossToastTimer = 0;
             }
             
             const lossPerFrame = this.state.currentLossRate / CONSTANTS.FRAMES_PER_GAME_HOUR;
@@ -448,6 +550,7 @@ class GameEngine {
             this.state.currentLossRate = 0;
             this.state.lossHealPercentage = 0;
             this.lossWarningShown = false;
+            this.lossToastTimer = 0;
         }
         
         document.getElementById('statusDisplay').innerText = "DRILLING";
@@ -475,7 +578,7 @@ class GameEngine {
             this.state.motorSpikeCount
         )) {
             this.handleDPSpike();
-            return;
+            // dont return - continue drilling return;
         }
         
         if (DrillingMechanics.shouldMotorFail(this.state.motorHealth)) {

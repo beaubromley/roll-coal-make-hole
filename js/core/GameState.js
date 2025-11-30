@@ -17,7 +17,7 @@ class GameState {
         this.isTripping = false;
         this.tripTimeRemaining = 0;
         this.mudWeight = this.wellConfig.normalPressureMW;
-        this.baseMudWeight = this.wellConfig.normalPressureMW; // Base MW without LCM
+        this.baseMudWeight = this.wellConfig.normalPressureMW;
         this.previousMudWeight = this.wellConfig.normalPressureMW;
         this.kickRisk = 0;
         this.currentX = 400;
@@ -45,7 +45,6 @@ class GameState {
         
         // Mud Loss State
         this.lcmConcentration = 0;
-        this.previousLcmConcentration = 0;
         this.isInLossZone = false;
         this.currentLossRate = 0;
         this.lossHealPercentage = 0;
@@ -63,5 +62,9 @@ class GameState {
         
         // Notification state
         this.waitingForAcknowledge = false;
+        
+        // Casing state
+        this.casingPointsReached = [];
+        this.nextCasingIndex = 0;
     }
 }

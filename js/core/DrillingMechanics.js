@@ -53,10 +53,9 @@ class DrillingMechanics {
         
         baseDP *= spikeMultiplier;
         
-        // Increased variation: ±50-100 psi range
         let variation = 1 + (Math.random() * 0.15 - 0.075);
         
-        return Math.min(baseDP * variation, CONSTANTS.MOTOR_MAX_DP);
+        return baseDP * variation; // Allow DP to exceed max (for stalls at 110%)
     }
 
     static calculateMotorHealthDrain(currentDP) {
@@ -71,7 +70,7 @@ class DrillingMechanics {
         }
     }
 
-    static checkForDPSpike(currentDP, spikeMultiplier, motorSpikeCount) {
+    static checkForDPSpike(currentDP, spikeMultiplier, motorHealth) {
         // Only check if we're above 90% threshold (1350 psi)
         if (currentDP < CONSTANTS.MOTOR_90_PERCENT_DP) return false;
         
@@ -79,8 +78,9 @@ class DrillingMechanics {
         let overThreshold = (currentDP - CONSTANTS.MOTOR_90_PERCENT_DP) / 
                            (CONSTANTS.MOTOR_MAX_DP - CONSTANTS.MOTOR_90_PERCENT_DP);
         
-        // Base probability increases with spike history
-        let baseProbability = 0.002 * spikeMultiplier;
+        // Base probability increases with spike history AND decreases with motor health
+        let healthFactor = 1 + ((100 - motorHealth) / 100); // 1.0 at 100% health, 2.0 at 0% health
+        let baseProbability = 0.002 * spikeMultiplier * healthFactor;
         
         // Probability increases exponentially as we approach max DP
         let spikeProbability = baseProbability * (1 + Math.pow(overThreshold, 2) * 10);

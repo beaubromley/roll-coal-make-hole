@@ -35,31 +35,87 @@
         <div id="well-select-content">
             <h2 id="select-title">SELECT WELL</h2>
             <div id="well-options">
-                <div class="well-card" data-well="standard">
-                    <h3>STANDARD WELL</h3>
+                <div class="well-card" data-well="powder">
+                    <h3>POWDER RIVER</h3>
                     <div class="well-details">
-                        <p><strong>Location:</strong> Generic Basin</p>
-                        <p><strong>Target Depth:</strong> 10,000 ft</p>
-                        <p><strong>Profile:</strong> Vertical to 3,000 ft, then build</p>
-                        <p><strong>Challenges:</strong> Mixed formations, moderate losses</p>
-                        <p><strong>Difficulty:</strong> ★★☆☆☆</p>
+                        <p><strong>Location:</strong> Wyoming - Niobrara</p>
+                        <p><strong>Target Depth:</strong> 27,500 ft MD</p>
+                        <p><strong>Profile:</strong> Ultra-deep, extended lateral</p>
+                        <p><strong>Challenges:</strong> Extreme depth, multiple losses</p>
+                        <p><strong>Difficulty:</strong> ★☆☆☆☆</p>
                     </div>
-                    <button class="select-button" data-well="standard">SELECT [1]</button>
+                    <div class="well-highscore" id="highscore-powder">
+                        <div class="highscore-label">BEST SCORE:</div>
+                        <div class="highscore-value">No scores yet</div>
+                    </div>
+                    <button class="select-button" data-well="powder">SELECT [1]</button>
                 </div>
 
-                <div class="well-card" data-well="bakken">
-                    <h3>BAKKEN HORIZONTAL</h3>
+                <div class="well-card" data-well="williston">
+                    <h3>WILLISTON BASIN</h3>
                     <div class="well-details">
-                        <p><strong>Location:</strong> Williston Basin, ND</p>
-                        <p><strong>Target Depth:</strong> 12,000 ft MD</p>
-                        <p><strong>Profile:</strong> Vertical, curve, horizontal lateral</p>
-                        <p><strong>Challenges:</strong> Hard limestone, tight curve</p>
+                        <p><strong>Location:</strong> North Dakota - Bakken</p>
+                        <p><strong>Target Depth:</strong> 26,500 ft MD</p>
+                        <p><strong>Profile:</strong> Deep vertical, curve, long lateral</p>
+                        <p><strong>Challenges:</strong> Abrasive Kibbey, losses, kicks</p>
+                        <p><strong>Difficulty:</strong> ★★☆☆☆</p>
+                    </div>
+                    <div class="well-highscore" id="highscore-williston">
+                        <div class="highscore-label">BEST SCORE:</div>
+                        <div class="highscore-value">No scores yet</div>
+                    </div>
+                    <button class="select-button" data-well="williston">SELECT [2]</button>
+                </div>
+
+                <div class="well-card" data-well="eagleford">
+                    <h3>EAGLE FORD</h3>
+                    <div class="well-details">
+                        <p><strong>Location:</strong> South Texas</p>
+                        <p><strong>Target Depth:</strong> 19,500 ft MD</p>
+                        <p><strong>Profile:</strong> Deep curve, long lateral</p>
+                        <p><strong>Challenges:</strong> Major losses, deep kicks</p>
                         <p><strong>Difficulty:</strong> ★★★☆☆</p>
                     </div>
-                    <button class="select-button" data-well="bakken">SELECT [2]</button>
+                    <div class="well-highscore" id="highscore-eagleford">
+                        <div class="highscore-label">BEST SCORE:</div>
+                        <div class="highscore-value">No scores yet</div>
+                    </div>
+                    <button class="select-button" data-well="eagleford">SELECT [3]</button>
+                </div>
+
+                <div class="well-card" data-well="stack">
+                    <h3>STACK PLAY</h3>
+                    <div class="well-details">
+                        <p><strong>Location:</strong> Oklahoma - Meramec</p>
+                        <p><strong>Target Depth:</strong> 13,500 ft MD</p>
+                        <p><strong>Profile:</strong> Vertical, curve, horizontal</p>
+                        <p><strong>Challenges:</strong> Gas kicks, tight curve</p>
+                        <p><strong>Difficulty:</strong> ★★★★☆</p>
+                    </div>
+                    <div class="well-highscore" id="highscore-stack">
+                        <div class="highscore-label">BEST SCORE:</div>
+                        <div class="highscore-value">No scores yet</div>
+                    </div>
+                    <button class="select-button" data-well="stack">SELECT [4]</button>
+                </div>
+
+                <div class="well-card" data-well="delaware">
+                    <h3>DELAWARE BASIN</h3>
+                    <div class="well-details">
+                        <p><strong>Location:</strong> West Texas - Wolfcamp</p>
+                        <p><strong>Target Depth:</strong> 14,500 ft MD</p>
+                        <p><strong>Profile:</strong> Deep vertical, curve, lateral</p>
+                        <p><strong>Challenges:</strong> Salt sections, losses, kicks</p>
+                        <p><strong>Difficulty:</strong> ★★★★★</p>
+                    </div>
+                    <div class="well-highscore" id="highscore-delaware">
+                        <div class="highscore-label">BEST SCORE:</div>
+                        <div class="highscore-value">No scores yet</div>
+                    </div>
+                    <button class="select-button" data-well="delaware">SELECT [5]</button>
                 </div>
             </div>
-            <div id="select-instructions">Use number keys [1-2] or click to select</div>
+            <div id="select-instructions">Use number keys [1-5] or click to select</div>
         </div>
     </div>
 

@@ -53,9 +53,15 @@ class MenuManager {
         document.addEventListener('keydown', (e) => {
             if (this.isScreenVisible('well-select-screen')) {
                 if (e.code === 'Digit1') {
-                    this.startGame('standard');
+                    this.startGame('powder');
                 } else if (e.code === 'Digit2') {
-                    this.startGame('bakken');
+                    this.startGame('williston');
+                } else if (e.code === 'Digit3') {
+                    this.startGame('eagleford');
+                } else if (e.code === 'Digit4') {
+                    this.startGame('stack');
+                } else if (e.code === 'Digit5') {
+                    this.startGame('delaware');
                 }
             }
         });
@@ -121,6 +127,25 @@ class MenuManager {
         const menuScreen = document.getElementById('highscore-menu-screen');
         if (menuScreen) menuScreen.style.display = 'none';
         document.getElementById('game-container').style.display = 'none';
+        
+        this.updateWellCardHighScores();
+    }
+
+    static updateWellCardHighScores() {
+        Object.keys(WELL_CONFIGS).forEach(wellType => {
+            const scores = this.getHighScores(wellType);
+            const element = document.getElementById(`highscore-${wellType}`);
+            
+            if (element) {
+                const valueDiv = element.querySelector('.highscore-value');
+                if (scores.length > 0) {
+                    const best = scores[0];
+                    valueDiv.innerHTML = `${best.name} - $${Math.floor(best.cost).toLocaleString()}<br>${best.gameTime}`;
+                } else {
+                    valueDiv.innerText = 'No scores yet';
+                }
+            }
+        });
     }
 
     static showHighScoreMenu() {
@@ -304,7 +329,6 @@ class MenuManager {
             if (!scores) {
                 localStorage.setItem(key, JSON.stringify([]));
             } else {
-                // Migrate old scores to add missing fields
                 scores = JSON.parse(scores);
                 let needsUpdate = false;
                 
@@ -312,7 +336,6 @@ class MenuManager {
                     if (!score.ftPerDay || !score.costPerFt) {
                         needsUpdate = true;
                         
-                        // Try to calculate from existing data
                         if (score.gameTime && score.cost) {
                             const timeParts = score.gameTime.match(/(\d+)d (\d+)h/);
                             if (timeParts) {

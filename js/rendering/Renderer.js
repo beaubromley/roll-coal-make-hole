@@ -7,17 +7,13 @@ class Renderer {
     draw(state) {
         const currentFormation = DrillingMechanics.getFormation(state.depth, state.wellConfig.formations);
         
-        // Fill with current formation color
         this.ctx.fillStyle = currentFormation.color;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Draw current formation particles
         this.drawRocks(currentFormation, state.dirtOffset, 0, this.canvas.height);
         
-        // Draw previous formations above (already drilled through)
         this.drawPreviousFormations(state, currentFormation);
         
-        // Draw upcoming formation transition
         this.drawFormationTransition(state, currentFormation);
         
         this.drawTargetPath(state);
@@ -25,27 +21,21 @@ class Renderer {
     }
 
     drawPreviousFormations(state, currentFormation) {
-        // Find all formations we've already drilled through
         const formations = state.wellConfig.formations;
         
         for (let i = 0; i < formations.length; i++) {
             const formation = formations[i];
             
-            // Skip if this is the current formation or deeper
             if (state.depth < formation.limit) break;
             
-            // Calculate where this formation's bottom boundary is on screen
             const boundaryDepth = formation.limit;
             const depthDifference = boundaryDepth - state.depth;
             const screenY = (CONSTANTS.DRILL_Y + 50) + (depthDifference * 0.5);
             
-            // Only draw if the formation is visible above the bit
             if (screenY < CONSTANTS.DRILL_Y + 50 && screenY > -500) {
-                // Draw this old formation above its boundary
                 this.ctx.fillStyle = formation.color;
                 this.ctx.fillRect(0, 0, this.canvas.width, screenY);
                 
-                // Draw particles for this formation
                 this.drawRocks(formation, state.dirtOffset, 0, screenY);
             }
         }
@@ -68,20 +58,16 @@ class Renderer {
         
         const distanceToBoundary = boundaryDepth - state.depth;
         
-        // Only draw transition when approaching (not after passing)
         if (distanceToBoundary > 500 || distanceToBoundary < 0) return null;
         
         const screenY = (CONSTANTS.DRILL_Y + 50) + (distanceToBoundary * 0.5);
         
         if (screenY > 0 && screenY < this.canvas.height) {
-            // Draw the next formation below the boundary line
             this.ctx.fillStyle = nextFormation.color;
             this.ctx.fillRect(0, screenY, this.canvas.width, this.canvas.height - screenY);
             
-            // Draw particles for next formation
             this.drawRocks(nextFormation, state.dirtOffset, screenY, this.canvas.height);
             
-            // Draw boundary line
             this.ctx.strokeStyle = '#ffeb3b';
             this.ctx.lineWidth = 3;
             this.ctx.setLineDash([10, 5]);
@@ -91,13 +77,11 @@ class Renderer {
             this.ctx.stroke();
             this.ctx.setLineDash([]);
             
-            // Draw formation label
             this.ctx.fillStyle = '#ffeb3b';
             this.ctx.font = '10px "Press Start 2P"';
             this.ctx.textAlign = 'right';
             this.ctx.fillText(nextFormation.name.toUpperCase(), this.canvas.width - 10, screenY - 10);
             
-            // Draw distance to boundary
             this.ctx.fillStyle = '#fff';
             this.ctx.font = '8px "Press Start 2P"';
             this.ctx.fillText(`${Math.floor(distanceToBoundary)} ft`, this.canvas.width - 10, screenY + 20);
@@ -152,17 +136,77 @@ class Renderer {
     }
 
     drawDrill(x) {
+        // Drill pipe/string
         this.ctx.fillStyle = '#90a4ae';
         this.ctx.fillRect(x - 6, 0, 12, CONSTANTS.DRILL_Y);
 
-        this.ctx.fillStyle = '#cfd8dc';
-        this.ctx.fillRect(x - 18, CONSTANTS.DRILL_Y, 36, 30);
+        // BHA (Bottom Hole Assembly) - thicker section
+        this.ctx.fillStyle = '#78909c';
+        this.ctx.fillRect(x - 14, CONSTANTS.DRILL_Y, 28, 20);
         
-        this.ctx.fillStyle = '#eceff1';
+        // Motor housing
+        this.ctx.fillStyle = '#546e7a';
+        this.ctx.fillRect(x - 16, CONSTANTS.DRILL_Y + 20, 32, 18);
+
+        // PDC Bit body - main cylinder with rounded bottom
+        this.ctx.fillStyle = '#37474f';
+        this.ctx.fillRect(x - 18, CONSTANTS.DRILL_Y + 38, 36, 20);
+        
+        // Rounded shoulders
+        this.ctx.fillStyle = '#263238';
+        this.ctx.fillRect(x - 20, CONSTANTS.DRILL_Y + 54, 40, 4);
+        
+        // Angled bit face
+        this.ctx.fillStyle = '#1a1a1a';
         this.ctx.beginPath();
-        this.ctx.moveTo(x - 15, CONSTANTS.DRILL_Y + 30);
-        this.ctx.lineTo(x + 15, CONSTANTS.DRILL_Y + 30);
-        this.ctx.lineTo(x, CONSTANTS.DRILL_Y + 50);
+        this.ctx.moveTo(x - 20, CONSTANTS.DRILL_Y + 58);
+        this.ctx.lineTo(x - 20, CONSTANTS.DRILL_Y + 68);
+        this.ctx.lineTo(x - 12, CONSTANTS.DRILL_Y + 64);
+        this.ctx.lineTo(x + 12, CONSTANTS.DRILL_Y + 64);
+        this.ctx.lineTo(x + 20, CONSTANTS.DRILL_Y + 68);
+        this.ctx.lineTo(x + 20, CONSTANTS.DRILL_Y + 58);
+        this.ctx.closePath();
         this.ctx.fill();
+        
+        // PDC cutters (slate gray with black outlines)
+        const cutterColor = '#607d8b';
+        const outlineColor = '#000';
+        
+        // Helper function to draw cutter with outline
+        const drawCutter = (cx, cy, width, height) => {
+            // Black outline
+            this.ctx.fillStyle = outlineColor;
+            this.ctx.fillRect(cx - 1, cy - 1, width + 2, height + 2);
+            // Gray cutter
+            this.ctx.fillStyle = cutterColor;
+            this.ctx.fillRect(cx, cy, width, height);
+        };
+        
+        // Bottom edge cutters (angled profile - lower on outside, higher in middle)
+        drawCutter(x - 19, CONSTANTS.DRILL_Y + 66, 4, 4); // Outer left (lowest)
+        drawCutter(x - 14, CONSTANTS.DRILL_Y + 64, 4, 4);
+        drawCutter(x - 9, CONSTANTS.DRILL_Y + 63, 4, 4);
+        drawCutter(x - 4, CONSTANTS.DRILL_Y + 62, 4, 4);  // Center-left
+        drawCutter(x + 1, CONSTANTS.DRILL_Y + 62, 4, 4);  // Center-right
+        drawCutter(x + 6, CONSTANTS.DRILL_Y + 63, 4, 4);
+        drawCutter(x + 11, CONSTANTS.DRILL_Y + 64, 4, 4);
+        drawCutter(x + 16, CONSTANTS.DRILL_Y + 66, 4, 4); // Outer right (lowest)
+        
+        // Side cutters running up the edges
+        // Left side
+        drawCutter(x - 19, CONSTANTS.DRILL_Y + 62, 3, 3);
+        drawCutter(x - 19, CONSTANTS.DRILL_Y + 58, 3, 3);
+        
+        // Right side
+        drawCutter(x + 17, CONSTANTS.DRILL_Y + 62, 3, 3);
+        drawCutter(x + 17, CONSTANTS.DRILL_Y + 58, 3, 3);
+        
+        // Add detail line on bit body
+        this.ctx.strokeStyle = '#000';
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
+        this.ctx.moveTo(x - 18, CONSTANTS.DRILL_Y + 46);
+        this.ctx.lineTo(x + 18, CONSTANTS.DRILL_Y + 46);
+        this.ctx.stroke();
     }
 }
