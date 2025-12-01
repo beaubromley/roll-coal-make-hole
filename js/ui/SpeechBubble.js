@@ -1,4 +1,7 @@
+
 class SpeechBubble {
+    static activeBubbles = [];
+    
     static messages = {
         powder: {
             beforeCasing1: [
@@ -103,7 +106,7 @@ class SpeechBubble {
             slideFaster: [
                 { speaker: "Engineering Manager", portrait: "portrait-engineer.png", message: "Slide faster!" }
             ],
-            slideInitiated: [],  // ← ADD THIS LINE (empty array = no messages)
+            slideInitiated: [],
             beforeTD: [
                 { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Don't miss that depth. Can't stop here." }
             ],
@@ -172,9 +175,8 @@ class SpeechBubble {
             { depth: 650, speaker: "Harry Stamper", portrait: "portrait-harry.png", message: "Not once, Chick. Not once." },
             { depth: 700, speaker: "Bear", portrait: "portrait-bear.png", message: "If this thing blows, I want my last meal to be a Twinkie." },
             { depth: 750, speaker: "Harry Stamper", portrait: "portrait-harry.png", message: "I have been drilling holes in the earth for 30 years. And I have never, NEVER missed a depth that I have aimed for. And by God, I am not gonna miss this one, I will make 800 feet." },
-            { depth: 800, speaker: "Chick", portrait: "portrait-chick.png", message: "Can I go home now, or is there another asteroid?" },
-            { depth: 800, speaker: "President", portrait: "portrait-president.png", message: "Mission accomplished. Godspeed, gentlemen." },
-            { depth: 800, speaker: "Harry Stamper", portrait: "portrait-harry.png", message: "Yeah one more thing, um... none of them wanna pay taxes again." }
+            { depth: 790, speaker: "Harry Stamper", portrait: "portrait-harry.png", message: "Yeah one more thing, um... none of them wanna pay taxes again." },
+            { depth: 799, speaker: "President", portrait: "portrait-president.png", message: "Mission accomplished. Godspeed, gentlemen." }
         ],
         
         general: {
@@ -214,20 +216,17 @@ class SpeechBubble {
     static show(wellType, eventType, customData = null) {
         let messageData;
         
-        // Armageddon uses depth-based messages
         if (wellType === 'armageddon') {
             const armageddonMessages = this.messages.armageddon;
             const depth = customData?.depth || 0;
             
-            // Find messages at this depth
             const depthMessages = armageddonMessages.filter(m => m.depth === Math.floor(depth));
             if (depthMessages.length > 0) {
                 messageData = depthMessages[Math.floor(Math.random() * depthMessages.length)];
             } else {
-                return; // No message for this depth
+                return;
             }
         } else {
-            // Other wells use event-based messages
             const wellMessages = this.messages[wellType];
             const generalMessages = this.messages.general;
             
@@ -269,10 +268,32 @@ class SpeechBubble {
         bubble.appendChild(portrait);
         bubble.appendChild(content);
         
+        // Add to active bubbles array
+        this.activeBubbles.push(bubble);
+        
+        // Position bubble based on stack
+        this.updateBubblePositions();
+        
         document.getElementById('game-container').appendChild(bubble);
         
+        // Remove after 5 seconds
         setTimeout(() => {
             bubble.remove();
+            const index = this.activeBubbles.indexOf(bubble);
+            if (index > -1) {
+                this.activeBubbles.splice(index, 1);
+                this.updateBubblePositions();
+            }
         }, 5000);
+    }
+
+    static updateBubblePositions() {
+        // Stack bubbles from bottom up
+        let currentBottom = 120;
+        
+        this.activeBubbles.forEach((bubble, index) => {
+            bubble.style.bottom = currentBottom + 'px';
+            currentBottom += bubble.offsetHeight + 10; // 10px gap between bubbles
+        });
     }
 }
