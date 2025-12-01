@@ -6,6 +6,30 @@ All notable changes to Roll Coal Make Hole will be documented in this file.
 
 
 
+\## \[1.2.2] - 2025-12-01
+
+
+
+\### Changed
+
+\- Updated default high scores with real well performance data from field operations
+
+\- Added actual engineer names and completion dates
+
+\- Realistic drilling metrics based on completed wells
+
+
+
+\### Fixed
+
+\- Speech bubbles now stack vertically when multiple appear
+
+\- Smooth transitions when bubbles appear and disappear
+
+\- Fixed speech bubble positioning bug
+
+
+
 \## \[1.2.1] - 2025-12-01
 
 
