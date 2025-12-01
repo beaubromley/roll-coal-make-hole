@@ -5,16 +5,16 @@ class Recorder {
     }
 
     logDataPoint(state, rop) {
-        state.logData.depth.push(state.depth);
         state.logData.rop.push(rop);
         state.logData.wob.push(state.wob);
         state.logData.diffPressure.push(state.diffPressure);
+        state.logData.flowRate.push(state.flowRate);
 
-        if (state.logData.depth.length > CONSTANTS.MAX_LOG_POINTS) {
-            state.logData.depth.shift();
+        if (state.logData.rop.length > CONSTANTS.MAX_LOG_POINTS) {
             state.logData.rop.shift();
             state.logData.wob.shift();
             state.logData.diffPressure.shift();
+            state.logData.flowRate.shift();
         }
     }
 
@@ -27,22 +27,26 @@ class Recorder {
 
         this.drawGrid(width, height);
 
-        if (state.logData.depth.length < 2) return;
+        if (state.logData.rop.length < 2) return;
 
-        const numPoints = state.logData.depth.length;
+        const numPoints = state.logData.rop.length;
         const xStep = width / CONSTANTS.MAX_LOG_POINTS;
 
-        this.drawTrack(state.logData.depth, xStep, numPoints, '#00ffff', 
-            (val) => val / state.wellConfig.targetDepth, 37.5, 35);
-        
+        // Track 1: ROP (Green)
         this.drawTrack(state.logData.rop, xStep, numPoints, '#76ff03', 
-            (val) => Math.min(val / 200, 1), 75, 35);
+            (val) => Math.min(val / 600, 1), 37.5, 35);
         
+        // Track 2: WOB (Yellow)
         this.drawTrack(state.logData.wob, xStep, numPoints, '#ffeb3b', 
-            (val) => val / 60, 112.5, 35);
+            (val) => val / 80, 75, 35);
         
+        // Track 3: Diff Pressure (Magenta)
         this.drawTrack(state.logData.diffPressure, xStep, numPoints, '#ff00ff', 
-            (val) => val / CONSTANTS.MOTOR_MAX_DP, 150, 35);
+            (val) => val / CONSTANTS.MOTOR_MAX_DP, 112.5, 35);
+        
+        // Track 4: Flow Rate (Cyan)
+        this.drawTrack(state.logData.flowRate, xStep, numPoints, '#00ffff', 
+            (val) => (val - CONSTANTS.MIN_FLOW_RATE) / (CONSTANTS.MAX_FLOW_RATE - CONSTANTS.MIN_FLOW_RATE), 150, 35);
 
         this.drawLabels();
         this.drawDPThresholdLine();
@@ -82,8 +86,7 @@ class Recorder {
     }
 
     drawDPThresholdLine() {
-        // Draw 80% threshold line on DP track
-        const thresholdY = 150 - ((CONSTANTS.MOTOR_RECOMMENDED_DP / CONSTANTS.MOTOR_MAX_DP) * 35);
+        const thresholdY = 112.5 - ((CONSTANTS.MOTOR_RECOMMENDED_DP / CONSTANTS.MOTOR_MAX_DP) * 35);
         
         this.ctx.strokeStyle = '#ff6b6b';
         this.ctx.lineWidth = 1;
@@ -98,16 +101,16 @@ class Recorder {
     drawLabels() {
         this.ctx.font = '8px "Press Start 2P"';
         
-        this.ctx.fillStyle = '#00ffff';
-        this.ctx.fillText('DEPTH', 5, 10);
-        
         this.ctx.fillStyle = '#76ff03';
-        this.ctx.fillText('ROP', 5, 47);
+        this.ctx.fillText('ROP', 5, 10);
         
         this.ctx.fillStyle = '#ffeb3b';
-        this.ctx.fillText('WOB', 5, 85);
+        this.ctx.fillText('WOB', 5, 47);
         
         this.ctx.fillStyle = '#ff00ff';
-        this.ctx.fillText('DIFF P', 5, 122);
+        this.ctx.fillText('DIFF P', 5, 85);
+        
+        this.ctx.fillStyle = '#00ffff';
+        this.ctx.fillText('FLOW', 5, 122);
     }
 }

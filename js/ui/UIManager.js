@@ -4,6 +4,7 @@ class UIManager {
         document.getElementById('rop-readout').innerText = Math.floor(rop) + ' ft/hr';
         document.getElementById('wob-readout').innerText = state.wob + ' klbs';
         document.getElementById('dp-readout').innerText = Math.floor(state.diffPressure) + ' psi';
+        document.getElementById('flow-readout').innerText = state.flowRate + ' gpm';
         document.getElementById('mw-readout').innerText = state.mudWeight.toFixed(1) + ' ppg';
         
         const dpElement = document.getElementById('dp-readout');
@@ -16,6 +17,16 @@ class UIManager {
         } else {
             dpElement.style.color = '#ff00ff';
         }
+        
+        // Color code flow rate
+        const flowElement = document.getElementById('flow-readout');
+        if (state.flowRate < CONSTANTS.LOW_FLOW_THRESHOLD) {
+            flowElement.style.color = '#ff1744';
+        } else if (state.flowRate < CONSTANTS.NORMAL_FLOW_RATE) {
+            flowElement.style.color = '#ffeb3b';
+        } else {
+            flowElement.style.color = '#00ffff';
+        }
     }
 
     static updateStats(state, formation) {
@@ -27,12 +38,11 @@ class UIManager {
         document.getElementById('kickRiskDisplay').innerText = Math.floor(state.kickRisk) + '%';
         document.getElementById('lossRateDisplay').innerText = Math.floor(state.currentLossRate);
         document.getElementById('lcmDisplay').innerText = Math.floor(state.lcmConcentration);
+        document.getElementById('ecdDisplay').innerText = state.ecd.toFixed(1);
         
         const slideFtPercent = state.depth > 0 ? (state.totalSlideDepth / state.depth * 100) : 0;
-        const slideTimePercent = state.totalDrillingTime > 0 ? (state.totalSlideTime / state.totalDrillingTime * 100) : 0;
         
         document.getElementById('slideFtDisplay').innerText = slideFtPercent.toFixed(1);
-        document.getElementById('slideTimeDisplay').innerText = slideTimePercent.toFixed(1);
 
         const spikesElement = document.getElementById('motorSpikesDisplay');
         if (state.motorSpikeCount >= CONSTANTS.MOTOR_MIN_SPIKES_TO_FAIL) {

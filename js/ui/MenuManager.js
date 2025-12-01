@@ -4,6 +4,7 @@ class MenuManager {
         this.setupStartScreen();
         this.setupWellSelectScreen();
         this.setupHighScoreScreen();
+        this.setupAutoScroll();
         this.loadHighScores();
     }
 
@@ -34,6 +35,13 @@ class MenuManager {
     static setupWellSelectScreen() {
         const selectButtons = document.querySelectorAll('.select-button');
         const wellCards = document.querySelectorAll('.well-card');
+        const backButton = document.getElementById('back-from-select-button');
+
+        if (backButton) {
+            backButton.addEventListener('click', () => {
+                this.returnToStart();
+            });
+        }
 
         selectButtons.forEach(button => {
             button.addEventListener('click', (e) => {
@@ -62,6 +70,54 @@ class MenuManager {
                     this.startGame('stack');
                 } else if (e.code === 'Digit5') {
                     this.startGame('delaware');
+                } else if (e.code === 'Digit6') {
+                    this.startGame('armageddon');
+                } else if (e.code === 'Escape') {
+                    this.returnToStart();
+                }
+            }
+        });
+    }
+
+    static setupAutoScroll() {
+        let scrollInterval = null;
+        
+        document.addEventListener('mousemove', (e) => {
+            const wellOptions = document.getElementById('well-options');
+            if (!wellOptions || !this.isScreenVisible('well-select-screen')) {
+                if (scrollInterval) {
+                    clearInterval(scrollInterval);
+                    scrollInterval = null;
+                }
+                return;
+            }
+
+            const rect = wellOptions.getBoundingClientRect();
+            const edgeThreshold = 100;
+            const scrollSpeed = 50; // Changed from 5 to 50 (10x faster)
+
+            // Check if mouse is near left edge
+            if (e.clientX < rect.left + edgeThreshold && wellOptions.scrollLeft > 0) {
+                if (!scrollInterval) {
+                    scrollInterval = setInterval(() => {
+                        wellOptions.scrollLeft -= scrollSpeed;
+                    }, 16);
+                }
+            }
+            // Check if mouse is near right edge
+            else if (e.clientX > rect.right - edgeThreshold && 
+                     wellOptions.scrollLeft < wellOptions.scrollWidth - wellOptions.clientWidth) {
+                if (!scrollInterval) {
+                    scrollInterval = setInterval(() => {
+                        wellOptions.scrollLeft += scrollSpeed;
+                    }, 16);
+                }
+            }
+            // Not near edges
+            else {
+                if (scrollInterval) {
+                    clearInterval(scrollInterval);
+                    scrollInterval = null;
                 }
             }
         });
@@ -322,13 +378,47 @@ class MenuManager {
     }
 
     static loadHighScores() {
+        const defaultScores = {
+            powder: [
+                { name: "WILDCATTER", cost: 2500000, gameTime: "8d 12h", ftPerDay: 3235, costPerFt: 91, date: "1/1/2024" },
+                { name: "ROUGHNECK", cost: 2800000, gameTime: "9d 6h", ftPerDay: 2957, costPerFt: 102, date: "1/1/2024" },
+                { name: "DRILLER", cost: 3200000, gameTime: "10d 18h", ftPerDay: 2558, costPerFt: 116, date: "1/1/2024" }
+            ],
+            williston: [
+                { name: "BAKKEN PRO", cost: 1900000, gameTime: "7d 4h", ftPerDay: 2986, costPerFt: 88, date: "1/1/2024" },
+                { name: "OILMAN", cost: 2100000, gameTime: "8d 0h", ftPerDay: 2688, costPerFt: 98, date: "1/1/2024" },
+                { name: "DRILLER", cost: 2400000, gameTime: "9d 12h", ftPerDay: 2263, costPerFt: 112, date: "1/1/2024" }
+            ],
+            eagleford: [
+                { name: "TEXAN", cost: 1600000, gameTime: "6d 8h", ftPerDay: 3079, costPerFt: 82, date: "1/1/2024" },
+                { name: "SHALE KING", cost: 1850000, gameTime: "7d 2h", ftPerDay: 2732, costPerFt: 95, date: "1/1/2024" },
+                { name: "DRILLER", cost: 2100000, gameTime: "8d 6h", ftPerDay: 2349, costPerFt: 108, date: "1/1/2024" }
+            ],
+            stack: [
+                { name: "SOONER", cost: 1750000, gameTime: "6d 18h", ftPerDay: 3015, costPerFt: 85, date: "1/1/2024" },
+                { name: "MERAMEC ACE", cost: 2000000, gameTime: "7d 12h", ftPerDay: 2733, costPerFt: 98, date: "1/1/2024" },
+                { name: "DRILLER", cost: 2300000, gameTime: "8d 20h", ftPerDay: 2318, costPerFt: 112, date: "1/1/2024" }
+            ],
+            delaware: [
+                { name: "PERMIAN", cost: 1950000, gameTime: "7d 6h", ftPerDay: 2945, costPerFt: 91, date: "1/1/2024" },
+                { name: "WOLFCAMP", cost: 2200000, gameTime: "8d 4h", ftPerDay: 2590, costPerFt: 102, date: "1/1/2024" },
+                { name: "DRILLER", cost: 2500000, gameTime: "9d 18h", ftPerDay: 2204, costPerFt: 116, date: "1/1/2024" }
+            ],
+            armageddon: [
+                { name: "BRUCE", cost: 99999999, gameTime: "99d 23h", ftPerDay: 8, costPerFt: 124999, date: "1/1/2024" }
+            ]
+        };
+        
         Object.keys(WELL_CONFIGS).forEach(wellType => {
             const key = `highscores_${wellType}`;
             let scores = localStorage.getItem(key);
             
             if (!scores) {
-                localStorage.setItem(key, JSON.stringify([]));
+                // No scores exist - install defaults
+                const defaults = defaultScores[wellType] || [];
+                localStorage.setItem(key, JSON.stringify(defaults));
             } else {
+                // Migrate old scores
                 scores = JSON.parse(scores);
                 let needsUpdate = false;
                 
@@ -358,4 +448,5 @@ class MenuManager {
             }
         });
     }
+
 }

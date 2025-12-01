@@ -28,7 +28,7 @@ const WELL_CONFIGS = {
         ],
         formations: [
             { 
-                limit: 1785,
+                limit: 4810,
                 name: "Shallow Sands",
                 color: "#f4a460",
                 particle: "#deb887",
@@ -153,11 +153,11 @@ const WELL_CONFIGS = {
 
     williston: {
         name: "Williston Basin - Bakken Horizontal",
-        targetDepth: 26500,
+        targetDepth: 21500,
         casingPoints: [
             { depth: 2000, name: "Surface Casing", cost: 105000 },
             { depth: 11000, name: "Intermediate Casing", cost: 450000 },
-            { depth: 26500, name: "Production Casing", cost: 350000 }
+            { depth: 21500, name: "Production Casing", cost: 350000 }
         ],
         targetPath: [
             { depth: 0,     x: 400 },
@@ -172,9 +172,8 @@ const WELL_CONFIGS = {
             { depth: 13000, x: 660 },
             { depth: 15000, x: 700 },
             { depth: 17000, x: 690 },
-            { depth: 20000, x: 710 },
-            { depth: 23000, x: 700 },
-            { depth: 26500, x: 715 }
+            { depth: 19000, x: 710 },
+            { depth: 21500, x: 715 }
         ],
         formations: [
             { 
@@ -262,19 +261,19 @@ const WELL_CONFIGS = {
                 kickZone: null
             },
             { 
-                limit: 8179,
+                limit: 8995,
                 name: "Kibbey",
                 color: "#8b7355",
                 particle: "#a0826d",
                 hardness: 0.7,
-                abrasiveness: 3.5,
+                abrasiveness: 10,
                 driftTendency: -0.2,
                 toolfaceFlopFactor: 1.7,
                 lossZone: null,
                 kickZone: null
             },
             { 
-                limit: 8318,
+                limit: 9110,
                 name: "Charles Salt",
                 color: "#f0e68c",
                 particle: "#fafad2",
@@ -282,18 +281,6 @@ const WELL_CONFIGS = {
                 abrasiveness: 0.65,
                 driftTendency: 0.6,
                 toolfaceFlopFactor: 1.8,
-                lossZone: null,
-                kickZone: null
-            },
-            { 
-                limit: 8944,
-                name: "Last Salt",
-                color: "#fffacd",
-                particle: "#ffffe0",
-                hardness: 0.9,
-                abrasiveness: 0.7,
-                driftTendency: 0.4,
-                toolfaceFlopFactor: 1.6,
                 lossZone: null,
                 kickZone: null
             },
@@ -358,7 +345,7 @@ const WELL_CONFIGS = {
                 kickZone: null
             },
             { 
-                limit: 26501,
+                limit: 21501,
                 name: "Lower Bakken",
                 color: "#2b2b2b",
                 particle: "#4a4a4a",
@@ -370,7 +357,7 @@ const WELL_CONFIGS = {
                 kickZone: { start: 10600, end: 11500, minMW: 11.5 }
             }
         ],
-        normalPressureMW: 10.5
+        normalPressureMW: 11.0
     },
 
     eagleford: {
@@ -393,14 +380,14 @@ const WELL_CONFIGS = {
             { depth: 14300, x: 670 },
             { depth: 14800, x: 700 },
             { depth: 15300, x: 715 },
-            { depth: 15800, x: 710 },
-            { depth: 16300, x: 720 },
-            { depth: 16800, x: 715 },
-            { depth: 17300, x: 725 },
-            { depth: 17800, x: 720 },
-            { depth: 18300, x: 730 },
-            { depth: 18800, x: 725 },
-            { depth: 19500, x: 730 }
+            { depth: 15800, x: 720 },
+            { depth: 16300, x: 715 },
+            { depth: 16800, x: 710 },
+            { depth: 17300, x: 700 },
+            { depth: 17800, x: 685 },
+            { depth: 18300, x: 675 },
+            { depth: 18800, x: 670 },
+            { depth: 19500, x: 685 }
         ],
         formations: [
             { 
@@ -440,7 +427,7 @@ const WELL_CONFIGS = {
                 kickZone: null
             },
             { 
-                limit: 2301,
+                limit: 4550,
                 name: "Yegua",
                 color: "#daa520",
                 particle: "#f0e68c",
@@ -533,7 +520,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.5,
                 toolfaceFlopFactor: 1.6,
                 lossZone: null,
-                kickZone: null
+                kickZone: { start: 13000, end: 14000, minMW: 13.0 }
             }
         ],
         normalPressureMW: 12.5
@@ -541,11 +528,11 @@ const WELL_CONFIGS = {
 
     stack: {
         name: "STACK Play - Meramec Horizontal",
-        targetDepth: 13500,
+        targetDepth: 20500,
         casingPoints: [
             { depth: 1500, name: "Surface Casing", cost: 65000 },
             { depth: 10000, name: "Intermediate Casing", cost: 500000 },
-            { depth: 13500, name: "Production Casing", cost: 450000 }
+            { depth: 20500, name: "Production Casing", cost: 660000 }
         ],
         targetPath: [
             { depth: 0,     x: 400 },
@@ -558,7 +545,20 @@ const WELL_CONFIGS = {
             { depth: 12100, x: 660 },
             { depth: 12600, x: 690 },
             { depth: 13000, x: 705 },
-            { depth: 13500, x: 715 }
+            { depth: 14100, x: 420 },
+            { depth: 14600, x: 470 },
+            { depth: 15100, x: 540 },
+            { depth: 15600, x: 610 },
+            { depth: 16100, x: 660 },
+            { depth: 16600, x: 690 },
+            { depth: 17100, x: 660 },
+            { depth: 17600, x: 630 },
+            { depth: 18100, x: 620 },
+            { depth: 18600, x: 610 },
+            { depth: 19100, x: 660 },
+            { depth: 19600, x: 690 },
+            { depth: 20100, x: 660 },
+            { depth: 20500, x: 715 }
         ],
         formations: [
             { 
@@ -634,7 +634,7 @@ const WELL_CONFIGS = {
                 kickZone: null
             },
             { 
-                limit: 7861,
+                limit: 8213,
                 name: "Cottage Grove",
                 color: "#bc8f8f",
                 particle: "#d2b48c",
@@ -642,18 +642,6 @@ const WELL_CONFIGS = {
                 abrasiveness: 0.9,
                 driftTendency: -0.4,
                 toolfaceFlopFactor: 1.8,
-                lossZone: null,
-                kickZone: null
-            },
-            { 
-                limit: 8213,
-                name: "Woodsmoker",
-                color: "#556b2f",
-                particle: "#6b8e23",
-                hardness: 0.5,
-                abrasiveness: 0.6,
-                driftTendency: -0.3,
-                toolfaceFlopFactor: 2.0,
                 lossZone: null,
                 kickZone: null
             },
@@ -790,7 +778,7 @@ const WELL_CONFIGS = {
                 kickZone: null
             },
             { 
-                limit: 13501,
+                limit: 20501,
                 name: "Meramec 300",
                 color: "#0a0a0a",
                 particle: "#2b2b2b",
@@ -807,11 +795,11 @@ const WELL_CONFIGS = {
 
     delaware: {
         name: "Delaware Basin - Wolfcamp Horizontal",
-        targetDepth: 14500,
+        targetDepth: 21500,
         casingPoints: [
             { depth: 750, name: "Surface Casing", cost: 65000 },
             { depth: 11500, name: "Intermediate Casing", cost: 550000 },
-            { depth: 14500, name: "Production Casing", cost: 450000 }
+            { depth: 21500, name: "Production Casing", cost: 625000 }
         ],
         targetPath: [
             { depth: 0,     x: 400 },
@@ -825,7 +813,21 @@ const WELL_CONFIGS = {
             { depth: 13000, x: 630 },
             { depth: 13500, x: 680 },
             { depth: 14000, x: 710 },
-            { depth: 14500, x: 730 }
+            { depth: 14500, x: 730 },
+			{ depth: 15000, x: 630 },
+            { depth: 15500, x: 680 },
+            { depth: 16000, x: 710 },
+            { depth: 16500, x: 730 },
+			{ depth: 17000, x: 630 },
+            { depth: 17500, x: 680 },
+            { depth: 18000, x: 710 },
+            { depth: 18500, x: 730 },
+			{ depth: 19000, x: 630 },
+            { depth: 19500, x: 680 },
+            { depth: 20000, x: 710 },
+            { depth: 20500, x: 730 },
+			{ depth: 21000, x: 630 },
+            { depth: 21500, x: 680 }
         ],
         formations: [
             { 
@@ -1033,7 +1035,7 @@ const WELL_CONFIGS = {
                 kickZone: null
             },
             { 
-                limit: 13501,
+                limit: 21501,
                 name: "Wolfcamp Y",
                 color: "#1a1a1a",
                 particle: "#3d3d3d",
@@ -1046,5 +1048,71 @@ const WELL_CONFIGS = {
             }
         ],
         normalPressureMW: 11.0
+    },
+
+    armageddon: {
+        name: "ARMAGEDDON",
+        targetDepth: 800,
+        casingPoints: [
+            { depth: 800, name: "Bomb", cost: 5000000 }
+        ],
+        targetPath: [
+            { depth: 0,   x: 400 },
+            { depth: 50,  x: 450 },
+            { depth: 100, x: 400 },
+            { depth: 150, x: 500 },
+            { depth: 200, x: 350 },
+            { depth: 250, x: 550 },
+            { depth: 300, x: 300 },
+            { depth: 350, x: 600 },
+            { depth: 400, x: 400 },
+            { depth: 450, x: 650 },
+            { depth: 500, x: 350 },
+            { depth: 550, x: 600 },
+            { depth: 600, x: 400 },
+            { depth: 650, x: 550 },
+            { depth: 700, x: 450 },
+            { depth: 750, x: 500 },
+            { depth: 800, x: 400 }
+        ],
+        formations: [
+            { 
+                limit: 200,
+                name: "Asteroid Crust",
+                color: "#4a0000",
+                particle: "#6a0000",
+                hardness: 5.0,
+                abrasiveness: 0.25,
+                driftTendency: 0.9,
+                toolfaceFlopFactor: 3.0,
+                lossZone: { start: 50, end: 100, maxMW: 9.0, maxLossRate: 1000 },
+                kickZone: null
+            },
+            { 
+                limit: 400,
+                name: "Metallic Core",
+                color: "#1a1a1a",
+                particle: "#2a2a2a",
+                hardness: 7.0,
+                abrasiveness: 0.5,
+                driftTendency: -0.9,
+                toolfaceFlopFactor: 10.0,
+                lossZone: null,
+                kickZone: { start: 250, end: 350, minMW: 16.0 }
+            },
+            { 
+                limit: 801,
+                name: "Vibranium",
+                color: "#000000",
+                particle: "#0a0a0a",
+                hardness: 10.0,
+                abrasiveness: 1.0,
+                driftTendency: 0.9,
+                toolfaceFlopFactor: 12.0,
+                lossZone: { start: 500, end: 600, maxMW: 10.0, maxLossRate: 1500 },
+                kickZone: { start: 600, end: 750, minMW: 17.0 }
+            }
+        ],
+        normalPressureMW: 15.0
     }
 };

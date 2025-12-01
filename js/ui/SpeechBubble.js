@@ -1,0 +1,278 @@
+class SpeechBubble {
+    static messages = {
+        powder: {
+            beforeCasing1: [
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's comin' up—don't screw this up, I want to go home today." }
+            ],
+            atCasing1: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Another trip? Must be time for the engineers to double-check their math." },
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Who picked this casing point, the same guy who missed lunch order?" },
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If the engineers say this is the spot, we're probably 100 feet off." }
+            ],
+            foxHills: [
+                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Fox Hills ahead! Protect the beloved. Don't lose our mud to it." }
+            ],
+            foxHillsLosses: [
+                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "At this rate, I'm gettin' my bonus. Keep it up!" }
+            ],
+            teapot: [
+                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Teapot coming up. Don't boil my mud, cowboy." }
+            ],
+            teapotLosses: [
+                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Teapot's leaking more than my ol' man at night." }
+            ],
+            parkman: [
+                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Parkman ahead. If we lose more mud, I'm buying a boat." }
+            ],
+            parkmanLosses: [
+                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Parkman's drinking mud like it's happy hour." }
+            ],
+            beforeCasing2: [
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Get ready for casing. Don't make me call the office." }
+            ],
+            atCasing2: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Hope the engineers used a calculator this time." }
+            ],
+            curveStart: [
+                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Curve's coming up. Can I kick off early? 100 ft? 200 ft?" }
+            ],
+            toolfaceFlop: [
+                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Toolface is floppin' like a fish outta water. Motor's gettin' weak!" }
+            ],
+            beforeTD: [
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Production casing soon. If you mess this up, you're buying donuts." }
+            ],
+            atTD: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If we miss this, can we blame the office guys?" }
+            ]
+        },
+        
+        williston: {
+            beforeCasing1: [
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's coming up. Don't forget to stop." }
+            ],
+            atCasing1: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "This 9-5/8\" is praying we don't see Dakota flows." }
+            ],
+            kibbey: [
+                { speaker: "Mud Logger", portrait: "portrait-geophysicist.png", message: "Kibbey formation! Bits go in, paper weights come out." }
+            ],
+            missionLosses: [
+                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Mission Canyon's thirsty. I'm sending the invoice." }
+            ],
+            curveStart: [
+                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Curve time! Can I kick off early, or you wanna trust geosteering?" }
+            ],
+            toolfaceFlop: [
+                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Toolface is floppin' more than a pancake at IHOP." }
+            ],
+            beforeCasing2: [
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's near. Don't mess up, or you're buying lunch." }
+            ],
+            atCasing2: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Engineers said set casing here, so get ready to move it tomorrow." }
+            ],
+            geosteering: [
+                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Geosteering says we might be high or we might be low." }
+            ],
+            beforeTD: [
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Almost at TD. Don't let the bit die now!" }
+            ],
+            atTD: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Engineers picked this point? Guess we're tripping for exercise again." }
+            ]
+        },
+        
+        eagleford: {
+            beforeCasing1: [
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's coming up. Don't make me call Austin." }
+            ],
+            atCasing1: [
+                { speaker: "Engineer", portrait: "portrait-engineer.png", message: "Congrats on a new surface hole record!" },
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If this isn't the right spot, I'm sending the engineers downhole next." }
+            ],
+            wilcox: [
+                { speaker: "Geophysicist", portrait: "portrait-geophysicist.png", message: "Don't get flexed on by that flexure." }
+            ],
+            midway: [
+                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Midway's up. I think we may lose here sometimes." }
+            ],
+            curveStart: [
+                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Long curve ahead. Can I kick off early, or you wanna risk it?" }
+            ],
+            slideFaster: [
+                { speaker: "Engineering Manager", portrait: "portrait-engineer.png", message: "Slide faster!" }
+            ],
+            slideInitiated: [],  // ← ADD THIS LINE (empty array = no messages)
+            beforeTD: [
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Don't miss that depth. Can't stop here." }
+            ],
+            atTD: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Hex Grip don't fail me now. Lotta pipe to lay down." }
+            ]
+        },
+        
+        stack: {
+            beforeCasing1: [
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Why do we always set pipe at 1,500 ft?" }
+            ],
+            curveStart: [
+                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Tight curve ahead. Can I kick off early, or you wanna steer?" }
+            ],
+            beforeCasing2: [
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's near. Don't mess up, or you're buying dinner." }
+            ],
+            atCasing2: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If the engineers say this is the spot, we're probably 100 feet off." },
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If we miss this, can we blame the office guys?" }
+            ],
+            beforeTD: [
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Almost at TD. Can't stop, won't stop." }
+            ],
+            atTD: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Engineers picked this point? Guess we're tripping for exercise again." }
+            ]
+        },
+        
+        delaware: {
+            beforeCasing1: [
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's coming up. Don't make me call Midland." }
+            ],
+            atCasing1: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Engineers said set casing here, so get ready to move it tomorrow." },
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "I trust the engineers… about as far as I can throw a drill collar." }
+            ],
+            curveStart: [
+                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Deep curve coming up. Can I kick off early, or you wanna steer?" }
+            ],
+            beforeCasing2: [
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's near. Don't mess up, or you're buying breakfast." }
+            ],
+            atCasing2: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If this isn't the right spot, I'm sending the engineers downhole next." },
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Engineers picked this point? Guess we're tripping for exercise again." }
+            ],
+            beforeTD: [
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Almost at TD. Don't dull the bit now!" }
+            ],
+            atTD: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If we miss this, can we blame the office guys?" }
+            ]
+        },
+        
+        armageddon: [
+            { depth: 50, speaker: "President", portrait: "portrait-president.png", message: "We are faced with the very gravest of challenges." },
+            { depth: 100, speaker: "Chick", portrait: "portrait-chick.png", message: "You know, Harry, I swore I'd never drill again after that last one." },
+            { depth: 200, speaker: "Bear", portrait: "portrait-bear.png", message: "You stick that drill in the ground, and you make it sing!" },
+            { depth: 250, speaker: "Rockhound", portrait: "portrait-rockhound.png", message: "I'm not crazy, I'm just a little unwell." },
+            { depth: 300, speaker: "Max", portrait: "portrait-max.png", message: "I got a bad feeling about this rock, Harry." },
+            { depth: 400, speaker: "Harry Stamper", portrait: "portrait-harry.png", message: "I can't do it alone, Colonel. I need your help." },
+            { depth: 500, speaker: "Rockhound", portrait: "portrait-rockhound.png", message: "Guess what guys, it's time to embrace the horror! Look, we've got front row tickets to the end of the earth!" },
+            { depth: 600, speaker: "Chick", portrait: "portrait-chick.png", message: "Harry, you ever miss a depth?" },
+            { depth: 650, speaker: "Harry Stamper", portrait: "portrait-harry.png", message: "Not once, Chick. Not once." },
+            { depth: 700, speaker: "Bear", portrait: "portrait-bear.png", message: "If this thing blows, I want my last meal to be a Twinkie." },
+            { depth: 750, speaker: "Harry Stamper", portrait: "portrait-harry.png", message: "I have been drilling holes in the earth for 30 years. And I have never, NEVER missed a depth that I have aimed for. And by God, I am not gonna miss this one, I will make 800 feet." },
+            { depth: 800, speaker: "Chick", portrait: "portrait-chick.png", message: "Can I go home now, or is there another asteroid?" },
+            { depth: 800, speaker: "President", portrait: "portrait-president.png", message: "Mission accomplished. Godspeed, gentlemen." },
+            { depth: 800, speaker: "Harry Stamper", portrait: "portrait-harry.png", message: "Yeah one more thing, um... none of them wanna pay taxes again." }
+        ],
+        
+        general: {
+            bitDull: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If you make this bit last 2 more hours, my relief said he'd love to trip it." }
+            ],
+            bitTrip: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If I trip one more time, I'm moving to IT." },
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Can't make hole off bottom!" }
+            ],
+            motorWeak: [
+                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Motor's gettin' weak, can't hold toolface worth a dang." },
+                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Motor's got less grip than a greased pig." }
+            ],
+            slideInitiated: [
+                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Another slide? I can't pause Call of Duty online!" },
+                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Slide again? I'm gonna need a new wrist." }
+            ],
+            lossesModerate: [
+                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "At this rate, I'm gettin' my bonus. Keep it up!" }
+            ],
+            lossesHeavy: [
+                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "I'm about to start selling mud futures." }
+            ],
+            gasDetected: [
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Gas! Don't make me call the incident command." }
+            ],
+            beforeCasing: [
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's coming up. Don't mess up, or you're buying lunch." }
+            ],
+            atTD: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "TD! Y'all paying bonuses yet?" }
+            ]
+        }
+    };
+
+    static show(wellType, eventType, customData = null) {
+        let messageData;
+        
+        // Armageddon uses depth-based messages
+        if (wellType === 'armageddon') {
+            const armageddonMessages = this.messages.armageddon;
+            const depth = customData?.depth || 0;
+            
+            // Find messages at this depth
+            const depthMessages = armageddonMessages.filter(m => m.depth === Math.floor(depth));
+            if (depthMessages.length > 0) {
+                messageData = depthMessages[Math.floor(Math.random() * depthMessages.length)];
+            } else {
+                return; // No message for this depth
+            }
+        } else {
+            // Other wells use event-based messages
+            const wellMessages = this.messages[wellType];
+            const generalMessages = this.messages.general;
+            
+            let messageArray = wellMessages?.[eventType] || generalMessages?.[eventType];
+            
+            if (!messageArray || messageArray.length === 0) return;
+            
+            messageData = messageArray[Math.floor(Math.random() * messageArray.length)];
+        }
+        
+        if (!messageData) return;
+        
+        this.createBubble(messageData);
+    }
+
+    static createBubble(data) {
+        const bubble = document.createElement('div');
+        bubble.className = 'speech-bubble';
+        
+        const portrait = document.createElement('img');
+        portrait.src = `images/${data.portrait}`;
+        portrait.className = 'speech-portrait';
+        portrait.onerror = () => { portrait.style.display = 'none'; };
+        
+        const content = document.createElement('div');
+        content.className = 'speech-content';
+        
+        const speaker = document.createElement('div');
+        speaker.className = 'speech-speaker';
+        speaker.innerText = data.speaker.toUpperCase();
+        
+        const message = document.createElement('div');
+        message.className = 'speech-message';
+        message.innerText = data.message;
+        
+        content.appendChild(speaker);
+        content.appendChild(message);
+        
+        bubble.appendChild(portrait);
+        bubble.appendChild(content);
+        
+        document.getElementById('game-container').appendChild(bubble);
+        
+        setTimeout(() => {
+            bubble.remove();
+        }, 5000);
+    }
+}

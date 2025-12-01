@@ -9,36 +9,31 @@
 </head>
 <body>
 
-    <!-- Start Screen -->
-    <div id="start-screen">
-        <div id="start-content">
-            <h1 id="game-title">ROLL COAL<br>MAKE HOLE</h1>
-            <div id="start-subtitle">A Directional Drilling Game</div>
-            <div id="start-instructions">
-                <p>Drill to total depth while managing:</p>
-                <ul>
-                    <li>Weight on Bit & Rate of Penetration</li>
-                    <li>Directional Control & Wellbore Path</li>
-                    <li>Mud Weight & Pressure Control</li>
-                    <li>Motor Performance & Bit Health</li>
-                    <li>Costs, Losses & Kicks</li>
-                </ul>
-            </div>
-            <button id="start-button" class="menu-button">PRESS ENTER TO START</button>
-            <button id="view-scores-button" class="menu-button" style="margin-top: 15px;">VIEW HIGH SCORES [H]</button>
-            <div id="start-credits">v1.0 | Educational Simulator</div>
-        </div>
-    </div>
+	<!-- Start Screen -->
+	<div id="start-screen">
+		<div id="start-content-image">
+			<div id="version-overlay">v1.1.0</div>
+			<img src="images/title-screen.png" alt="Roll Coal Make Hole" id="title-image">
+			<div id="button-overlay">
+				<button id="start-button" class="menu-button-overlay">START</button>
+				<button id="view-scores-button" class="menu-button-overlay">HIGH SCORES</button>
+			</div>
+		</div>
+	</div>
 
     <!-- Well Select Screen -->
     <div id="well-select-screen">
+        <button id="back-from-select-button" class="back-button">✕</button>
         <div id="well-select-content">
             <h2 id="select-title">SELECT WELL</h2>
             <div id="well-options">
                 <div class="well-card" data-well="powder">
-                    <h3>POWDER RIVER</h3>
+                    <div class="well-image">
+                        <img src="images/well-powder.png" alt="Powder River Basin" onerror="this.style.display='none'">
+                    </div>
+                    <h3>POWDER RIVER - NIO</h3>
                     <div class="well-details">
-                        <p><strong>Location:</strong> Wyoming - Niobrara</p>
+                        <p><strong>Location:</strong> Wyoming</p>
                         <p><strong>Target Depth:</strong> 27,500 ft MD</p>
                         <p><strong>Profile:</strong> Ultra-deep, extended lateral</p>
                         <p><strong>Challenges:</strong> Extreme depth, multiple losses</p>
@@ -52,10 +47,13 @@
                 </div>
 
                 <div class="well-card" data-well="williston">
-                    <h3>WILLISTON BASIN</h3>
+                    <div class="well-image">
+                        <img src="images/well-williston.png" alt="Williston Basin" onerror="this.style.display='none'">
+                    </div>
+                    <h3>WILLISTON - BAKKEN</h3>
                     <div class="well-details">
-                        <p><strong>Location:</strong> North Dakota - Bakken</p>
-                        <p><strong>Target Depth:</strong> 26,500 ft MD</p>
+                        <p><strong>Location:</strong> North Dakota</p>
+                        <p><strong>Target Depth:</strong> 21,500 ft MD</p>
                         <p><strong>Profile:</strong> Deep vertical, curve, long lateral</p>
                         <p><strong>Challenges:</strong> Abrasive Kibbey, losses, kicks</p>
                         <p><strong>Difficulty:</strong> ★★☆☆☆</p>
@@ -68,7 +66,10 @@
                 </div>
 
                 <div class="well-card" data-well="eagleford">
-                    <h3>EAGLE FORD</h3>
+                    <div class="well-image">
+                        <img src="images/well-eagleford.png" alt="Eagle Ford" onerror="this.style.display='none'">
+                    </div>
+                    <h3>STX - EAGLE FORD</h3>
                     <div class="well-details">
                         <p><strong>Location:</strong> South Texas</p>
                         <p><strong>Target Depth:</strong> 19,500 ft MD</p>
@@ -84,10 +85,13 @@
                 </div>
 
                 <div class="well-card" data-well="stack">
-                    <h3>STACK PLAY</h3>
+                    <div class="well-image">
+                        <img src="images/well-stack.png" alt="STACK Play" onerror="this.style.display='none'">
+                    </div>
+                    <h3>ANADARKO - MERAMEC</h3>
                     <div class="well-details">
-                        <p><strong>Location:</strong> Oklahoma - Meramec</p>
-                        <p><strong>Target Depth:</strong> 13,500 ft MD</p>
+                        <p><strong>Location:</strong> Oklahoma</p>
+                        <p><strong>Target Depth:</strong> 20,500 ft MD</p>
                         <p><strong>Profile:</strong> Vertical, curve, horizontal</p>
                         <p><strong>Challenges:</strong> Gas kicks, tight curve</p>
                         <p><strong>Difficulty:</strong> ★★★★☆</p>
@@ -100,10 +104,13 @@
                 </div>
 
                 <div class="well-card" data-well="delaware">
-                    <h3>DELAWARE BASIN</h3>
+                    <div class="well-image">
+                        <img src="images/well-delaware.png" alt="Delaware Basin" onerror="this.style.display='none'">
+                    </div>
+                    <h3>DELAWARE - WOLFCAMP</h3>
                     <div class="well-details">
-                        <p><strong>Location:</strong> West Texas - Wolfcamp</p>
-                        <p><strong>Target Depth:</strong> 14,500 ft MD</p>
+                        <p><strong>Location:</strong> West Texas, America</p>
+                        <p><strong>Target Depth:</strong> 21,500 ft MD</p>
                         <p><strong>Profile:</strong> Deep vertical, curve, lateral</p>
                         <p><strong>Challenges:</strong> Salt sections, losses, kicks</p>
                         <p><strong>Difficulty:</strong> ★★★★★</p>
@@ -114,8 +121,27 @@
                     </div>
                     <button class="select-button" data-well="delaware">SELECT [5]</button>
                 </div>
+
+                <div class="well-card well-card-armageddon" data-well="armageddon">
+                    <div class="well-image">
+                        <img src="images/well-armageddon.png" alt="ARMAGEDDON" onerror="this.style.display='none'">
+                    </div>
+                    <h3 style="color: #ff0000; text-shadow: 0 0 10px #ff0000;">ARMAGEDDON</h3>
+                    <div class="well-details">
+                        <p><strong>Location:</strong> Asteroid</p>
+                        <p><strong>Target Depth:</strong> 800 ft</p>
+                        <p><strong>Profile:</strong> EXTREME</p>
+                        <p><strong>Challenges:</strong> EVERYTHING</p>
+                        <p><strong>Difficulty:</strong> <span style="color: #ff0000;">★★★★★★★★★★</span></p>
+                    </div>
+                    <div class="well-highscore" id="highscore-armageddon">
+                        <div class="highscore-label">BEST SCORE:</div>
+                        <div class="highscore-value">No scores yet</div>
+                    </div>
+                    <button class="select-button" data-well="armageddon" style="background: #ff0000; animation: pulse 1s infinite;">SELECT [6] - GOOD LUCK</button>
+                </div>
             </div>
-            <div id="select-instructions">Use number keys [1-5] or click to select</div>
+            <div id="select-instructions">Use number keys [1-6] or click to select | Hover edges to scroll</div>
         </div>
     </div>
 
@@ -192,6 +218,10 @@
                     <div class="readout-value" id="dp-readout" style="color: #ff00ff;">0 psi</div>
                 </div>
                 <div class="readout">
+                    <div class="readout-label" style="color: #00ffff;">FLOW</div>
+                    <div class="readout-value" id="flow-readout" style="color: #00ffff;">550 gpm</div>
+                </div>
+                <div class="readout">
                     <div class="readout-label" style="color: #aaa;">MUD WT</div>
                     <div class="readout-value" id="mw-readout" style="color: #aaa;">10.0 ppg</div>
                 </div>
@@ -222,9 +252,9 @@
             </div>
             <div class="stat-group">
                 <div><span class="label">FORMATION:</span> <span id="formationDisplay" class="value" style="color:#ffd54f">SURFACE</span></div>
+                <div><span class="label">ECD:</span> <span id="ecdDisplay" class="value">0.0</span> ppg</div>
                 <div><span class="label">TIME:</span> <span id="timeDisplay" class="value">Day 1 00:00</span></div>
                 <div><span class="label">SLIDE FT %:</span> <span id="slideFtDisplay" class="value">0</span>%</div>
-                <div><span class="label">SLIDE TIME %:</span> <span id="slideTimeDisplay" class="value">0</span>%</div>
             </div>
         </div>
 
@@ -232,7 +262,7 @@
         <div id="message">
             <h2 id="msg-title">ALERT</h2>
             <p id="msg-detail">...</p>
-            <p id="msg-restart" style="font-size: 14px; margin-top:20px; color:#aaa;">Press R to Restart</p>
+            <p id="msg-restart" style="font-size: 14px; margin-top:20px; color:#aaa;">Press ESC to Menu</p>
         </div>
 
         <!-- Start Prompt -->
@@ -259,7 +289,7 @@
         <!-- Controls -->
         <div id="controls">
             [UP/DWN] WOB | [A] Slide Left | [S] Rotate | [D] Slide Right<br>
-            [M/N] Mud Wt | [I/K] LCM | [P] Pause | [R] Restart
+            [T/G] Mud Wt | [Y/H] LCM | [R/F] Flow | [P] Pause | [ESC] Menu
         </div>
     </div>
 
@@ -273,6 +303,7 @@
     <script src="js/rendering/Renderer.js"></script>
     <script src="js/rendering/DrillingWindow.js"></script>
     <script src="js/ui/UIManager.js"></script>
+    <script src="js/ui/SpeechBubble.js"></script>
     <script src="js/ui/MenuManager.js"></script>
     <script src="js/core/GameEngine.js"></script>
     <script src="js/main.js"></script>
@@ -280,9 +311,9 @@
     <script>
         window.addEventListener('DOMContentLoaded', () => {
             if (typeof GAME_VERSION !== 'undefined') {
-                const credits = document.getElementById('start-credits');
-                if (credits) {
-                    credits.innerText = `${GAME_VERSION.toString()} | Educational Simulator`;
+                const versionOverlay = document.getElementById('version-overlay');
+                if (versionOverlay) {
+                    versionOverlay.innerText = GAME_VERSION.toString();
                 }
             }
         });

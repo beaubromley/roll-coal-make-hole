@@ -24,14 +24,21 @@ const CONSTANTS = {
     MOTOR_SPIKE_THRESHOLD: 0.8,
     MOTOR_MAX_SPIKES: 20,
     MOTOR_MIN_SPIKES_TO_FAIL: 15,
-    DP_BASE_MULTIPLIER: 30,
+    DP_BASE_MULTIPLIER: 12, // Changed from 30 to 12 (2.5x less DP)
     DP_HARDNESS_DIVISOR: 1.5,
-    MOTOR_STALL_DP: 1650, // 110% of 1500 max
+    MOTOR_STALL_DP: 1650,
     
     // Motor health drain rates (per frame)
     MOTOR_DRAIN_SLOW: 0.005,
     MOTOR_DRAIN_MEDIUM: 0.02,
     MOTOR_DRAIN_FAST: 0.08,
+    
+    // Flow Rate Constants
+    MIN_FLOW_RATE: 400,
+    MAX_FLOW_RATE: 1000,
+    NORMAL_FLOW_RATE: 550,
+    FLOW_INCREMENT: 50,
+    LOW_FLOW_THRESHOLD: 500,
     
     // Mud Loss Constants
     MUD_COST_PER_BBL: 100,

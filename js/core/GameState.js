@@ -22,7 +22,7 @@ class GameState {
         this.kickRisk = 0;
         this.currentX = 400;
         this.dirtOffset = 0;
-        this.logData = { depth: [], rop: [], wob: [], diffPressure: [] };
+        this.logData = { rop: [], wob: [], diffPressure: [], flowRate: [] };
         this.logCounter = 0;
         
         this.drillingMode = 'rotating';
@@ -35,7 +35,6 @@ class GameState {
         this.currentFormationName = null;
         this.formationDriftDirection = 1;
         
-        // Motor/Diff Pressure State
         this.diffPressure = 0;
         this.motorSpikeCount = 0;
         this.motorSpikeHistory = [];
@@ -43,28 +42,31 @@ class GameState {
         this.isMotorStalled = false;
         this.motorStallStartDepth = 0;
         
-        // Mud Loss State
         this.lcmConcentration = 0;
         this.isInLossZone = false;
         this.currentLossRate = 0;
         this.lossHealPercentage = 0;
         this.totalMudLost = 0;
         
-        // Kick State
         this.isInKickZone = false;
         this.isKickActive = false;
         this.kickControlTimeRemaining = 0;
         
-        // Slide metrics
         this.totalSlideDepth = 0;
         this.totalSlideTime = 0;
         this.totalDrillingTime = 0;
         
-        // Notification state
         this.waitingForAcknowledge = false;
         
-        // Casing state
         this.casingPointsReached = [];
         this.nextCasingIndex = 0;
+        
+        this.speechTriggered = {};
+        this.slideCount = 0;
+        this.armageddonDepthsTriggered = [];
+        
+        // Flow rate
+        this.flowRate = CONSTANTS.NORMAL_FLOW_RATE;
+        this.ecd = 0;
     }
 }

@@ -106,6 +106,7 @@ class Renderer {
     drawTargetPath(state) {
         this.ctx.strokeStyle = '#ff1744';
         this.ctx.lineWidth = 4;
+        this.ctx.setLineDash([15, 10]); // Long dashes: 15px dash, 10px gap
         
         for (let i = 0; i < state.wellConfig.targetPath.length - 1; i++) {
             const p1 = state.wellConfig.targetPath[i];
@@ -121,7 +122,10 @@ class Renderer {
                 this.ctx.stroke();
             }
         }
+        
+        this.ctx.setLineDash([]); // Reset to solid for other drawing
     }
+
 
     drawRocks(formation, offset, startY, endY) {
         this.ctx.fillStyle = formation.particle;

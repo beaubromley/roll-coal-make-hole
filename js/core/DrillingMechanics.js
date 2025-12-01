@@ -25,6 +25,65 @@ class DrillingMechanics {
         return 1.1 - (currentMW * 0.015);
     }
 
+    static calculateFlowROPFactor(flowRate) {
+        // 550 gpm is baseline (1.0x)
+        // 400 gpm = 0.7x (-30%)
+        // 750 gpm = 1.3x (+30%)
+        // 1000 gpm = 1.6x (+60%)
+        const flowDiff = flowRate - CONSTANTS.NORMAL_FLOW_RATE;
+        const ropFactor = 1.0 + (flowDiff / 550) * 0.6;
+        return Math.max(0.5, Math.min(1.6, ropFactor));
+    }
+
+    static calculateECD(flowRate, depth) {
+        // ECD scales linearly with depth
+        // At 15,000 ft, use the full ECD values
+        // At 0 ft, ECD = 0
+        const depthFactor = depth / 15000;
+        
+        let baseECD = 0;
+        if (flowRate < 550) {
+            baseECD = 0.3;
+        } else if (flowRate < 650) {
+            baseECD = 0.6;
+        } else if (flowRate < 750) {
+            baseECD = 1.0;
+        } else if (flowRate < 850) {
+            baseECD = 1.3;
+        } else {
+            baseECD = 2.0;
+        }
+        
+        return baseECD * depthFactor;
+    }
+
+    static calculateFlowStallFactor(flowRate) {
+        // Below 500 gpm, motor stalls easier
+        if (flowRate >= CONSTANTS.LOW_FLOW_THRESHOLD) return 1.0;
+        
+        // At 400 gpm, stall threshold drops to 90% (1.1x easier to stall)
+        const flowDeficit = CONSTANTS.LOW_FLOW_THRESHOLD - flowRate;
+        return 1.0 + (flowDeficit / 100) * 0.1;
+    }
+
+    static calculateFlowFlopFactor(flowRate) {
+        // Below 500 gpm, toolface flops more
+        if (flowRate >= CONSTANTS.LOW_FLOW_THRESHOLD) return 1.0;
+        
+        // At 400 gpm, flops 1.5x more often
+        const flowDeficit = CONSTANTS.LOW_FLOW_THRESHOLD - flowRate;
+        return 1.0 + (flowDeficit / 100) * 0.5;
+    }
+
+    static calculateFlowSpikeFactor(flowRate) {
+        // Below 500 gpm, more DP spikes
+        if (flowRate >= CONSTANTS.LOW_FLOW_THRESHOLD) return 1.0;
+        
+        // At 400 gpm, spikes 1.3x more likely
+        const flowDeficit = CONSTANTS.LOW_FLOW_THRESHOLD - flowRate;
+        return 1.0 + (flowDeficit / 100) * 0.3;
+    }
+
     static calculateKickRisk(currentMW, depth, normalPressureMW) {
         let pressureDifferential = normalPressureMW - currentMW;
         if (pressureDifferential <= 0) return 0;
@@ -33,12 +92,13 @@ class DrillingMechanics {
 
     static calculateROP(currentWOB, formation) {
         if (currentWOB === 0) return 0;
-        return (currentWOB * 10) / formation.hardness;
+        return (currentWOB * 6) / formation.hardness;
     }
 
     static calculateDamage(currentWOB, formation) {
         if (currentWOB === 0) return 0;
-        return (Math.pow(currentWOB, 2.2)) * 0.0000016 * formation.abrasiveness;
+        // Increased from 0.0000016 to 0.000008 (5x faster wear)
+        return (Math.pow(currentWOB, 2.2)) * 0.0000064 * formation.abrasiveness;
     }
 
     static calculateDiffPressure(currentWOB, formation, spikeMultiplier = 1.0, isSliding = false) {
@@ -55,7 +115,7 @@ class DrillingMechanics {
         
         let variation = 1 + (Math.random() * 0.15 - 0.075);
         
-        return baseDP * variation; // Allow DP to exceed max (for stalls at 110%)
+        return baseDP * variation;
     }
 
     static calculateMotorHealthDrain(currentDP) {
@@ -70,19 +130,15 @@ class DrillingMechanics {
         }
     }
 
-    static checkForDPSpike(currentDP, spikeMultiplier, motorHealth) {
-        // Only check if we're above 90% threshold (1350 psi)
+    static checkForDPSpike(currentDP, spikeMultiplier, motorHealth, flowSpikeFactor = 1.0) {
         if (currentDP < CONSTANTS.MOTOR_90_PERCENT_DP) return false;
         
-        // Calculate spike probability based on how far over 90% we are
         let overThreshold = (currentDP - CONSTANTS.MOTOR_90_PERCENT_DP) / 
                            (CONSTANTS.MOTOR_MAX_DP - CONSTANTS.MOTOR_90_PERCENT_DP);
         
-        // Base probability increases with spike history AND decreases with motor health
-        let healthFactor = 1 + ((100 - motorHealth) / 100); // 1.0 at 100% health, 2.0 at 0% health
-        let baseProbability = 0.002 * spikeMultiplier * healthFactor;
+        let healthFactor = 1 + ((100 - motorHealth) / 100);
+        let baseProbability = 0.002 * spikeMultiplier * healthFactor * flowSpikeFactor;
         
-        // Probability increases exponentially as we approach max DP
         let spikeProbability = baseProbability * (1 + Math.pow(overThreshold, 2) * 10);
         
         return Math.random() < spikeProbability;
