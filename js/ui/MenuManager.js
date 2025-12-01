@@ -377,37 +377,42 @@ class MenuManager {
         localStorage.setItem(key, JSON.stringify(scores));
     }
 
-    static loadHighScores() {
-        const defaultScores = {
-            powder: [
-                { name: "WILDCATTER", cost: 2500000, gameTime: "8d 12h", ftPerDay: 3235, costPerFt: 91, date: "1/1/2024" },
-                { name: "ROUGHNECK", cost: 2800000, gameTime: "9d 6h", ftPerDay: 2957, costPerFt: 102, date: "1/1/2024" },
-                { name: "DRILLER", cost: 3200000, gameTime: "10d 18h", ftPerDay: 2558, costPerFt: 116, date: "1/1/2024" }
-            ],
-            williston: [
-                { name: "BAKKEN PRO", cost: 1900000, gameTime: "7d 4h", ftPerDay: 2986, costPerFt: 88, date: "1/1/2024" },
-                { name: "OILMAN", cost: 2100000, gameTime: "8d 0h", ftPerDay: 2688, costPerFt: 98, date: "1/1/2024" },
-                { name: "DRILLER", cost: 2400000, gameTime: "9d 12h", ftPerDay: 2263, costPerFt: 112, date: "1/1/2024" }
-            ],
-            eagleford: [
-                { name: "TEXAN", cost: 1600000, gameTime: "6d 8h", ftPerDay: 3079, costPerFt: 82, date: "1/1/2024" },
-                { name: "SHALE KING", cost: 1850000, gameTime: "7d 2h", ftPerDay: 2732, costPerFt: 95, date: "1/1/2024" },
-                { name: "DRILLER", cost: 2100000, gameTime: "8d 6h", ftPerDay: 2349, costPerFt: 108, date: "1/1/2024" }
-            ],
-            stack: [
-                { name: "SOONER", cost: 1750000, gameTime: "6d 18h", ftPerDay: 3015, costPerFt: 85, date: "1/1/2024" },
-                { name: "MERAMEC ACE", cost: 2000000, gameTime: "7d 12h", ftPerDay: 2733, costPerFt: 98, date: "1/1/2024" },
-                { name: "DRILLER", cost: 2300000, gameTime: "8d 20h", ftPerDay: 2318, costPerFt: 112, date: "1/1/2024" }
-            ],
-            delaware: [
-                { name: "PERMIAN", cost: 1950000, gameTime: "7d 6h", ftPerDay: 2945, costPerFt: 91, date: "1/1/2024" },
-                { name: "WOLFCAMP", cost: 2200000, gameTime: "8d 4h", ftPerDay: 2590, costPerFt: 102, date: "1/1/2024" },
-                { name: "DRILLER", cost: 2500000, gameTime: "9d 18h", ftPerDay: 2204, costPerFt: 116, date: "1/1/2024" }
-            ],
-            armageddon: [
-                { name: "BRUCE", cost: 99999999, gameTime: "99d 23h", ftPerDay: 8, costPerFt: 124999, date: "1/1/2024" }
-            ]
-        };
+	static loadHighScores() {
+		const defaultScores = {
+			powder: [
+				{ name: "BASSO, TAYLOR", cost: 1635414, gameTime: "8d 8h", ftPerDay: 2029, costPerFt: 96.52, date: "5/16/2024" },
+				{ name: "BROMLEY, BEAU", cost: 1146834, gameTime: "8d 16h", ftPerDay: 1404, costPerFt: 94.43, date: "9/20/2017" }
+			],
+			williston: [
+				{ name: "HARCLERODE, BRIAN", cost: 1864168, gameTime: "8d 9h", ftPerDay: 2543, costPerFt: 87.48, date: "9/2/2025" },
+				{ name: "WRIGHT, LACEY", cost: 1902685, gameTime: "9d 10h", ftPerDay: 2238, costPerFt: 90.43, date: "9/23/2025" }
+			],
+			eagleford: [
+				{ name: "WILLIMON, JOHN DAVID", cost: 1971576, gameTime: "4d 22h", ftPerDay: 3117, costPerFt: 128.55, date: "5/31/2025" },
+				{ name: "COLEMAN, LOGAN", cost: 1549819, gameTime: "5d 12h", ftPerDay: 2816, costPerFt: 100.07, date: "10/30/2024" },
+				{ name: "GILBERT, TERRY", cost: 2073725, gameTime: "17d 12h", ftPerDay: 317, costPerFt: 373.24, date: "12/27/2012" }
+			],
+			stack: [
+				{ name: "BOUZEK, JARED", cost: 1979356, gameTime: "11d 4h", ftPerDay: 1792, costPerFt: 98.87, date: "7/25/2025" },
+				{ name: "GLAZE, GARRETT", cost: 1595705, gameTime: "11d 4h", ftPerDay: 1755, costPerFt: 81.38, date: "9/3/2018" },
+				{ name: "MATALIK, MARK", cost: 791150, gameTime: "11d 10h", ftPerDay: 763, costPerFt: 90.94, date: "5/29/2007" }
+			],
+			delaware: [
+				{ name: "TURNER, KERRY", cost: 2713413, gameTime: "9d 2h", ftPerDay: 2113, costPerFt: 141.15, date: "8/11/2025" },
+				{ name: "SCHILLING, JOHN", cost: 2364139, gameTime: "9d 3h", ftPerDay: 2065, costPerFt: 125.39, date: "8/28/2024" },
+				{ name: "PORRAZ, ISAC", cost: 3125578, gameTime: "9d 12h", ftPerDay: 2031, costPerFt: 162.03, date: "6/26/2025" },
+				{ name: "MILLIGAN, DALLAS", cost: 1923842, gameTime: "9d 14h", ftPerDay: 1997, costPerFt: 100.34, date: "11/27/2025" },
+				{ name: "WARDHANA, KRISNA", cost: 2070085, gameTime: "10d 8h", ftPerDay: 1812, costPerFt: 110.58, date: "12/28/2023" },
+				{ name: "GRIFFIN, JAMES", cost: 2767027, gameTime: "10d 15h", ftPerDay: 1806, costPerFt: 144.12, date: "9/22/2025" },
+				{ name: "VORA, KUMAR", cost: 2484266, gameTime: "11d 20h", ftPerDay: 1360, costPerFt: 154.18, date: "5/24/2024" },
+				{ name: "DZURISIN, RYAN", cost: 3179038, gameTime: "12d 15h", ftPerDay: 1514, costPerFt: 166.21, date: "1/5/2024" },
+				{ name: "SHEPARD, DEVAN", cost: 3925970, gameTime: "16d 16h", ftPerDay: 1439, costPerFt: 163.82, date: "4/19/2025" },
+				{ name: "FISHER, JONATHAN", cost: 2248159, gameTime: "20d 8h", ftPerDay: 740, costPerFt: 149.20, date: "8/17/2015" }
+			],
+			armageddon: [
+				{ name: "STAMPER, HARRY", cost: 300000000000, gameTime: "8h", ftPerDay: 2400, costPerFt: 375000000, date: "7/1/1998" }
+			]
+		};
         
         Object.keys(WELL_CONFIGS).forEach(wellType => {
             const key = `highscores_${wellType}`;
