@@ -6,6 +6,22 @@ All notable changes to Roll Coal Make Hole will be documented in this file.
 
 
 
+\## \[1.2.1] - 2025-12-01
+
+
+
+\### Changed
+
+\- Updated default high scores with real well performance data
+
+\- Added actual engineer names and completion dates from field operations
+
+\- Realistic drilling metrics based on actual wells
+
+\- Harry Stamper's record-breaking Armageddon performance ($300B, saved the world)
+
+
+
 \## \[1.2.0] - 2025-12-01
 
 
@@ -14,35 +30,35 @@ All notable changes to Roll Coal Make Hole will be documented in this file.
 
 \- \*\*Flow Rate System\*\*: Control pump rate (400-1000 gpm, 50 gpm increments)
 
-&nbsp; - Flow affects ROP (+60% at 1000 gpm, -30% at 400 gpm)
+  - Flow affects ROP (+60% at 1000 gpm, -30% at 400 gpm)
 
-&nbsp; - ECD (Equivalent Circulating Density) scales with flow and depth
+  - ECD (Equivalent Circulating Density) scales with flow and depth
 
-&nbsp; - Low flow (<500 gpm) increases motor stalls, DP spikes, and toolface flops
+  - Low flow (<500 gpm) increases motor stalls, DP spikes, and toolface flops
 
-&nbsp; - New controls: R (increase flow), F (decrease flow)
+  - New controls: R (increase flow), F (decrease flow)
 
 \- \*\*Speech Bubble System\*\*: Crew commentary with character portraits
 
-&nbsp; - 15 unique character portraits (drillers, engineers, company man, etc.)
+  - 15 unique character portraits (drillers, engineers, company man, etc.)
 
-&nbsp; - Well-specific messages at key depths
+  - Well-specific messages at key depths
 
-&nbsp; - General messages for common events
+  - General messages for common events
 
-&nbsp; - Armageddon features movie quotes from the film
+  - Armageddon features movie quotes from the film
 
 \- \*\*Armageddon Well\*\*: Extreme 800 ft asteroid drilling challenge
 
-&nbsp; - 10-star difficulty (off the scale)
+  - 10-star difficulty (off the scale)
 
-&nbsp; - Hardness 150x normal formations
+  - Hardness 150x normal formations
 
-&nbsp; - Zig-zagging path every 50 ft
+  - Zig-zagging path every 50 ft
 
-&nbsp; - Impossible MW window (kicks need 17 ppg, losses at 10 ppg)
+  - Impossible MW window (kicks need 17 ppg, losses at 10 ppg)
 
-&nbsp; - Movie dialogue at specific depths
+  - Movie dialogue at specific depths
 
 \- \*\*Default High Scores\*\*: Pre-populated leaderboards for all wells
 
@@ -58,13 +74,13 @@ All notable changes to Roll Coal Make Hole will be documented in this file.
 
 \- \*\*Controls Remapped\*\*:
 
-&nbsp; - Mud Weight: M/N → T/G
+  - Mud Weight: M/N → T/G
 
-&nbsp; - LCM: I/K → Y/H
+  - LCM: I/K → Y/H
 
-&nbsp; - Flow Rate: New R/F
+  - Flow Rate: New R/F
 
-&nbsp; - Restart removed (ESC to menu only)
+  - Restart removed (ESC to menu only)
 
 \- \*\*ROP Formula\*\*: Reduced from (WOB × 10) to (WOB × 4) - requires 2.5x more WOB
 
@@ -78,11 +94,11 @@ All notable changes to Roll Coal Make Hole will be documented in this file.
 
 \- \*\*Well Lengths\*\*:
 
-&nbsp; - STACK: 13,500 ft → 20,500 ft
+  - STACK: 13,500 ft → 20,500 ft
 
-&nbsp; - Delaware: 14,500 ft → 21,500 ft
+  - Delaware: 14,500 ft → 21,500 ft
 
-&nbsp; - Williston: 26,500 ft → 21,500 ft
+  - Williston: 26,500 ft → 21,500 ft
 
 \- \*\*Recorder Tracks\*\*: Depth removed, Flow Rate added (ROP, WOB, Diff P, Flow)
 
