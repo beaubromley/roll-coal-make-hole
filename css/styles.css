@@ -56,11 +56,11 @@ body {
 #button-overlay {
     position: absolute;
     bottom: 73px;
-    left: 51%;
-    transform: translateX(-50%);
+    left: 0%;
+    transform: translateX(63%);
     display: flex;
     flex-direction: row;
-    gap: 18px;
+    gap: 0px;
     z-index: 10;
 }
 
@@ -69,7 +69,7 @@ body {
     background: transparent;
     color: #000;
     border: none;
-    padding: 12px 45px;
+    padding: 12px 26px;
     font-size: 16px;
     cursor: pointer;
     transition: all 0.3s;
@@ -753,7 +753,7 @@ canvas {
 /* Speech Bubble Styles */
 .speech-bubble {
     position: absolute;
-    bottom: 120px;
+    bottom: 150px;
     left: 20px;
     background: rgba(0, 0, 0, 0.95);
     border: 3px solid #76ff03;
