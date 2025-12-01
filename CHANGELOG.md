@@ -6,6 +6,122 @@ All notable changes to Roll Coal Make Hole will be documented in this file.
 
 
 
+\## \[1.2.0] - 2025-12-01
+
+
+
+\### Added
+
+\- \*\*Flow Rate System\*\*: Control pump rate (400-1000 gpm, 50 gpm increments)
+
+&nbsp; - Flow affects ROP (+60% at 1000 gpm, -30% at 400 gpm)
+
+&nbsp; - ECD (Equivalent Circulating Density) scales with flow and depth
+
+&nbsp; - Low flow (<500 gpm) increases motor stalls, DP spikes, and toolface flops
+
+&nbsp; - New controls: R (increase flow), F (decrease flow)
+
+\- \*\*Speech Bubble System\*\*: Crew commentary with character portraits
+
+&nbsp; - 15 unique character portraits (drillers, engineers, company man, etc.)
+
+&nbsp; - Well-specific messages at key depths
+
+&nbsp; - General messages for common events
+
+&nbsp; - Armageddon features movie quotes from the film
+
+\- \*\*Armageddon Well\*\*: Extreme 800 ft asteroid drilling challenge
+
+&nbsp; - 10-star difficulty (off the scale)
+
+&nbsp; - Hardness 150x normal formations
+
+&nbsp; - Zig-zagging path every 50 ft
+
+&nbsp; - Impossible MW window (kicks need 17 ppg, losses at 10 ppg)
+
+&nbsp; - Movie dialogue at specific depths
+
+\- \*\*Default High Scores\*\*: Pre-populated leaderboards for all wells
+
+\- \*\*Gas Flowing Alerts\*\*: Toast notifications during kick control
+
+\- \*\*Well Images\*\*: Custom 8-bit artwork for all 6 wells
+
+\- \*\*Title Screen\*\*: New custom artwork with explosions and lightning
+
+
+
+\### Changed
+
+\- \*\*Controls Remapped\*\*:
+
+&nbsp; - Mud Weight: M/N → T/G
+
+&nbsp; - LCM: I/K → Y/H
+
+&nbsp; - Flow Rate: New R/F
+
+&nbsp; - Restart removed (ESC to menu only)
+
+\- \*\*ROP Formula\*\*: Reduced from (WOB × 10) to (WOB × 4) - requires 2.5x more WOB
+
+\- \*\*Bit Wear\*\*: Increased 5x - bits wear out much faster
+
+\- \*\*Diff Pressure\*\*: Reduced generation 2.5x - DP less limiting, bit wear is primary limit
+
+\- \*\*Motor Stall\*\*: Now at 110% max DP (1650 psi)
+
+\- \*\*DP Spikes\*\*: Toast notifications instead of blocking popups
+
+\- \*\*Well Lengths\*\*:
+
+&nbsp; - STACK: 13,500 ft → 20,500 ft
+
+&nbsp; - Delaware: 14,500 ft → 21,500 ft
+
+&nbsp; - Williston: 26,500 ft → 21,500 ft
+
+\- \*\*Recorder Tracks\*\*: Depth removed, Flow Rate added (ROP, WOB, Diff P, Flow)
+
+\- \*\*Directional Path\*\*: Dashed line instead of solid
+
+\- \*\*Well Select\*\*: Horizontal scrolling with auto-scroll on hover
+
+\- \*\*Kibbey Formation\*\*: Abrasiveness increased to 10 (destroys bits)
+
+
+
+\### Improved
+
+\- Digital readouts condensed to fit 6 parameters
+
+\- Bottom stats moved up 10px for better spacing
+
+\- ECD display shows effective mud weight contribution
+
+\- Speech bubbles slide in from bottom-left
+
+\- Better PDC bit graphics with realistic cutters
+
+\- Formation transitions scroll smoothly
+
+
+
+\### Technical
+
+\- New SpeechBubble.js module for crew commentary
+
+\- Flow rate calculations integrated into all drilling mechanics
+
+\- ECD affects both kicks (helps prevent) and losses (can induce)
+
+\- Default scores populate on first load
+
+
+
 \## \[1.1.0] - 2025-11-30
 
 
@@ -16,31 +132,31 @@ All notable changes to Roll Coal Make Hole will be documented in this file.
 
 \- \*\*Casing System\*\*: Surface, intermediate, and production casing strings
 
-&nbsp; - Casing resets bit and motor health to 100%
+  - Casing resets bit and motor health to 100%
 
-&nbsp; - Adds realistic casing costs ($65k-$750k depending on depth)
+  - Adds realistic casing costs ($65k-$750k depending on depth)
 
-&nbsp; - Notifications pause game until acknowledged
+  - Notifications pause game until acknowledged
 
 \- \*\*Toast Notification System\*\*: Non-blocking notifications for minor events
 
-&nbsp; - Toolface flop alerts when sliding direction changes
+  - Toolface flop alerts when sliding direction changes
 
-&nbsp; - Periodic loss rate updates every few seconds
+  - Periodic loss rate updates every few seconds
 
-&nbsp; - DP spike warnings (non-blocking)
+  - DP spike warnings (non-blocking)
 
 \- \*\*Horizontal Well Select Screen\*\*: Scrollable card layout with high scores
 
 \- \*\*Formation-Specific Challenges\*\*:
 
-&nbsp; - Kibbey formation (Williston) extremely abrasive (destroys bits)
+  - Kibbey formation (Williston) extremely abrasive (destroys bits)
 
-&nbsp; - Gas kicks in Red Fork and Chester (STACK)
+  - Gas kicks in Red Fork and Chester (STACK)
 
-&nbsp; - Major losses in Wilcox (Eagle Ford)
+  - Major losses in Wilcox (Eagle Ford)
 
-&nbsp; - Loss zone in Mission Canyon (Williston)
+  - Loss zone in Mission Canyon (Williston)
 
 
 
@@ -160,9 +276,9 @@ All notable changes to Roll Coal Make Hole will be documented in this file.
 
 \- Two playable wells:
 
-&nbsp; - Standard Well (10,000 ft)
+  - Standard Well (10,000 ft)
 
-&nbsp; - Bakken Horizontal (12,000 ft)
+  - Bakken Horizontal (12,000 ft)
 
 \- Formation system with 6-8 unique formations per well
 
@@ -215,6 +331,4 @@ All notable changes to Roll Coal Make Hole will be documented in this file.
 \- Configurable well system for easy expansion
 
 \- LocalStorage for high score persistence
-
-
 
