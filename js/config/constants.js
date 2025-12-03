@@ -24,7 +24,7 @@ const CONSTANTS = {
     MOTOR_SPIKE_THRESHOLD: 0.8,
     MOTOR_MAX_SPIKES: 20,
     MOTOR_MIN_SPIKES_TO_FAIL: 15,
-    DP_BASE_MULTIPLIER: 12, // Changed from 30 to 12 (2.5x less DP)
+    DP_BASE_MULTIPLIER: 12,
     DP_HARDNESS_DIVISOR: 1.5,
     MOTOR_STALL_DP: 1650,
     
@@ -40,12 +40,19 @@ const CONSTANTS = {
     FLOW_INCREMENT: 50,
     LOW_FLOW_THRESHOLD: 500,
     
+    // Instability Constants
+    STUCK_PIPE_COST: 1000000,
+    INSTABILITY_TIME_MINOR: 18000,  // 2 minutes (0.1 ppg under)
+    INSTABILITY_TIME_MODERATE: 2250, // 30 seconds (0.5 ppg under)
+    INSTABILITY_TIME_SEVERE: 750,    // 10 seconds (1.0+ ppg under)
+    
     // Mud Loss Constants
     MUD_COST_PER_BBL: 100,
     LCM_COST_PER_10_LB: 10000,
     MW_CHANGE_COST: 5000,
     LCM_MW_INCREASE_RATIO: 30,
     LCM_DECAY_RATE: 0.002,
+    DEFAULT_LOSS_RATE: 150,
     
     // Limits
     MAX_MUD_WEIGHT: 17.0,

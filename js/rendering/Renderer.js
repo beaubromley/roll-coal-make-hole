@@ -5,7 +5,9 @@ class Renderer {
     }
 
     draw(state) {
-        const currentFormation = DrillingMechanics.getFormation(state.depth, state.wellConfig.formations);
+		if (!state || !state.wellConfig) return; // ADD THIS LINE
+    
+		const currentFormation = DrillingMechanics.getFormation(state.depth, state.wellConfig.formations);
         
         this.ctx.fillStyle = currentFormation.color;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);

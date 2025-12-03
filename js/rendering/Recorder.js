@@ -19,7 +19,9 @@ class Recorder {
     }
 
     draw(state) {
-        const width = this.canvas.width;
+		if (!state) return; // ADD THIS LINE
+    
+		const width = this.canvas.width;
         const height = this.canvas.height;
         
         this.ctx.fillStyle = '#0a0a0a';

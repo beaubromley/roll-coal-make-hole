@@ -1,35 +1,40 @@
+// js/ui/SpeechBubble.js
 
 class SpeechBubble {
     static activeBubbles = [];
+    static lastShownTime = {}; // Track last time each event was shown
+    static COOLDOWN_MS = 10000; // 10 seconds cooldown
     
     static messages = {
-        powder: {
-            beforeCasing1: [
-                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's comin' up—don't screw this up, I want to go home today." }
-            ],
-            atCasing1: [
-                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Another trip? Must be time for the engineers to double-check their math." },
-                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Who picked this casing point, the same guy who missed lunch order?" },
-                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If the engineers say this is the spot, we're probably 100 feet off." }
-            ],
-            foxHills: [
-                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Fox Hills ahead! Protect the beloved. Don't lose our mud to it." }
-            ],
-            foxHillsLosses: [
-                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "At this rate, I'm gettin' my bonus. Keep it up!" }
-            ],
-            teapot: [
-                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Teapot coming up. Don't boil my mud, cowboy." }
-            ],
-            teapotLosses: [
-                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Teapot's leaking more than my ol' man at night." }
-            ],
-            parkman: [
-                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Parkman ahead. If we lose more mud, I'm buying a boat." }
-            ],
-            parkmanLosses: [
-                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Parkman's drinking mud like it's happy hour." }
-            ],
+		powder: {
+			beforeCasing1: [
+				{ speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's comin' up—don't screw this up." }
+			],
+			atCasing1: [
+				{ speaker: "BLM Inspector", portrait: "portrait-inspector.png", message: "I'll be watching your cement job!" },
+				{ speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Who picked this casing point?" }
+			],
+			foxHills: [
+				{ speaker: "BLM Inspector", portrait: "portrait-inspector.png", message: "Fox Hills ahead! Protect the beloved." }
+			],
+			foxHillsLosses: [
+				{ speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "At this rate, I'm gettin' my bonus. Keep it up!" }
+			],
+			teapot: [
+				{ speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Teapot coming up. Don't boil my mud, cowboy." }
+			],
+			teapotLosses: [
+				{ speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Teapot's leaking more than my ol' man at night." }
+			],
+			parkman: [
+				{ speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Parkman ahead. If we lose more mud, I'm buying a boat." }
+			],
+			parkmanLosses: [
+				{ speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Parkman's drinking mud like it's happy hour." }
+			],
+			motivation: [
+				{ speaker: "Manager", portrait: "portrait-manager.png", message: "YOU PLAY TO WIN." }
+			],
             beforeCasing2: [
                 { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Get ready for casing. Don't make me call the office." }
             ],
@@ -58,7 +63,7 @@ class SpeechBubble {
                 { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "This 9-5/8\" is praying we don't see Dakota flows." }
             ],
             kibbey: [
-                { speaker: "Mud Logger", portrait: "portrait-geophysicist.png", message: "Kibbey formation! Bits go in, paper weights come out." }
+                { speaker: "Mud Logger", portrait: "portrait-mudlogger.png", message: "Kibbey formation! Bits go in, paper weights come out." }
             ],
             missionLosses: [
                 { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Mission Canyon's thirsty. I'm sending the invoice." }
@@ -70,7 +75,7 @@ class SpeechBubble {
                 { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Toolface is floppin' more than a pancake at IHOP." }
             ],
             beforeCasing2: [
-                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's near. Don't mess up, or you're buying lunch." }
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's near. Don't mess up." }
             ],
             atCasing2: [
                 { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Engineers said set casing here, so get ready to move it tomorrow." }
@@ -82,17 +87,16 @@ class SpeechBubble {
                 { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Almost at TD. Don't let the bit die now!" }
             ],
             atTD: [
-                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Engineers picked this point? Guess we're tripping for exercise again." }
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Good well, men." }
             ]
         },
         
         eagleford: {
             beforeCasing1: [
-                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's coming up. Don't make me call Austin." }
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's coming up." }
             ],
-            atCasing1: [
-                { speaker: "Engineer", portrait: "portrait-engineer.png", message: "Congrats on a new surface hole record!" },
-                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If this isn't the right spot, I'm sending the engineers downhole next." }
+            surfaceRecord: [
+                { speaker: "Engineer", portrait: "portrait-engineer.png", message: "Congrats on a new surface hole record!" }
             ],
             wilcox: [
                 { speaker: "Geophysicist", portrait: "portrait-geophysicist.png", message: "Don't get flexed on by that flexure." }
@@ -104,7 +108,7 @@ class SpeechBubble {
                 { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Long curve ahead. Can I kick off early, or you wanna risk it?" }
             ],
             slideFaster: [
-                { speaker: "Engineering Manager", portrait: "portrait-engineer.png", message: "Slide faster!" }
+                { speaker: "Engineering Manager", portrait: "portrait-manager.png", message: "Slide faster..." }
             ],
             slideInitiated: [],
             beforeTD: [
@@ -123,43 +127,40 @@ class SpeechBubble {
                 { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Tight curve ahead. Can I kick off early, or you wanna steer?" }
             ],
             beforeCasing2: [
-                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's near. Don't mess up, or you're buying dinner." }
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's near. Don't mess up." }
             ],
             atCasing2: [
-                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If the engineers say this is the spot, we're probably 100 feet off." },
-                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If we miss this, can we blame the office guys?" }
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "We used to set into the curve with those other guys." }
             ],
             beforeTD: [
-                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Almost at TD. Can't stop, won't stop." }
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "RCMH, almost at TD!" }
             ],
             atTD: [
-                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Engineers picked this point? Guess we're tripping for exercise again." }
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Good well!" }
             ]
         },
         
         delaware: {
             beforeCasing1: [
-                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's coming up. Don't make me call Midland." }
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's coming up." }
             ],
             atCasing1: [
-                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Engineers said set casing here, so get ready to move it tomorrow." },
-                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "I trust the engineers… about as far as I can throw a drill collar." }
+                { speaker: "BLM Inspector", portrait: "portrait-inspector.png", message: "Yesss... the Rustler. My work here is done." }
             ],
             curveStart: [
                 { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Deep curve coming up. Can I kick off early, or you wanna steer?" }
             ],
             beforeCasing2: [
-                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's near. Don't mess up, or you're buying breakfast." }
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's near. Hope this is deep enough." }
             ],
             atCasing2: [
-                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If this isn't the right spot, I'm sending the engineers downhole next." },
-                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Engineers picked this point? Guess we're tripping for exercise again." }
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If this isn't the right spot, I'm sending the engineers downhole next." }
             ],
             beforeTD: [
                 { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Almost at TD. Don't dull the bit now!" }
             ],
             atTD: [
-                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If we miss this, can we blame the office guys?" }
+                { speaker: "Engineer", portrait: "portrait-engineer.png", message: "I'm gonna have to update this WCDM." }
             ]
         },
         
@@ -179,21 +180,26 @@ class SpeechBubble {
             { depth: 799, speaker: "President", portrait: "portrait-president.png", message: "Mission accomplished. Godspeed, gentlemen." }
         ],
         
-        general: {
-            bitDull: [
-                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If you make this bit last 2 more hours, my relief said he'd love to trip it." }
-            ],
-            bitTrip: [
-                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If I trip one more time, I'm moving to IT." },
-                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Can't make hole off bottom!" }
-            ],
+		general: {
+			bitDull: [
+				{ speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If you make this bit last 2 more hours, my relief said he'd love to trip it." }
+			],
+			bitTrip: [
+				{ speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If I trip one more time, I'm moving to IT." },
+				{ speaker: "Company Man", portrait: "portrait-companyman.png", message: "Can't make hole off bottom!" }
+			],
+			deviationWarning: [
+				{ speaker: "Well Planner", portrait: "portrait-wellplanner.png", message: "Are you even paying attention to my directional plan?" }
+			],
             motorWeak: [
                 { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Motor's gettin' weak, can't hold toolface worth a dang." },
                 { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Motor's got less grip than a greased pig." }
             ],
             slideInitiated: [
                 { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Another slide? I can't pause Call of Duty online!" },
-                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Slide again? I'm gonna need a new wrist." }
+                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Slide again? I'm gonna need a new wrist." },
+				{ speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Again? I was taking a nap!" },
+				{ speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Why don't you try AutoSlide. I'm done." }
             ],
             lossesModerate: [
                 { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "At this rate, I'm gettin' my bonus. Keep it up!" }
@@ -205,15 +211,38 @@ class SpeechBubble {
                 { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Gas! Don't make me call the incident command." }
             ],
             beforeCasing: [
-                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's coming up. Don't mess up, or you're buying lunch." }
+                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's coming up. Get those CVD crews out." }
             ],
             atTD: [
                 { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "TD! Y'all paying bonuses yet?" }
+            ],
+            // ============================================================================
+            // INSTABILITY WARNINGS (severity-based)
+            // ============================================================================
+            instabilityMinor: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "I'm seeing some shale slivers at the shakers." }
+            ],
+            instabilityModerate: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "We have some chunky shale coming across. I'll grab some samples." }
+            ],
+            instabilitySevere: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "HEY MAN, THERE ARE FULL SKOAL CANS AT THE SHAKERS!" }
             ]
         }
     };
 
     static show(wellType, eventType, customData = null) {
+        // Check cooldown
+        const cooldownKey = `${wellType}_${eventType}`;
+        const now = Date.now();
+        
+        if (this.lastShownTime[cooldownKey]) {
+            const timeSinceLastShown = now - this.lastShownTime[cooldownKey];
+            if (timeSinceLastShown < this.COOLDOWN_MS) {
+                return; // Still in cooldown, don't show
+            }
+        }
+        
         let messageData;
         
         if (wellType === 'armageddon') {
@@ -238,6 +267,9 @@ class SpeechBubble {
         }
         
         if (!messageData) return;
+        
+        // Update last shown time
+        this.lastShownTime[cooldownKey] = now;
         
         this.createBubble(messageData);
     }

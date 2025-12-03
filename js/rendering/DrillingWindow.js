@@ -7,7 +7,9 @@ class DrillingWindow {
     }
 
     draw(state) {
-        // Clear
+		if (!state || !state.wellConfig) return; // ADD THIS LINE
+    
+		// Clear
         this.ctx.fillStyle = '#0a0a0a';
         this.ctx.fillRect(0, 0, this.width, this.height);
 

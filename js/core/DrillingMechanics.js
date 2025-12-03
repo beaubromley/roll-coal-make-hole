@@ -1,3 +1,5 @@
+// js/core/DrillingMechanics.js
+
 class DrillingMechanics {
     static getFormation(depth, formations) {
         for (let f of formations) {
@@ -192,5 +194,80 @@ class DrillingMechanics {
     static isKickControlled(mudWeight, kickZone) {
         if (!kickZone) return true;
         return mudWeight >= kickZone.minMW;
+    }
+
+    // ============================================================================
+    // INSTABILITY SYSTEM
+    // ============================================================================
+
+    /**
+     * Check if current depth is in an instability zone
+     * @param {number} depth - Current drilling depth
+     * @param {Object} formation - Current formation object
+     * @returns {Object|null} - Instability zone object or null
+     */
+    static checkInstabilityZone(depth, formation) {
+        if (!formation.instabilityZone) return null;
+        
+        const zone = formation.instabilityZone;
+        if (depth >= zone.start && depth <= zone.end) {
+            return zone;
+        }
+        return null;
+    }
+
+    /**
+     * Check if wellbore is stable (MW is high enough)
+     * @param {number} mudWeight - Current total mud weight (base + LCM + ECD)
+     * @param {Object} instabilityZone - Instability zone object
+     * @returns {boolean} - True if stable, false if unstable
+     */
+    static isWellboreStable(mudWeight, instabilityZone) {
+        if (!instabilityZone) return true;
+        return mudWeight >= instabilityZone.minMW;
+    }
+
+    /**
+     * Calculate how many frames until stuck pipe based on MW deficit
+     * @param {number} mudWeight - Current total mud weight
+     * @param {Object} instabilityZone - Instability zone object
+     * @returns {number} - Frames until stuck pipe (0 if stable)
+     */
+    static calculateInstabilityTimer(mudWeight, instabilityZone) {
+        if (!instabilityZone) return 0;
+        
+        const mwDeficit = instabilityZone.minMW - mudWeight;
+        
+        // If stable or over threshold, no timer
+        if (mwDeficit <= 0) return 0;
+        
+        // Determine severity and return appropriate timer
+        if (mwDeficit >= 1.0) {
+            // Severe: 1.0+ ppg under = 10 seconds
+            return CONSTANTS.INSTABILITY_TIME_SEVERE;
+        } else if (mwDeficit >= 0.5) {
+            // Moderate: 0.5+ ppg under = 30 seconds
+            return CONSTANTS.INSTABILITY_TIME_MODERATE;
+        } else {
+            // Minor: 0.1-0.5 ppg under = 2 minutes
+            return CONSTANTS.INSTABILITY_TIME_MINOR;
+        }
+    }
+
+    /**
+     * Get instability severity level for UI display
+     * @param {number} mudWeight - Current total mud weight
+     * @param {Object} instabilityZone - Instability zone object
+     * @returns {string} - 'none', 'minor', 'moderate', or 'severe'
+     */
+    static getInstabilitySeverity(mudWeight, instabilityZone) {
+        if (!instabilityZone) return 'none';
+        
+        const mwDeficit = instabilityZone.minMW - mudWeight;
+        
+        if (mwDeficit <= 0) return 'none';
+        if (mwDeficit >= 1.0) return 'severe';
+        if (mwDeficit >= 0.5) return 'moderate';
+        return 'minor';
     }
 }

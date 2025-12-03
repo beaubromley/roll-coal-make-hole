@@ -6,6 +6,60 @@ All notable changes to Roll Coal Make Hole will be documented in this file.
 
 
 
+\## \[1.3.0] - 2025-12-02
+
+
+
+\### Added
+
+\- \*\*Instability System\*\*: New wellbore collapse mechanic for shale formations
+
+&nbsp; - Three severity levels (minor/moderate/severe) based on MW deficit
+
+&nbsp; - Severity-based floorhand warnings with speech bubbles
+
+&nbsp; - Stuck pipe penalty: $1,000,000 and restart from last casing point
+
+&nbsp; - Active in Niobrara, Bakken, Eagle Ford, Meramec, and Wolfcamp formations
+
+\- \*\*Starting Mud Weight System\*\*: Each hole section now has appropriate starting MW
+
+&nbsp; - Automatically adjusts MW when casing is set
+
+&nbsp; - Realistic mud weights for each well's hole sections
+
+\- \*\*Speech Bubble Cooldown\*\*: 10-second cooldown prevents spam messages
+
+\- \*\*Well Planner Warning\*\*: Triggers at 45+ ft deviation from directional plan
+
+\- New Manager portrait and motivational speech bubble at 15,000 ft (Powder River)
+
+\- Engineer speech bubble at 4,600 ft for surface hole record (Eagle Ford)
+
+
+
+\### Changed
+
+\- Extended kick/loss zones to persist across formations until next casing point
+
+\- Improved speech bubble triggering system with better timing
+
+\- Updated all well configurations with comprehensive kick/loss zones
+
+\- All formations now have both kick and loss zones (8.0/15.0 ppg defaults)
+
+
+
+\### Fixed
+
+\- Fixed initialization issues with wellConfig loading
+
+\- Added null checks to renderer draw methods
+
+\- Improved game state initialization
+
+
+
 \## \[1.2.2] - 2025-12-01
 
 
