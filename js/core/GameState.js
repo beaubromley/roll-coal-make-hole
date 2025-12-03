@@ -65,6 +65,7 @@ class GameState {
 		
 		this.logCounter = 0;
 		this.dirtOffset = 0;
+		this.lastLoggedDepth = null;
 		
 		this.currentX = this.wellConfig.targetPath[0].x;
 		
@@ -73,6 +74,12 @@ class GameState {
 		
 		this.slideCount = 0;
 		this.needsTrip = false;
+		
+		this.performanceLog = {
+			depths: [],
+			days: [],
+			costs: []
+		};
 		
 		this.logData = {
 			rop: [],

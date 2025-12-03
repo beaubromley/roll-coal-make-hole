@@ -11,6 +11,9 @@ class GameEngine {
 		this.recorder = new Recorder(recorderCanvas);
 		this.drillingWindow = new DrillingWindow(drillingWindowCanvas);
 		this.setupEventListeners();
+    
+		// Initialize Driller's Console
+		DrillersConsole.init(this);
 		
 		this.lossWarningShown = false;
 		this.lossToastTimer = 0;
@@ -51,10 +54,19 @@ class GameEngine {
         }
     }
 
-    setupEventListeners() {
-        window.addEventListener('keydown', (e) => this.handleKeyDown(e));
-        window.addEventListener('keyup', (e) => this.handleKeyUp(e));
-    }
+	setupEventListeners() {
+		window.addEventListener('keydown', (e) => this.handleKeyDown(e));
+		window.addEventListener('keyup', (e) => this.handleKeyUp(e));
+		
+		// OK button click handler
+		document.getElementById('msg-ok-btn').addEventListener('click', () => {
+			if (this.state && this.state.waitingForAcknowledge) {
+				// Simulate SPACE key press
+				const event = new KeyboardEvent('keydown', { code: 'Space' });
+				this.handleKeyDown(event);
+			}
+		});
+	}
 
     handleKeyDown(e) {
         if (!this.isRunning) return;
@@ -956,11 +968,20 @@ class GameEngine {
             }
         }
         
-        this.state.logCounter++;
-        if (this.state.logCounter >= CONSTANTS.LOG_INTERVAL) {
-            this.recorder.logDataPoint(this.state, rop);
-            this.state.logCounter = 0;
-        }
+		this.state.logCounter++;
+		if (this.state.logCounter >= CONSTANTS.LOG_INTERVAL) {
+			this.recorder.logDataPoint(this.state, rop);
+			
+			// Log performance data for charts (every 10 ft)
+			if (Math.floor(this.state.depth) % 10 === 0) {
+				const currentDays = this.state.gameFrameCount / CONSTANTS.FRAMES_PER_GAME_HOUR / 24;
+				this.state.performanceLog.depths.push(Math.floor(this.state.depth));
+				this.state.performanceLog.days.push(currentDays);
+				this.state.performanceLog.costs.push(this.state.totalCost);
+			}
+			
+			this.state.logCounter = 0;
+		}
         
         if (this.state.drillingMode === 'sliding' && this.state.wob > 0) {
             this.state.slideChangeTimer++;
@@ -977,23 +998,25 @@ class GameEngine {
             
             const ropScale = rop / 100;
             this.state.currentX += this.state.slideDirection * CONSTANTS.SLIDING_STEER_SPEED * ropScale;
-        } else if (this.state.drillingMode === 'rotating') {
-            this.state.rotateDriftTimer++;
-            
-            if (this.state.rotateDriftTimer >= CONSTANTS.ROTATE_DRIFT_CHANGE_INTERVAL * 2) {
-                if (Math.random() < 0.3) {
-                    this.state.formationDriftDirection *= -1;
-                }
-                this.state.rotateDriftTimer = 0;
-            }
-            
-            let driftAmount = DrillingMechanics.calculateFormationDrift(
-                formation, 
-                this.state.formationDriftDirection
-            );
-            
-            this.state.currentX += driftAmount;
-        }
+			} else if (this.state.drillingMode === 'rotating') {
+				this.state.rotateDriftTimer++;
+				
+				if (this.state.rotateDriftTimer >= CONSTANTS.ROTATE_DRIFT_CHANGE_INTERVAL * 2) {
+					if (Math.random() < 0.3) {
+						this.state.formationDriftDirection *= -1;
+					}
+					this.state.rotateDriftTimer = 0;
+				}
+				
+				// Scale drift with ROP (no ROP = no drift)
+				const ropScale = rop / 100;
+				let driftAmount = DrillingMechanics.calculateFormationDrift(
+					formation, 
+					this.state.formationDriftDirection
+				);
+				
+				this.state.currentX += driftAmount * ropScale;
+			}
         
 		let targetX = DrillingMechanics.getTargetPathX(this.state.depth, this.state.wellConfig.targetPath);
 		this.state.currentX = Math.min(800 - 50, Math.max(50, this.state.currentX));
@@ -1047,31 +1070,34 @@ class GameEngine {
 		}
 	}
 
-    draw() {
-        if (!this.isRunning || !this.state) return;
+	draw() {
+		if (!this.isRunning || !this.state) return;
 
-        this.renderer.draw(this.state);
-        this.recorder.draw(this.state);
-        this.drillingWindow.draw(this.state);
-        
-        const formation = DrillingMechanics.getFormation(this.state.depth, this.state.wellConfig.formations);
-        let rop = DrillingMechanics.calculateROP(this.state.wob, formation) * 
-                  DrillingMechanics.calculateMudROPFactor(this.state.mudWeight) *
-                  DrillingMechanics.calculateFlowROPFactor(this.state.flowRate);
-        
-        if (this.state.drillingMode === 'sliding') {
-            rop *= CONSTANTS.SLIDING_ROP_FACTOR;
-        }
-        
-        if (this.state.isInLossZone && this.state.currentLossRate > 0) {
-            const lossROPFactor = 1 - (this.state.currentLossRate / 500);
-            rop *= Math.max(0.1, lossROPFactor);
-        }
-        
-        UIManager.updateDigitalReadouts(this.state, rop);
-        UIManager.updateStats(this.state, formation);
-        UIManager.updateModeIndicator(this.state);
-    }
+		this.renderer.draw(this.state);
+		this.recorder.draw(this.state);
+		this.drillingWindow.draw(this.state);
+		
+		const formation = DrillingMechanics.getFormation(this.state.depth, this.state.wellConfig.formations);
+		let rop = DrillingMechanics.calculateROP(this.state.wob, formation) * 
+				  DrillingMechanics.calculateMudROPFactor(this.state.mudWeight) *
+				  DrillingMechanics.calculateFlowROPFactor(this.state.flowRate);
+		
+		if (this.state.drillingMode === 'sliding') {
+			rop *= CONSTANTS.SLIDING_ROP_FACTOR;
+		}
+		
+		if (this.state.isInLossZone && this.state.currentLossRate > 0) {
+			const lossROPFactor = 1 - (this.state.currentLossRate / 500);
+			rop *= Math.max(0.1, lossROPFactor);
+		}
+		
+		UIManager.updateDigitalReadouts(this.state, rop);
+		UIManager.updateStats(this.state, formation);
+		UIManager.updateModeIndicator(this.state);
+		
+		// Update Driller's Console
+		DrillersConsole.update(this.state); // ADD THIS LINE
+	}
 
     loop() {
         this.update();

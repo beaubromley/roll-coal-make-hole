@@ -258,12 +258,123 @@
             </div>
         </div>
 
+        <!-- Driller's Console (NEW) -->
+		<div id="drillers-console">
+			<div id="console-header">
+				<div id="console-tabs">
+					<button class="console-tab active" data-tab="controls">CONTROLS</button>
+					<button class="console-tab" data-tab="reports">REPORTS</button>
+				</div>
+				<button id="console-minimize-btn">−</button>
+			</div>
+			
+			<!-- Controls Tab -->
+			<div id="console-content" class="console-tab-content active">
+				<div class="console-section">
+					<div class="console-label">DRILLING MODE</div>
+					<div class="console-buttons">
+						<button class="console-btn mode-btn" data-mode="slide-left">
+							<div class="btn-icon">←</div>
+							<div class="btn-label">SLIDE LEFT</div>
+							<div class="btn-key">[A]</div>
+						</button>
+						<button class="console-btn mode-btn" data-mode="rotate">
+							<div class="btn-icon">↻</div>
+							<div class="btn-label">ROTATE</div>
+							<div class="btn-key">[S]</div>
+						</button>
+						<button class="console-btn mode-btn" data-mode="slide-right">
+							<div class="btn-icon">→</div>
+							<div class="btn-label">SLIDE RIGHT</div>
+							<div class="btn-key">[D]</div>
+						</button>
+					</div>
+				</div>
+
+				<div class="console-section">
+					<div class="console-label">WOB: <span id="console-wob-display">0</span> KLBS</div>
+					<div class="console-buttons">
+						<button class="console-btn param-btn" data-param="wob" data-direction="up">
+							<div class="btn-label">WOB ↑</div>
+							<div class="btn-key">[↑]</div>
+						</button>
+						<button class="console-btn param-btn" data-param="wob" data-direction="down">
+							<div class="btn-label">WOB ↓</div>
+							<div class="btn-key">[↓]</div>
+						</button>
+					</div>
+				</div>
+
+				<div class="console-section">
+					<div class="console-label">FLOW: <span id="console-flow-display">550</span> GPM</div>
+					<div class="console-buttons">
+						<button class="console-btn param-btn" data-param="flow" data-direction="up">
+							<div class="btn-label">FLOW ↑</div>
+							<div class="btn-key">[R]</div>
+						</button>
+						<button class="console-btn param-btn" data-param="flow" data-direction="down">
+							<div class="btn-label">FLOW ↓</div>
+							<div class="btn-key">[F]</div>
+						</button>
+					</div>
+				</div>
+
+				<div class="console-section">
+					<div class="console-label">MUD WT: <span id="console-mw-display">10.0</span> PPG</div>
+					<div class="console-buttons">
+						<button class="console-btn param-btn" data-param="mw" data-direction="up">
+							<div class="btn-label">MW ↑</div>
+							<div class="btn-key">[T]</div>
+						</button>
+						<button class="console-btn param-btn" data-param="mw" data-direction="down">
+							<div class="btn-label">MW ↓</div>
+							<div class="btn-key">[G]</div>
+						</button>
+					</div>
+				</div>
+
+				<div class="console-section">
+					<div class="console-label">LCM: <span id="console-lcm-display">0</span> LB/BBL</div>
+					<div class="console-buttons">
+						<button class="console-btn param-btn" data-param="lcm" data-direction="up">
+							<div class="btn-label">LCM ↑</div>
+							<div class="btn-key">[Y]</div>
+						</button>
+						<button class="console-btn param-btn" data-param="lcm" data-direction="down">
+							<div class="btn-label">LCM ↓</div>
+							<div class="btn-key">[H]</div>
+						</button>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Reports Tab -->
+			<div id="console-reports" class="console-tab-content">
+				<div class="reports-container">
+					<div class="report-chart">
+						<div class="chart-title">DEPTH vs TIME</div>
+						<canvas id="chart-depth-days" width="360" height="180"></canvas>
+					</div>
+					<div class="report-chart">
+						<div class="chart-title">DEPTH vs COST</div>
+						<canvas id="chart-depth-cost" width="360" height="180"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Console Maximize Button (when minimized) -->
+		<button id="console-maximize-btn" style="display: none;">
+			DRILLER'S CONSOLE [+]
+		</button>
+		
         <!-- Message Box -->
-        <div id="message">
-            <h2 id="msg-title">ALERT</h2>
-            <p id="msg-detail">...</p>
-            <p id="msg-restart" style="font-size: 14px; margin-top:20px; color:#aaa;">Press ESC to Menu</p>
-        </div>
+		<div id="message">
+			<h2 id="msg-title">ALERT</h2>
+			<p id="msg-detail">...</p>
+			<button id="msg-ok-btn" class="menu-button">OK [SPACE]</button>
+			<p id="msg-restart" style="font-size: 14px; margin-top:20px; color:#aaa;">Press ESC to Menu</p>
+		</div>
 
         <!-- Start Prompt -->
         <div id="start-prompt">
@@ -304,6 +415,7 @@
     <script src="js/rendering/DrillingWindow.js"></script>
     <script src="js/ui/UIManager.js"></script>
     <script src="js/ui/SpeechBubble.js"></script>
+    <script src="js/ui/DrillersConsole.js"></script>
     <script src="js/ui/MenuManager.js"></script>
     <script src="js/core/GameEngine.js"></script>
     <script src="js/main.js"></script>

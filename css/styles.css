@@ -608,17 +608,40 @@ canvas {
 }
 
 #message {
+    display: none;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    text-align: center;
-    display: none;
-    background: rgba(0,0,0,0.95);
+    background: #000;
+    color: #fff;
+    border: 4px solid #76ff03;
     padding: 30px;
-    border: 3px solid white;
-    z-index: 10;
+    text-align: center;
+    z-index: 1000;
+    max-width: 500px;
+    font-family: 'Press Start 2P', monospace;
+    flex-direction: column;
+    align-items: center;
+}
+
+#msg-title {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #76ff03;
+}
+
+#msg-detail {
+    font-size: 12px;
+    line-height: 1.8;
+    white-space: pre-line;
+    margin-bottom: 0;
+}
+
+#msg-restart {
     font-size: 14px;
+    margin-top: 20px;
+    color: #aaa;
 }
 
 #controls {
@@ -807,4 +830,261 @@ canvas {
     color: #fff;
     line-height: 1.6;
     text-shadow: 1px 1px #000;
+}
+
+/* ===========================
+   DRILLER'S CONSOLE
+   =========================== */
+
+#drillers-console {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(10, 10, 10, 0.95);
+    border-top: 3px solid #76ff03;
+    z-index: 100;
+    font-family: 'Press Start 2P', monospace;
+}
+
+#console-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: #1a1a1a;
+    border-bottom: 2px solid #76ff03;
+    font-size: 12px;
+    color: #76ff03;
+}
+
+#console-minimize-btn {
+    background: #333;
+    color: #76ff03;
+    border: 2px solid #76ff03;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 16px;
+    padding: 5px 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#console-minimize-btn:hover {
+    background: #76ff03;
+    color: #000;
+}
+
+#console-maximize-btn {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a1a;
+    color: #76ff03;
+    border: 2px solid #76ff03;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    z-index: 99;
+    transition: all 0.2s;
+}
+
+#console-maximize-btn:hover {
+    background: #76ff03;
+    color: #000;
+}
+
+#console-content {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;  /* CHANGED from 15px */
+    flex-wrap: wrap;
+    gap: 10px;  /* CHANGED from 15px */
+}
+
+.console-section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;  /* CHANGED from 8px */
+    min-width: 140px;
+}
+
+.console-label {
+    font-size: 7px;  /* CHANGED from 8px */
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 3px;  /* CHANGED from 5px */
+}
+
+.console-label span {
+    color: #76ff03;
+    font-weight: bold;
+}
+
+.console-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.console-btn {
+    background: #1a1a1a;
+    border: 2px solid #76ff03;
+    color: #76ff03;
+    font-family: 'Press Start 2P', monospace;
+    padding: 8px;  /* CHANGED from 10px */
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;  /* CHANGED from 5px */
+    min-width: 60px;
+    flex: 1;
+}
+
+.console-btn:hover {
+    background: #76ff03;
+    color: #000;
+    transform: scale(1.05);
+}
+
+.console-btn:active {
+    transform: scale(0.95);
+}
+
+.console-btn.active {
+    background: #76ff03;
+    color: #000;
+    border-color: #fff;
+}
+
+.btn-icon {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.btn-label {
+    font-size: 7px;
+    text-align: center;
+}
+
+.btn-key {
+    font-size: 6px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.console-btn:hover .btn-key {
+    color: #000;
+}
+
+/* Hide bottom stats when console is open */
+#bottom-stats {
+    display: none;
+}
+
+/* Show bottom stats when console is minimized */
+body.console-minimized #bottom-stats {
+    display: flex;
+}
+
+body.console-minimized #drillers-console {
+    display: none;
+}
+
+body.console-minimized #console-maximize-btn {
+    display: block !important;
+}
+
+#msg-ok-btn {
+    margin-top: 20px;
+    padding: 8px 20px;
+    font-size: 8px;
+    background: #76ff03;
+    color: #000;
+    border: 2px solid #fff;
+    font-family: 'Press Start 2P', monospace;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: auto;
+    min-width: 120px;
+}
+
+#msg-ok-btn:hover {
+    background: #fff;
+    color: #000;
+    transform: scale(1.05);
+}
+
+#msg-ok-btn:active {
+    transform: scale(0.95);
+}
+
+/* Console Tabs */
+#console-tabs {
+    display: flex;
+    gap: 10px;
+}
+
+.console-tab {
+    background: #333;
+    color: #76ff03;
+    border: 2px solid #76ff03;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.console-tab:hover {
+    background: #4a4a4a;
+}
+
+.console-tab.active {
+    background: #76ff03;
+    color: #000;
+    border-color: #fff;
+}
+
+.console-tab-content {
+    display: none;
+}
+
+.console-tab-content.active {
+    display: flex;
+}
+
+/* Reports Tab */
+#console-reports {
+    padding: 10px;  /* CHANGED from 15px */
+    justify-content: space-around;
+    gap: 15px;  /* CHANGED from 20px */
+}
+
+.reports-container {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    justify-content: center;
+}
+
+.report-chart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.chart-title {
+    font-size: 8px;
+    color: #76ff03;
+    text-align: center;
+}
+
+#chart-depth-days,
+#chart-depth-cost {
+    background: #1a1a1a;
+    border: 2px solid #4a4a4a;
 }

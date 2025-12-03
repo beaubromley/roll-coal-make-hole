@@ -324,7 +324,7 @@ class SpeechBubble {
 
     static updateBubblePositions() {
         // Stack bubbles from bottom up
-        let currentBottom = 120;
+        let currentBottom = 250;
         
         this.activeBubbles.forEach((bubble, index) => {
             bubble.style.bottom = currentBottom + 'px';

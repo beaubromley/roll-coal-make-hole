@@ -6,6 +6,78 @@ All notable changes to Roll Coal Make Hole will be documented in this file.
 
 
 
+\## \[1.3.1] - 2025-12-03
+
+
+
+\### Added
+
+\- \*\*Driller's Console\*\*: Clickable UI overlay for easier control
+
+  - Click-and-hold support for rapid parameter changes
+
+  - Minimize/maximize functionality
+
+  - Mode buttons: Slide Left, Rotate, Slide Right
+
+  - Parameter controls: WOB, Flow Rate, Mud Weight, LCM
+
+\- \*\*Reports Tab\*\*: Real-time performance charts
+
+  - Depth vs. Time chart (tracking drilling efficiency)
+
+  - Depth vs. Cost chart (tracking cost performance)
+
+  - Charts log data every 10 ft for detailed analysis
+
+\- Clickable OK buttons on all blocking notifications
+
+\- Well Planner speech bubble at 45+ ft deviation
+
+\- Manager motivational speech at 15,000 ft (Powder River)
+
+\- Engineer surface record speech at 4,600 ft (Eagle Ford)
+
+
+
+\### Changed
+
+\- Speech bubbles positioned higher to clear Driller's Console (200px from bottom)
+
+\- Formation drift now scales with ROP (no drift when not making hole)
+
+\- Chart Y-axis inverted (depth increases downward - realistic display)
+
+\- Compact console design for better screen real estate
+
+
+
+\### Improved
+
+\- Speech bubble cooldown system
+
+\- Formation drift now scales with ROP (0 ROP = 0 drift when WOB = 0)
+
+\- Reorganized depth-based speech triggers into dedicated section in update loop
+
+\- Separated formation-based triggers from depth-based triggers
+
+\- Extended kick/loss/instability zones to persist until casing (more realistic)
+
+\- More compact Driller's Console styling
+
+
+
+\### Fixed
+
+\- Speech bubble depth triggers now fire correctly every frame
+
+\- Console UI properly updates in real-time
+
+\- Null checks added to renderer draw methods
+
+
+
 \## \[1.3.0] - 2025-12-02
 
 
@@ -14,19 +86,19 @@ All notable changes to Roll Coal Make Hole will be documented in this file.
 
 \- \*\*Instability System\*\*: New wellbore collapse mechanic for shale formations
 
-&nbsp; - Three severity levels (minor/moderate/severe) based on MW deficit
+  - Three severity levels (minor/moderate/severe) based on MW deficit
 
-&nbsp; - Severity-based floorhand warnings with speech bubbles
+  - Severity-based floorhand warnings with speech bubbles
 
-&nbsp; - Stuck pipe penalty: $1,000,000 and restart from last casing point
+  - Stuck pipe penalty: $1,000,000 and restart from last casing point
 
-&nbsp; - Active in Niobrara, Bakken, Eagle Ford, Meramec, and Wolfcamp formations
+  - Active in Niobrara, Bakken, Eagle Ford, Meramec, and Wolfcamp formations
 
 \- \*\*Starting Mud Weight System\*\*: Each hole section now has appropriate starting MW
 
-&nbsp; - Automatically adjusts MW when casing is set
+  - Automatically adjusts MW when casing is set
 
-&nbsp; - Realistic mud weights for each well's hole sections
+  - Realistic mud weights for each well's hole sections
 
 \- \*\*Speech Bubble Cooldown\*\*: 10-second cooldown prevents spam messages
 

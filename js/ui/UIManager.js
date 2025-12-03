@@ -94,13 +94,26 @@ class UIManager {
         }
     }
 
-    static showMessage(title, detail, color, showRestart = true) {
-        document.getElementById('msg-title').innerText = title;
-        document.getElementById('msg-title').style.color = color;
-        document.getElementById('msg-detail').innerText = detail;
-        document.getElementById('msg-restart').style.display = showRestart ? 'block' : 'none';
-        document.getElementById('message').style.display = 'block';
-    }
+    static showMessage(title, detail, color = '#fff', isGameOver = false) {
+		const msgBox = document.getElementById('message');
+		const msgTitle = document.getElementById('msg-title');
+		const msgDetail = document.getElementById('msg-detail');
+		const msgRestart = document.getElementById('msg-restart');
+		const msgOkBtn = document.getElementById('msg-ok-btn');
+
+		msgTitle.innerText = title;
+		msgTitle.style.color = color;
+		msgDetail.innerText = detail;
+		msgBox.style.display = 'flex';
+
+		if (isGameOver) {
+			msgRestart.style.display = 'block';
+			msgOkBtn.style.display = 'none';
+		} else {
+			msgRestart.style.display = 'none';
+			msgOkBtn.style.display = 'block';
+		}
+	}
 
     static hideMessage() {
         document.getElementById('message').style.display = 'none';
