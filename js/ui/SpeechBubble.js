@@ -95,6 +95,9 @@ class SpeechBubble {
             beforeCasing1: [
                 { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's coming up." }
             ],
+            atCasing1: [
+                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "No NPT yet." }
+			],
             surfaceRecord: [
                 { speaker: "Engineer", portrait: "portrait-engineer.png", message: "Congrats on a new surface hole record!" }
             ],

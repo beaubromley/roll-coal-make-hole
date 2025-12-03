@@ -607,16 +607,101 @@ class GameEngine {
                 return;
             }
         }
+		
+		// ============================================================================
+		// DEPTH-BASED SPEECH TRIGGERS (checked every frame)
+		// ============================================================================
+
+		// Powder River: Curve start at 9400 ft
+		if (this.currentWellType === 'powder' && 
+			this.state.depth >= 9400 && this.state.depth < 9450 && 
+			!this.state.speechTriggered['curveStart']) {
+			this.state.speechTriggered['curveStart'] = true;
+			SpeechBubble.show('powder', 'curveStart');
+		}
+
+		// Powder River: Manager motivation at 15000 ft
+		if (this.currentWellType === 'powder' && 
+			this.state.depth >= 15000 && this.state.depth < 15050 && 
+			!this.state.speechTriggered['motivation']) {
+			this.state.speechTriggered['motivation'] = true;
+			SpeechBubble.show('powder', 'motivation');
+		}
+
+		// Williston: Curve start at 10651 ft
+		if (this.currentWellType === 'williston' && 
+			this.state.depth >= 10651 && this.state.depth < 10700 && 
+			!this.state.speechTriggered['curveStart']) {
+			this.state.speechTriggered['curveStart'] = true;
+			SpeechBubble.show('williston', 'curveStart');
+		}
+
+		// Williston: Geosteering at 17000 ft
+		if (this.currentWellType === 'williston' && 
+			this.state.depth >= 17000 && this.state.depth < 17050 && 
+			!this.state.speechTriggered['geosteering']) {
+			this.state.speechTriggered['geosteering'] = true;
+			SpeechBubble.show('williston', 'geosteering');
+		}
+
+		// Eagle Ford: Surface hole record at 4600 ft
+		if (this.currentWellType === 'eagleford' && 
+			this.state.depth >= 4600 && this.state.depth < 4650 && 
+			!this.state.speechTriggered['surfaceRecord']) {
+			this.state.speechTriggered['surfaceRecord'] = true;
+			SpeechBubble.show('eagleford', 'surfaceRecord');
+		}
+
+		// Eagle Ford: Wilcox at 4800 ft
+		if (this.currentWellType === 'eagleford' && 
+			this.state.depth >= 4800 && this.state.depth < 4850 && 
+			!this.state.speechTriggered['wilcox']) {
+			this.state.speechTriggered['wilcox'] = true;
+			SpeechBubble.show('eagleford', 'wilcox');
+		}
+
+		// Eagle Ford: Midway at 7000 ft
+		if (this.currentWellType === 'eagleford' && 
+			this.state.depth >= 7000 && this.state.depth < 7050 && 
+			!this.state.speechTriggered['midway']) {
+			this.state.speechTriggered['midway'] = true;
+			SpeechBubble.show('eagleford', 'midway');
+		}
+
+		// Eagle Ford: Curve start at 12300 ft
+		if (this.currentWellType === 'eagleford' && 
+			this.state.depth >= 12300 && this.state.depth < 12350 && 
+			!this.state.speechTriggered['curveStart']) {
+			this.state.speechTriggered['curveStart'] = true;
+			SpeechBubble.show('eagleford', 'curveStart');
+		}
+
+		// STACK: Curve start at 9600 ft
+		if (this.currentWellType === 'stack' && 
+			this.state.depth >= 9600 && this.state.depth < 9650 && 
+			!this.state.speechTriggered['curveStart']) {
+			this.state.speechTriggered['curveStart'] = true;
+			SpeechBubble.show('stack', 'curveStart');
+		}
+
+		// Delaware: Curve start at 11400 ft
+		if (this.currentWellType === 'delaware' && 
+			this.state.depth >= 11400 && this.state.depth < 11450 && 
+			!this.state.speechTriggered['curveStart']) {
+			this.state.speechTriggered['curveStart'] = true;
+			SpeechBubble.show('delaware', 'curveStart');
+		}
         
-        if (this.state.depth >= this.state.wellConfig.targetDepth - 200 && 
-            this.state.depth < this.state.wellConfig.targetDepth - 190) {
-            if (!this.state.speechTriggered['beforeTD']) {
-                this.state.speechTriggered['beforeTD'] = true;
-                SpeechBubble.show(this.currentWellType, 'beforeTD');
-            }
-        }
-        
-        if (this.currentWellType === 'armageddon') {
+        // Before TD check (all wells)
+		if (this.state.depth >= this.state.wellConfig.targetDepth - 400 && 
+			this.state.depth < this.state.wellConfig.targetDepth - 390) {
+			if (!this.state.speechTriggered['beforeTD']) {
+				this.state.speechTriggered['beforeTD'] = true;
+				SpeechBubble.show(this.currentWellType, 'beforeTD');
+			}
+		}
+		
+		if (this.currentWellType === 'armageddon') {
             const currentDepth = Math.floor(this.state.depth);
             if (!this.state.armageddonDepthsTriggered.includes(currentDepth)) {
                 this.state.armageddonDepthsTriggered.push(currentDepth);
@@ -937,9 +1022,8 @@ class GameEngine {
     }
 
     checkFormationSpeech(formation) {
-        const depth = this.state.depth;
-        const well = this.currentWellType;
-        
+		const well = this.currentWellType;
+		
 		if (well === 'powder') {
 			if (formation.name === 'Fox Hills' && !this.state.speechTriggered['foxHills']) {
 				this.state.speechTriggered['foxHills'] = true;
@@ -953,68 +1037,15 @@ class GameEngine {
 				this.state.speechTriggered['parkman'] = true;
 				SpeechBubble.show('powder', 'parkman');
 			}
-			if (depth >= 9400 && depth < 9450 && !this.state.speechTriggered['curveStart']) {
-				this.state.speechTriggered['curveStart'] = true;
-				SpeechBubble.show('powder', 'curveStart');
-			}
-			// NEW: Manager motivation at 15000 ft
-			if (depth >= 15000 && depth < 15050 && !this.state.speechTriggered['motivation']) {
-				this.state.speechTriggered['motivation'] = true;
-				SpeechBubble.show('powder', 'motivation');
-			}
-        }
-        
-        if (well === 'williston') {
-            if (formation.name === 'Kibbey' && !this.state.speechTriggered['kibbey']) {
-                this.state.speechTriggered['kibbey'] = true;
-                SpeechBubble.show('williston', 'kibbey');
-            }
-            if (depth >= 10651 && depth < 10700 && !this.state.speechTriggered['curveStart']) {
-                this.state.speechTriggered['curveStart'] = true;
-                SpeechBubble.show('williston', 'curveStart');
-            }
-            if (depth >= 17000 && depth < 17050 && !this.state.speechTriggered['geosteering']) {
-                this.state.speechTriggered['geosteering'] = true;
-                SpeechBubble.show('williston', 'geosteering');
-            }
-        }
-        
-		if (well === 'eagleford') {
-			// NEW: Surface hole record at 4600 ft
-			if (depth >= 4600 && depth < 4650 && !this.state.speechTriggered['surfaceRecord']) {
-				this.state.speechTriggered['surfaceRecord'] = true;
-				SpeechBubble.show('eagleford', 'surfaceRecord');
-			}
-			
-			if (depth >= 4800 && depth < 4850 && !this.state.speechTriggered['wilcox']) {
-				this.state.speechTriggered['wilcox'] = true;
-				SpeechBubble.show('eagleford', 'wilcox');
-			}
-			if (depth >= 7000 && depth < 7050 && !this.state.speechTriggered['midway']) {
-				this.state.speechTriggered['midway'] = true;
-				SpeechBubble.show('eagleford', 'midway');
-			}
-			if (depth >= 12300 && depth < 12350 && !this.state.speechTriggered['curveStart']) {
-				this.state.speechTriggered['curveStart'] = true;
-				SpeechBubble.show('eagleford', 'curveStart');
+		}
+		
+		if (well === 'williston') {
+			if (formation.name === 'Kibbey' && !this.state.speechTriggered['kibbey']) {
+				this.state.speechTriggered['kibbey'] = true;
+				SpeechBubble.show('williston', 'kibbey');
 			}
 		}
-
-        
-        if (well === 'stack') {
-            if (depth >= 9600 && depth < 9650 && !this.state.speechTriggered['curveStart']) {
-                this.state.speechTriggered['curveStart'] = true;
-                SpeechBubble.show('stack', 'curveStart');
-            }
-        }
-        
-        if (well === 'delaware') {
-            if (depth >= 11400 && depth < 11450 && !this.state.speechTriggered['curveStart']) {
-                this.state.speechTriggered['curveStart'] = true;
-                SpeechBubble.show('delaware', 'curveStart');
-            }
-        }
-    }
+	}
 
     draw() {
         if (!this.isRunning || !this.state) return;
