@@ -6,8 +6,8 @@ const WELL_CONFIGS = {
         targetDepth: 27500,
         casingPoints: [
             { depth: 1750, name: "Surface Casing", cost: 185000 },
-            { depth: 8575, name: "Intermediate Casing", cost: 450000 },
-            { depth: 27500, name: "Production Casing", cost: 750000 }
+            { depth: 8575, name: "Intermediate Casing", cost: 750000 },
+            { depth: 27500, name: "Production Casing", cost: 900000 }
         ],
         startingMW: [
             { section: 0, depth: 0, mw: 8.5 },           // Surface hole
@@ -59,7 +59,7 @@ const WELL_CONFIGS = {
                 lossZone: { start: 5400, end: 8575, maxMW: 11.0, maxLossRate: 200 }
             },
             { 
-                limit: 5681,
+                limit: 5981,
                 name: "Lewis",
                 color: "#8b7d6b",
                 particle: "#bdb76b",
@@ -133,11 +133,11 @@ const WELL_CONFIGS = {
             { 
                 limit: 9689,
                 name: "Niobrara A",
-                color: "#d3d3d3",
+                color: "#556b2f",
                 particle: "#dcdcdc",
                 hardness: 0.8,
                 abrasiveness: 0.8,
-                driftTendency: 0.5,
+                driftTendency: 0.3,
                 toolfaceFlopFactor: 2.2,
                 kickZone: { start: 8598, end: 27451, minMW: 8.0 },
                 lossZone: { start: 8598, end: 27451, maxMW: 15.0, maxLossRate: 150 },
@@ -146,11 +146,11 @@ const WELL_CONFIGS = {
             { 
                 limit: 27501,
                 name: "Niobrara B Chalk",
-                color: "#f5f5f5",
+                color: "#8b7d6b",
                 particle: "#fffafa",
                 hardness: 0.7,
                 abrasiveness: 0.7,
-                driftTendency: 0.6,
+                driftTendency: 0.2,
                 toolfaceFlopFactor: 2.0,
                 kickZone: { start: 9739, end: 27451, minMW: 8.0 },
                 lossZone: { start: 9739, end: 27451, maxMW: 15.0, maxLossRate: 150 },
@@ -165,8 +165,8 @@ const WELL_CONFIGS = {
         targetDepth: 21500,
         casingPoints: [
             { depth: 2000, name: "Surface Casing", cost: 105000 },
-            { depth: 11000, name: "Intermediate Casing", cost: 450000 },
-            { depth: 21500, name: "Production Casing", cost: 350000 }
+            { depth: 11000, name: "Intermediate Casing", cost: 650000 },
+            { depth: 21500, name: "Production Casing", cost: 650000 }
         ],
         startingMW: [
             { section: 0, depth: 0, mw: 8.5 },           // Surface hole
@@ -186,6 +186,10 @@ const WELL_CONFIGS = {
             { depth: 13000, x: 660 },
             { depth: 15000, x: 700 },
             { depth: 17000, x: 690 },
+            { depth: 17250, x: 600 },
+            { depth: 17500, x: 500 },
+            { depth: 17750, x: 600 },
+            { depth: 18000, x: 690 },
             { depth: 19000, x: 710 },
             { depth: 21500, x: 715 }
         ],
@@ -197,7 +201,7 @@ const WELL_CONFIGS = {
                 particle: "#808080",
                 hardness: 0.2,
                 abrasiveness: 0.3,
-                driftTendency: -0.3,
+                driftTendency: -0.1,
                 toolfaceFlopFactor: 1.3,
                 kickZone: { start: 50, end: 1735, minMW: 8.0 },
                 lossZone: { start: 50, end: 1735, maxMW: 15.0, maxLossRate: 150 }
@@ -209,7 +213,7 @@ const WELL_CONFIGS = {
                 particle: "#98fb98",
                 hardness: 0.3,
                 abrasiveness: 0.6,
-                driftTendency: 0.4,
+                driftTendency: 0.2,
                 toolfaceFlopFactor: 1.8,
                 kickZone: { start: 1835, end: 11000, minMW: 8.0 },
                 lossZone: { start: 1835, end: 11000, maxMW: 15.0, maxLossRate: 150 }
@@ -221,7 +225,7 @@ const WELL_CONFIGS = {
                 particle: "#556b2f",
                 hardness: 0.3,
                 abrasiveness: 0.2,
-                driftTendency: -0.4,
+                driftTendency: -0.2,
                 toolfaceFlopFactor: 2.0,
                 kickZone: { start: 4560, end: 11000, minMW: 8.0 },
                 lossZone: { start: 4560, end: 11000, maxMW: 15.0, maxLossRate: 150 }
@@ -308,7 +312,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.7,
                 toolfaceFlopFactor: 2.5,
                 kickZone: { start: 9160, end: 11000, minMW: 8.0 },
-                lossZone: { start: 8950, end: 11000, maxMW: 11.8, maxLossRate: 300 }
+                lossZone: { start: 8950, end: 11000, maxMW: 10.8, maxLossRate: 300 }
             },
             { 
                 limit: 9743,
@@ -354,7 +358,7 @@ const WELL_CONFIGS = {
                 particle: "#bdb76b",
                 hardness: 1.4,
                 abrasiveness: 1.2,
-                driftTendency: 0.5,
+                driftTendency: 0.3,
                 toolfaceFlopFactor: 2.0,
                 kickZone: { start: 10548, end: 11000, minMW: 8.0 },
                 lossZone: { start: 10548, end: 11000, maxMW: 15.0, maxLossRate: 150 },
@@ -367,7 +371,7 @@ const WELL_CONFIGS = {
                 particle: "#4a4a4a",
                 hardness: 0.5,
                 abrasiveness: 0.5,
-                driftTendency: -0.6,
+                driftTendency: -0.2,
                 toolfaceFlopFactor: 1.7,
                 kickZone: { start: 10600, end: 21451, minMW: 11.5 },
                 lossZone: { start: 10563, end: 21451, maxMW: 15.0, maxLossRate: 150 },
@@ -382,7 +386,7 @@ const WELL_CONFIGS = {
         targetDepth: 19500,
         casingPoints: [
             { depth: 4500, name: "Surface Casing", cost: 215000 },
-            { depth: 19500, name: "Production Casing", cost: 625000 }
+            { depth: 19500, name: "Production Casing", cost: 1325000 }
         ],
         startingMW: [
             { section: 0, depth: 0, mw: 9.0 },           // Surface hole
@@ -390,11 +394,20 @@ const WELL_CONFIGS = {
         ],
         targetPath: [
             { depth: 0,     x: 400 },
-            { depth: 4700,  x: 400 },
-            { depth: 12300, x: 400 },
-            { depth: 12500, x: 410 },
-            { depth: 12700, x: 430 },
-            { depth: 12900, x: 460 },
+            { depth: 3500,  x: 400 },
+            { depth: 4000,  x: 375 },
+            { depth: 4500,  x: 350 },
+            { depth: 5000,  x: 325 },
+            { depth: 5500,  x: 300 },
+            { depth: 6000,  x: 275 },
+            { depth: 6500,  x: 275 },
+            { depth: 7000,  x: 275 },
+            { depth: 7500,  x: 275 },
+            { depth: 8000,  x: 300 },
+            { depth: 12300, x: 325 },
+            { depth: 12500, x: 350 },
+            { depth: 12700, x: 375 },
+            { depth: 12900, x: 400 },
             { depth: 13100, x: 500 },
             { depth: 13400, x: 560 },
             { depth: 13800, x: 620 },
@@ -496,19 +509,19 @@ const WELL_CONFIGS = {
                 lossZone: { start: 9177, end: 19500, maxMW: 15.0, maxLossRate: 150 }
             },
             { 
-                limit: 11911,
+                limit: 12111,
                 name: "Anacacho",
                 color: "#fffaf0",
                 particle: "#faf0e6",
                 hardness: 0.25,
                 abrasiveness: 0.2,
                 driftTendency: -0.4,
-                toolfaceFlopFactor: 3.8,
+                toolfaceFlopFactor: 6.8,
                 kickZone: { start: 10944, end: 19500, minMW: 8.0 },
                 lossZone: { start: 10944, end: 19500, maxMW: 15.0, maxLossRate: 50 }
             },
             { 
-                limit: 12160,
+                limit: 12460,
                 name: "Austin Chalk",
                 color: "#f5f5dc",
                 particle: "#fffacd",
@@ -539,7 +552,7 @@ const WELL_CONFIGS = {
                 particle: "#3a3a3a",
                 hardness: 0.4,
                 abrasiveness: 0.4,
-                driftTendency: -0.5,
+                driftTendency: -0.2,
                 toolfaceFlopFactor: 1.6,
                 kickZone: { start: 13000, end: 14000, minMW: 10.0 },
                 lossZone: { start: 12755, end: 19500, maxMW: 15.0, maxLossRate: 150 },
@@ -550,12 +563,12 @@ const WELL_CONFIGS = {
     },
 
     stack: {
-        name: "STACK Play - Meramec Horizontal",
+        name: "STACK Play - Woodford Horizontal",
         targetDepth: 20500,
         casingPoints: [
             { depth: 1500, name: "Surface Casing", cost: 65000 },
-            { depth: 10000, name: "Intermediate Casing", cost: 500000 },
-            { depth: 20500, name: "Production Casing", cost: 660000 }
+            { depth: 10000, name: "Intermediate Casing", cost: 800000 },
+            { depth: 20500, name: "Production Casing", cost: 1060000 }
         ],
         startingMW: [
             { section: 0, depth: 0, mw: 8.5 },           // Surface hole
@@ -618,7 +631,7 @@ const WELL_CONFIGS = {
                 name: "Brown Dolomite",
                 color: "#8b7355",
                 particle: "#a0826d",
-                hardness: 1.8,
+                hardness: 0.5,
                 abrasiveness: 1.5,
                 driftTendency: 0.4,
                 toolfaceFlopFactor: 1.3,
@@ -784,7 +797,7 @@ const WELL_CONFIGS = {
             },
             { 
                 limit: 11470,
-                name: "Meramec 100",
+                name: "Meramec",
                 color: "#2f4f4f",
                 particle: "#696969",
                 hardness: 0.8,
@@ -810,16 +823,16 @@ const WELL_CONFIGS = {
             },
             { 
                 limit: 20501,
-                name: "Meramec 300",
+                name: "Woodford",
                 color: "#0a0a0a",
                 particle: "#2b2b2b",
                 hardness: 0.6,
                 abrasiveness: 0.7,
-                driftTendency: 0.6,
+                driftTendency: 0.4,
                 toolfaceFlopFactor: 1.8,
                 kickZone: { start: 11997, end: 20451, minMW: 8.0 },
                 lossZone: { start: 11997, end: 20451, maxMW: 15.0, maxLossRate: 150 },
-                instabilityZone: { start: 11997, end: 20451, minMW: 9.0 }
+                instabilityZone: { start: 11997, end: 20451, minMW: 11.5 }
             }
         ],
         normalPressureMW: 11.0
@@ -1102,20 +1115,20 @@ const WELL_CONFIGS = {
             { depth: 0,   x: 400 },
             { depth: 50,  x: 450 },
             { depth: 100, x: 400 },
-            { depth: 150, x: 500 },
-            { depth: 200, x: 350 },
-            { depth: 250, x: 550 },
-            { depth: 300, x: 300 },
-            { depth: 350, x: 600 },
-            { depth: 400, x: 400 },
-            { depth: 450, x: 650 },
-            { depth: 500, x: 350 },
-            { depth: 550, x: 600 },
-            { depth: 600, x: 400 },
-            { depth: 650, x: 550 },
-            { depth: 700, x: 450 },
-            { depth: 750, x: 500 },
-            { depth: 800, x: 400 }
+            { depth: 150, x: 450 },
+            { depth: 200, x: 400 },
+            { depth: 250, x: 450 },
+            { depth: 300, x: 400 },
+            { depth: 350, x: 350 },
+            { depth: 400, x: 300 },
+            { depth: 450, x: 350 },
+            { depth: 500, x: 450 },
+            { depth: 550, x: 400 },
+            { depth: 600, x: 450 },
+            { depth: 650, x: 400 },
+            { depth: 700, x: 350 },
+            { depth: 750, x: 400 },
+            { depth: 800, x: 450 }
         ],
         formations: [
             { 

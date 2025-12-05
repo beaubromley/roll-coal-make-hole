@@ -27,6 +27,7 @@ class GameEngine {
 		this.currentWellType = null;
 		this.kickZoneTriggered = {};
 		this.showTDAfterCasing = false;
+		this.showArmageddonAfterAck = false;
 	}
 
     loadWell(wellType) {
@@ -158,6 +159,15 @@ class GameEngine {
 				return;
 			}
 			
+			// NEW: Handle Armageddon victory transition
+			if (this.showArmageddonAfterAck) {
+				this.showArmageddonAfterAck = false;
+				setTimeout(() => {
+					this.showArmageddonVictory();
+				}, 100);
+				return;
+			}
+			
 			// Handle trip after stuck pipe
 			if (this.state.needsTrip) {
 				this.state.needsTrip = false;
@@ -192,7 +202,7 @@ class GameEngine {
             this.resetSlideTimer();
             this.state.slideCount++;
             
-            if (Math.random() < 0.3) {
+            if (Math.random() < 0.1) {
                 SpeechBubble.show(this.currentWellType, 'slideInitiated');
             }
             
@@ -206,7 +216,7 @@ class GameEngine {
             this.resetSlideTimer();
             this.state.slideCount++;
             
-            if (Math.random() < 0.3) {
+            if (Math.random() < 0.1) {
                 SpeechBubble.show(this.currentWellType, 'slideInitiated');
             }
             
@@ -263,57 +273,67 @@ class GameEngine {
         UIManager.togglePause(false);
     }
 
-    startTrip(reason = 'bit') {
-        this.state.isTripping = true;
-        
-        const tripCost = CONSTANTS.BIT_ASSEMBLY_COST + CONSTANTS.MOTOR_COST;
-        this.state.totalCost += tripCost;
-        
-        const actualTripHours = (this.state.depth / CONSTANTS.TRIP_SPEED_FT_PER_HR) * 2;
-        const gameplayTripFrames = (actualTripHours * CONSTANTS.FRAMES_PER_GAME_HOUR) / CONSTANTS.TRIP_SPEED_MULTIPLIER;
-        this.state.tripTimeRemaining = gameplayTripFrames;
-        
-        document.getElementById('statusDisplay').innerText = "TRIPPING";
-        
-        SpeechBubble.show(this.currentWellType, 'bitTrip');
-        
-        let title = reason === 'motor' ? "MOTOR FAILURE" : "BIT FAILURE";
-        let detail = `${reason === 'motor' ? 'Motor' : 'Bit'} failure at ${Math.floor(this.state.depth).toLocaleString()} ft.\n` +
-                    `Cost: $${CONSTANTS.BIT_ASSEMBLY_COST.toLocaleString()} bit + $${CONSTANTS.MOTOR_COST.toLocaleString()} motor\n` +
-                    `Trip time: ${actualTripHours.toFixed(1)} hours\n\n` +
-                    `Press SPACE when trip complete to continue`;
-        
-        this.state.waitingForAcknowledge = true;
-        this.state.isPaused = true;
-        
-        UIManager.showMessage(title, detail, '#f44336', false);
-    }
+	startTrip(reason = 'bit') {
+		this.state.isTripping = true;
+		this.state.tripReason = reason;  // Store reason for later
+		
+		const tripCost = CONSTANTS.BIT_ASSEMBLY_COST + CONSTANTS.MOTOR_COST;
+		this.state.totalCost += tripCost;
+		
+		const actualTripHours = (this.state.depth / CONSTANTS.TRIP_SPEED_FT_PER_HR) * 2;
+		const gameplayTripFrames = (actualTripHours * CONSTANTS.FRAMES_PER_GAME_HOUR) / CONSTANTS.TRIP_SPEED_MULTIPLIER;
+		this.state.tripTimeRemaining = gameplayTripFrames;
+		
+		// ADD ACTUAL TRIP TIME TO GAME CLOCK
+		const actualTripFrames = actualTripHours * CONSTANTS.FRAMES_PER_GAME_HOUR;
+		this.state.gameFrameCount += actualTripFrames;
+		
+		document.getElementById('statusDisplay').innerText = "TRIPPING";
+		
+		SpeechBubble.show(this.currentWellType, 'bitTrip');
+		
+		// SHOW FAILURE MESSAGE
+		this.state.waitingForAcknowledge = true;
+		this.state.isPaused = true;
+		
+		let title = reason === 'motor' ? "MOTOR FAILURE" : (reason === 'stuck' ? "STUCK PIPE" : "BIT FAILURE");
+		let failureType = reason === 'motor' ? 'Motor' : (reason === 'stuck' ? 'Stuck pipe' : 'Bit');
+		let detail = `${failureType} failure at ${Math.floor(this.state.depth).toLocaleString()} ft\n\n` +
+					`Trip cost: $${tripCost.toLocaleString()}\n` +
+					`Trip time: ${actualTripHours.toFixed(1)} hours\n\n` +
+					`Press SPACE to begin trip`;
+		
+		UIManager.showMessage(title, detail, '#f44336', false);
+	}
 
-    handleKickEvent(kickZone) {
-        this.state.isKickActive = true;
-        this.state.waitingForAcknowledge = true;
-        this.state.isPaused = true;
-        
-        SpeechBubble.show(this.currentWellType, 'gasDetected');
-        
-        const kickDurationHours = (this.state.depth / 1000) * CONSTANTS.KICK_TIME_PER_1000FT;
-        this.state.kickControlTimeRemaining = kickDurationHours * CONSTANTS.FRAMES_PER_GAME_HOUR;
-        
-        const kickCostPenalty = (kickDurationHours / 24) * CONSTANTS.SPREAD_RATE_PER_DAY;
-        this.state.totalCost += kickCostPenalty;
 
-        UIManager.showMessage(
-            "KICK DETECTED!",
-            `Kick at ${Math.floor(this.state.depth).toLocaleString()} ft!\n\n` +
-            `Calculated Kill Weight: ${kickZone.minMW.toFixed(1)} ppg\n` +
-            `Current MW (with ECD): ${this.state.mudWeight.toFixed(1)} ppg\n\n` +
-            `Control time: ${kickDurationHours.toFixed(1)} hours\n` +
-            `Cost: $${kickCostPenalty.toLocaleString('en-US', { maximumFractionDigits: 0 })}\n\n` +
-            `Adjust MW [T/G] or Flow [R/F], then press SPACE`,
-            '#ff1744',
-            false
-        );
-    }
+	handleKickEvent(kickZone) {
+		this.state.isKickActive = true;
+		this.state.waitingForAcknowledge = true;
+		this.state.isPaused = true;
+		
+		SpeechBubble.show(this.currentWellType, 'gasDetected');
+		
+		const kickDurationHours = (this.state.depth / 1000) * CONSTANTS.KICK_TIME_PER_1000FT;
+		this.state.kickControlTimeRemaining = kickDurationHours * CONSTANTS.FRAMES_PER_GAME_HOUR;
+		
+		const kickCostPenalty = (kickDurationHours / 24) * CONSTANTS.SPREAD_RATE_PER_DAY;
+		this.state.totalCost += kickCostPenalty;
+
+		UIManager.showMessage(
+			"KICK DETECTED!",
+			`Gas kick at ${Math.floor(this.state.depth).toLocaleString()} ft!\n\n` +
+			`Kill Weight Required: ${kickZone.minMW.toFixed(1)} ppg\n` +
+			`Current MW (with ECD): ${this.state.mudWeight.toFixed(1)} ppg\n\n` +
+			`YOU MUST INCREASE MUD WEIGHT TO PROCEED\n` +
+			`Use [T] to raise MW or [R] to raise Flow\n\n` +
+			`Control time: ${kickDurationHours.toFixed(1)} hours\n` +
+			`Cost: $${kickCostPenalty.toLocaleString('en-US', { maximumFractionDigits: 0 })}\n\n` +
+			`Press SPACE when MW is high enough`,
+			'#ff1744',
+			false
+		);
+	}
 
     handleLossEvent(lossZone) {
         if (!this.lossWarningShown) {
@@ -348,28 +368,34 @@ class GameEngine {
         );
     }
 
-    handleMotorStall() {
-        if (!this.state.isMotorStalled) {
-            this.state.isMotorStalled = true;
-            this.state.motorStallStartDepth = this.state.depth;
-            this.state.motorSpikeCount++;
-            this.state.wob = 0;
-            this.state.waitingForAcknowledge = true;
-            this.state.isPaused = true;
-            
-            UIManager.showMessage(
-                "MOTOR STALLED!",
-                `Motor stalled at ${Math.floor(this.state.depth).toLocaleString()} ft\n\n` +
-                `Current DP: ${Math.floor(this.state.diffPressure)} psi\n` +
-                `Stall Threshold: ${Math.floor(CONSTANTS.MOTOR_STALL_DP / DrillingMechanics.calculateFlowStallFactor(this.state.flowRate))} psi\n` +
-                `WOB reset to 0 klbs\n\n` +
-                `Reduce WOB or increase Flow [R]\n` +
-                `Then press SPACE to continue drilling`,
-                '#ff0000',
-                false
-            );
-        }
-    }
+	handleMotorStall() {
+		if (!this.state.isMotorStalled) {
+			this.state.isMotorStalled = true;
+			this.state.motorStallStartDepth = this.state.depth;
+			this.state.motorSpikeCount++;
+			this.state.wob = 0;
+			
+			// ADD MOTOR HEALTH DAMAGE FROM STALL
+			const stallDamage = Math.floor(Math.random() * 11) + 10; // 10-20% damage
+			this.state.motorHealth = Math.max(0, this.state.motorHealth - stallDamage);
+			
+			this.state.waitingForAcknowledge = true;
+			this.state.isPaused = true;
+			
+			UIManager.showMessage(
+				"MOTOR STALLED!",
+				`Motor stalled at ${Math.floor(this.state.depth).toLocaleString()} ft\n\n` +
+				`Current DP: ${Math.floor(this.state.diffPressure)} psi\n` +
+				`Stall Threshold: ${Math.floor(CONSTANTS.MOTOR_STALL_DP / DrillingMechanics.calculateFlowStallFactor(this.state.flowRate))} psi\n` +
+				`Motor Damage: -${stallDamage}%\n` +
+				`WOB reset to 0 klbs\n\n` +
+				`Reduce WOB or increase Flow [R]\n` +
+				`Then press SPACE to continue drilling`,
+				'#ff0000',
+				false
+			);
+		}
+	}
 
 	handleStuckPipe(instabilityZone) {
 		this.state.waitingForAcknowledge = true;
@@ -378,6 +404,12 @@ class GameEngine {
 		
 		// Apply penalty
 		this.state.totalCost += CONSTANTS.STUCK_PIPE_COST;
+		
+		// ADD TIME PENALTY: 3 days
+		const stuckDays = 3;
+		const stuckHours = stuckDays * 24;
+		const stuckFrames = stuckHours * CONSTANTS.FRAMES_PER_GAME_HOUR;
+		this.state.gameFrameCount += stuckFrames;
 		
 		// Destroy bit and motor
 		this.state.bitHealth = 0;
@@ -399,7 +431,8 @@ class GameEngine {
 			`MW too low: ${this.state.mudWeight.toFixed(1)} ppg\n` +
 			`Required: ${instabilityZone.minMW.toFixed(1)} ppg\n\n` +
 			`Penalty: $${CONSTANTS.STUCK_PIPE_COST.toLocaleString()}\n` +
-			`Lost: ${depthLost.toLocaleString()} ft\n` +
+			`Time Lost: ${stuckDays} days\n` +
+			`Depth Lost: ${depthLost.toLocaleString()} ft\n` +
 			`Restart from: ${restartDepth.toLocaleString()} ft\n\n` +
 			`Press SPACE to trip and restart drilling`,
 			'#ff0000',
@@ -420,6 +453,7 @@ class GameEngine {
 		this.state.needsTrip = true;
 	}
 
+
 	handleCasingPoint(casingPoint) {
 		this.state.casingPointsReached.push(casingPoint.depth);
 		
@@ -433,6 +467,18 @@ class GameEngine {
 		this.state.spikeMultiplier = 1.0;
 		
 		this.state.totalCost += casingPoint.cost;
+    
+		// ADD TIME PENALTY: 2 hours per 1000 ft of depth
+		const casingHours = (casingPoint.depth / 1000) * 2;
+		const casingFrames = casingHours * CONSTANTS.FRAMES_PER_GAME_HOUR;
+		this.state.gameFrameCount += casingFrames;
+		
+		// LOG DATA POINT AFTER CASING
+		const displayTime = UIManager.getDisplayTime(this.state.gameFrameCount);
+		const currentDays = displayTime.totalHours / 24;
+		this.state.performanceLog.depths.push(Math.floor(this.state.depth));
+		this.state.performanceLog.days.push(currentDays);
+		this.state.performanceLog.costs.push(this.state.totalCost);
 		
 		// SET MUD WEIGHT FOR NEXT SECTION
 		this.state.baseMudWeight = this.state.getStartingMWForSection(casingPoint.depth);
@@ -448,7 +494,8 @@ class GameEngine {
 		UIManager.showMessage(
 			`${casingPoint.name.toUpperCase()} SET`,
 			`Casing set at ${Math.floor(this.state.depth).toLocaleString()} ft\n\n` +
-			`Cost: $${casingPoint.cost.toLocaleString()}\n\n` +
+			`Cost: $${casingPoint.cost.toLocaleString()}\n` +
+			`Time: ${casingHours.toFixed(1)} hours\n\n` +
 			`New bit and motor installed\n` +
 			`Bit Health: 100%\n` +
 			`Motor Health: 100%\n` +
@@ -460,85 +507,161 @@ class GameEngine {
 	}
 
 
-    endGame(win) {
-        this.state.isGameOver = true;
-        
-        if (win) {
-            if (this.state.wellConfig.casingPoints) {
-                const prodCasing = this.state.wellConfig.casingPoints.find(c => c.depth === this.state.wellConfig.targetDepth);
-                
-                if (prodCasing && !this.state.casingPointsReached.includes(prodCasing.depth)) {
-                    this.state.casingPointsReached.push(prodCasing.depth);
-                    
-                    this.state.totalCost += prodCasing.cost;
-                    this.state.bitHealth = 100;
-                    this.state.motorHealth = 100;
-                    this.state.motorSpikeCount = 0;
-                    this.state.spikeMultiplier = 1.0;
-                    
-                    this.state.waitingForAcknowledge = true;
-                    this.state.isPaused = true;
-                    
-                    SpeechBubble.show(this.currentWellType, 'atTD');
-                    
-                    UIManager.showMessage(
-                        `${prodCasing.name.toUpperCase()} SET`,
-                        `Casing set at ${Math.floor(this.state.depth).toLocaleString()} ft\n\n` +
-                        `Cost: $${prodCasing.cost.toLocaleString()}\n\n` +
-                        `New bit and motor installed\n` +
-                        `Bit Health: 100%\n` +
-                        `Motor Health: 100%\n\n` +
-                        `Press SPACE to continue`,
-                        '#00bcd4',
-                        false
-                    );
-                    
-                    this.showTDAfterCasing = true;
-                    return;
-                }
-            }
-            
-            const totalHours = Math.floor(this.state.gameFrameCount / CONSTANTS.FRAMES_PER_GAME_HOUR);
-            const days = Math.floor(totalHours / 24);
-            const hours = totalHours % 24;
-            const gameTime = `${days}d ${hours}h`;
-            
-            const finalCost = Math.floor(this.state.totalCost);
-            const totalDepth = this.state.wellConfig.targetDepth;
-            
-            if (MenuManager.checkHighScore(this.currentWellType, finalCost, gameTime)) {
-                MenuManager.showNameEntry(this.currentWellType, finalCost, gameTime, totalDepth);
-            } else {
-                const totalDays = days + (hours / 24);
-                const ftPerDay = Math.floor(totalDepth / totalDays);
-                const costPerFt = Math.floor(finalCost / totalDepth);
-                
-                UIManager.showMessage(
-                    "TD REACHED!",
-                    `Total Depth: ${totalDepth.toLocaleString()} ft\n` +
-                    `Final Cost: $${finalCost.toLocaleString()}\n` +
-                    `Time: ${gameTime}\n` +
-                    `Mud Lost: ${Math.floor(this.state.totalMudLost)} bbls\n\n` +
-                    `Performance:\n` +
-                    `${ftPerDay.toLocaleString()} ft/day\n` +
-                    `$${costPerFt.toLocaleString()}/ft`,
-                    '#76ff03',
-                    true
-                );
-                
-                setTimeout(() => {
-                    MenuManager.returnToStart();
-                }, 5000);
-            }
-        } else {
-            UIManager.showMessage(
-                "CRITICAL FAILURE",
-                `Depth Achieved: ${Math.floor(this.state.depth)} ft\nCost at Failure: $${Math.floor(this.state.totalCost).toLocaleString()}.`,
-                '#f44336',
-                true
-            );
-        }
-    }
+
+
+	endGame(win) {
+		this.state.isGameOver = true;
+		
+		if (win) {
+			if (this.state.wellConfig.casingPoints) {
+				const prodCasing = this.state.wellConfig.casingPoints.find(c => c.depth === this.state.wellConfig.targetDepth);
+				
+				if (prodCasing && !this.state.casingPointsReached.includes(prodCasing.depth)) {
+					this.state.casingPointsReached.push(prodCasing.depth);
+					
+					this.state.totalCost += prodCasing.cost;
+					this.state.bitHealth = 100;
+					this.state.motorHealth = 100;
+					this.state.motorSpikeCount = 0;
+					this.state.spikeMultiplier = 1.0;
+					
+					// ADD TIME PENALTY (moved from handleCasingPoint since this is final casing)
+					const casingHours = (prodCasing.depth / 1000) * 2;
+					const casingFrames = casingHours * CONSTANTS.FRAMES_PER_GAME_HOUR;
+					this.state.gameFrameCount += casingFrames;
+					
+					// LOG FINAL DATA POINT AFTER ADDING CASING COST/TIME
+					const displayTime = UIManager.getDisplayTime(this.state.gameFrameCount);
+					const currentDays = displayTime.totalHours / 24;
+					this.state.performanceLog.depths.push(Math.floor(this.state.depth));
+					this.state.performanceLog.days.push(currentDays);
+					this.state.performanceLog.costs.push(this.state.totalCost);
+					
+					this.state.waitingForAcknowledge = true;
+					this.state.isPaused = true;
+					
+					SpeechBubble.show(this.currentWellType, 'atTD');
+					
+					// Special handling for Armageddon
+					if (this.currentWellType === 'armageddon') {
+						UIManager.showMessage(
+							`BOMB PLANTED`,
+							`Bomb set at 800 ft\n\n` +
+							`Cost: $${prodCasing.cost.toLocaleString()}\n\n` +
+							`Detonation sequence initiated...\n\n` +
+							`Press SPACE to detonate`,
+							'#ff0000',
+							false
+						);
+						
+						this.showArmageddonAfterAck = true;
+						return;
+					}
+					
+					UIManager.showMessage(
+						`${prodCasing.name.toUpperCase()} SET`,
+						`Casing set at ${Math.floor(this.state.depth).toLocaleString()} ft\n\n` +
+						`Cost: $${prodCasing.cost.toLocaleString()}\n\n` +
+						`Rig Released!\n\n` +
+						`Press SPACE to continue`,
+						'#00bcd4',
+						false
+					);
+					
+					this.showTDAfterCasing = true;
+					return;
+				}
+			}
+			
+			// Direct TD reached (no final casing to set) - log here instead
+			const displayTime = UIManager.getDisplayTime(this.state.gameFrameCount);
+			const currentDays = displayTime.totalHours / 24;
+			this.state.performanceLog.depths.push(Math.floor(this.state.depth));
+			this.state.performanceLog.days.push(currentDays);
+			this.state.performanceLog.costs.push(this.state.totalCost);
+
+			if (this.currentWellType === 'armageddon') {
+				this.showArmageddonVictory();
+				return;
+			}
+
+			const gameTime = displayTime.gameTime;
+
+			const finalCost = Math.floor(this.state.totalCost);
+			const totalDepth = this.state.wellConfig.targetDepth;
+			
+			if (MenuManager.checkHighScore(this.currentWellType, finalCost, gameTime)) {
+				MenuManager.showNameEntry(this.currentWellType, finalCost, gameTime, totalDepth);
+			} else {
+				const totalDays = displayTime.days + (displayTime.hours / 24);
+				const ftPerDay = Math.floor(totalDepth / totalDays);
+				const costPerFt = Math.floor(finalCost / totalDepth);
+				
+				UIManager.showMessage(
+					"TD REACHED!",
+					`Total Depth: ${totalDepth.toLocaleString()} ft\n` +
+					`Final Cost: $${finalCost.toLocaleString()}\n` +
+					`Time: ${gameTime}\n` +
+					`Mud Lost: ${Math.floor(this.state.totalMudLost)} bbls\n\n` +
+					`Performance:\n` +
+					`${ftPerDay.toLocaleString()} ft/day\n` +
+					`$${costPerFt.toLocaleString()}/ft`,
+					'#76ff03',
+					true
+				);
+				
+				setTimeout(() => {
+					MenuManager.returnToStart();
+				}, 5000);
+			}
+		} else {
+			UIManager.showMessage(
+				"CRITICAL FAILURE",
+				`Depth Achieved: ${Math.floor(this.state.depth)} ft\nCost at Failure: $${Math.floor(this.state.totalCost).toLocaleString()}.`,
+				'#f44336',
+				true
+			);
+		}
+	}
+
+	
+	showArmageddonVictory() {
+		const victoryScreen = document.getElementById('armageddon-victory-screen');
+		victoryScreen.style.display = 'flex';
+		
+		const handleContinue = () => {
+			victoryScreen.style.display = 'none';
+			
+			// Now show high score entry
+			const displayTime = UIManager.getDisplayTime(this.state.gameFrameCount);
+			const gameTime = displayTime.gameTime;
+			const finalCost = Math.floor(this.state.totalCost);
+			const totalDepth = this.state.wellConfig.targetDepth;
+			
+			if (MenuManager.checkHighScore(this.currentWellType, finalCost, gameTime)) {
+				MenuManager.showNameEntry(this.currentWellType, finalCost, gameTime, totalDepth);
+			} else {
+				MenuManager.returnToStart();
+			}
+			
+			// Remove event listeners
+			continueBtn.removeEventListener('click', handleContinue);
+			victoryScreen.removeEventListener('click', handleContinue);
+			window.removeEventListener('keydown', handleSpaceKey);
+		};
+		
+		const handleSpaceKey = (e) => {
+			if (e.code === 'Space') {
+				handleContinue();
+			}
+		};
+		
+		const continueBtn = document.getElementById('armageddon-continue-btn');
+		continueBtn.addEventListener('click', handleContinue);
+		victoryScreen.addEventListener('click', handleContinue);  // NEW - click anywhere
+		window.addEventListener('keydown', handleSpaceKey);
+	}
+
     update() {
         if (!this.isRunning || !this.state) return;
         if (this.state.isGameOver || !this.state.hasStarted || this.state.isPaused) return;
@@ -562,28 +685,45 @@ class GameEngine {
             this.state.wob = 0;
             this.state.diffPressure = 0;
 
-            if (this.state.tripTimeRemaining <= 0) {
-                this.state.isTripping = false;
-                this.state.tripTimeRemaining = 0;
-                this.state.bitHealth = 100;
-                this.state.motorHealth = 100;
-                this.state.motorSpikeCount = 0;
-                this.state.spikeMultiplier = 1.0;
-                this.state.isMotorStalled = false;
-                
-                this.state.waitingForAcknowledge = true;
-                this.state.isPaused = true;
-                
-                UIManager.showMessage(
-                    "TRIP COMPLETE",
-                    `New bit and motor installed\n\n` +
-                    `Bit Health: 100%\n` +
-                    `Motor Health: 100%\n\n` +
-                    `Press SPACE to acknowledge, then add WOB to continue`,
-                    '#76ff03',
-                    false
-                );
-            }
+			if (this.state.tripTimeRemaining <= 0) {
+				this.state.isTripping = false;
+				this.state.tripTimeRemaining = 0;
+				this.state.bitHealth = 100;
+				this.state.motorHealth = 100;
+				this.state.motorSpikeCount = 0;
+				this.state.spikeMultiplier = 1.0;
+				this.state.isMotorStalled = false;
+
+				// LOG DATA POINT AFTER TRIP
+				const displayTime = UIManager.getDisplayTime(this.state.gameFrameCount);
+				const currentDays = displayTime.totalHours / 24;
+				this.state.performanceLog.depths.push(Math.floor(this.state.depth));
+				this.state.performanceLog.days.push(currentDays);
+				this.state.performanceLog.costs.push(this.state.totalCost);
+				   
+				this.state.waitingForAcknowledge = true;
+				this.state.isPaused = true;
+				
+				let completionDetail = 'New bit and motor installed\n\n';
+				if (this.state.tripReason) {
+					let reasonText = this.state.tripReason === 'motor' ? 'motor failure' : 
+									(this.state.tripReason === 'stuck' ? 'stuck pipe' : 'bit failure');
+					completionDetail = `Trip complete after ${reasonText}\n\n` +
+									  `New bit and motor installed\n\n`;
+				}
+				
+				UIManager.showMessage(
+					"TRIP COMPLETE",
+					completionDetail +
+					`Bit Health: 100%\n` +
+					`Motor Health: 100%\n\n` +
+					`Press SPACE to acknowledge, then add WOB to continue`,
+					'#76ff03',
+					false
+				);
+				
+				this.state.tripReason = null;  // Reset for next trip
+			}
             return;
         }
 
@@ -624,102 +764,26 @@ class GameEngine {
 		// DEPTH-BASED SPEECH TRIGGERS (checked every frame)
 		// ============================================================================
 
-		// Powder River: Curve start at 9400 ft
-		if (this.currentWellType === 'powder' && 
-			this.state.depth >= 9400 && this.state.depth < 9450 && 
-			!this.state.speechTriggered['curveStart']) {
-			this.state.speechTriggered['curveStart'] = true;
-			SpeechBubble.show('powder', 'curveStart');
-		}
+		// Check depth-based triggers (configured in SpeechBubble.js)
+		SpeechBubble.checkDepthTriggers(this.currentWellType, this.state.depth, this.state.speechTriggered);
 
-		// Powder River: Manager motivation at 15000 ft
-		if (this.currentWellType === 'powder' && 
-			this.state.depth >= 15000 && this.state.depth < 15050 && 
-			!this.state.speechTriggered['motivation']) {
-			this.state.speechTriggered['motivation'] = true;
-			SpeechBubble.show('powder', 'motivation');
-		}
-
-		// Williston: Curve start at 10651 ft
-		if (this.currentWellType === 'williston' && 
-			this.state.depth >= 10651 && this.state.depth < 10700 && 
-			!this.state.speechTriggered['curveStart']) {
-			this.state.speechTriggered['curveStart'] = true;
-			SpeechBubble.show('williston', 'curveStart');
-		}
-
-		// Williston: Geosteering at 17000 ft
-		if (this.currentWellType === 'williston' && 
-			this.state.depth >= 17000 && this.state.depth < 17050 && 
-			!this.state.speechTriggered['geosteering']) {
-			this.state.speechTriggered['geosteering'] = true;
-			SpeechBubble.show('williston', 'geosteering');
-		}
-
-		// Eagle Ford: Surface hole record at 4600 ft
-		if (this.currentWellType === 'eagleford' && 
-			this.state.depth >= 4600 && this.state.depth < 4650 && 
-			!this.state.speechTriggered['surfaceRecord']) {
-			this.state.speechTriggered['surfaceRecord'] = true;
-			SpeechBubble.show('eagleford', 'surfaceRecord');
-		}
-
-		// Eagle Ford: Wilcox at 4800 ft
-		if (this.currentWellType === 'eagleford' && 
-			this.state.depth >= 4800 && this.state.depth < 4850 && 
-			!this.state.speechTriggered['wilcox']) {
-			this.state.speechTriggered['wilcox'] = true;
-			SpeechBubble.show('eagleford', 'wilcox');
-		}
-
-		// Eagle Ford: Midway at 7000 ft
-		if (this.currentWellType === 'eagleford' && 
-			this.state.depth >= 7000 && this.state.depth < 7050 && 
-			!this.state.speechTriggered['midway']) {
-			this.state.speechTriggered['midway'] = true;
-			SpeechBubble.show('eagleford', 'midway');
-		}
-
-		// Eagle Ford: Curve start at 12300 ft
-		if (this.currentWellType === 'eagleford' && 
-			this.state.depth >= 12300 && this.state.depth < 12350 && 
-			!this.state.speechTriggered['curveStart']) {
-			this.state.speechTriggered['curveStart'] = true;
-			SpeechBubble.show('eagleford', 'curveStart');
-		}
-
-		// STACK: Curve start at 9600 ft
-		if (this.currentWellType === 'stack' && 
-			this.state.depth >= 9600 && this.state.depth < 9650 && 
-			!this.state.speechTriggered['curveStart']) {
-			this.state.speechTriggered['curveStart'] = true;
-			SpeechBubble.show('stack', 'curveStart');
-		}
-
-		// Delaware: Curve start at 11400 ft
-		if (this.currentWellType === 'delaware' && 
-			this.state.depth >= 11400 && this.state.depth < 11450 && 
-			!this.state.speechTriggered['curveStart']) {
-			this.state.speechTriggered['curveStart'] = true;
-			SpeechBubble.show('delaware', 'curveStart');
-		}
-        
-        // Before TD check (all wells)
-		if (this.state.depth >= this.state.wellConfig.targetDepth - 400 && 
-			this.state.depth < this.state.wellConfig.targetDepth - 390) {
+		// Before TD check (all wells)
+		if (this.state.depth >= this.state.wellConfig.targetDepth - 200 && 
+			this.state.depth < this.state.wellConfig.targetDepth - 190) {
 			if (!this.state.speechTriggered['beforeTD']) {
 				this.state.speechTriggered['beforeTD'] = true;
 				SpeechBubble.show(this.currentWellType, 'beforeTD');
 			}
 		}
-		
+
+		// Armageddon special depth triggers (keep this as-is since it's unique)
 		if (this.currentWellType === 'armageddon') {
-            const currentDepth = Math.floor(this.state.depth);
-            if (!this.state.armageddonDepthsTriggered.includes(currentDepth)) {
-                this.state.armageddonDepthsTriggered.push(currentDepth);
-                SpeechBubble.show('armageddon', null, { depth: currentDepth });
-            }
-        }
+			const currentDepth = Math.floor(this.state.depth);
+			if (!this.state.armageddonDepthsTriggered.includes(currentDepth)) {
+				this.state.armageddonDepthsTriggered.push(currentDepth);
+				SpeechBubble.show('armageddon', null, { depth: currentDepth });
+			}
+		}
         
         const kickZone = DrillingMechanics.checkKickZone(this.state.depth, formation);
         this.state.isInKickZone = kickZone !== null;
@@ -733,6 +797,15 @@ class GameEngine {
                 
                 if (this.state.kickControlTimeRemaining <= 0) {
                     this.state.isKickActive = false;
+					    
+					// LOG DATA POINT AFTER KICK CONTROL
+					// LOG DATA POINT AFTER KICK CONTROL
+					const displayTime = UIManager.getDisplayTime(this.state.gameFrameCount);
+					const currentDays = displayTime.totalHours / 24;
+					this.state.performanceLog.depths.push(Math.floor(this.state.depth));
+					this.state.performanceLog.days.push(currentDays);
+					this.state.performanceLog.costs.push(this.state.totalCost);
+	
                     this.state.waitingForAcknowledge = true;
                     this.state.isPaused = true;
                     
@@ -973,11 +1046,25 @@ class GameEngine {
 			this.recorder.logDataPoint(this.state, rop);
 			
 			// Log performance data for charts (every 10 ft)
-			if (Math.floor(this.state.depth) % 10 === 0) {
-				const currentDays = this.state.gameFrameCount / CONSTANTS.FRAMES_PER_GAME_HOUR / 24;
+			if (Math.floor(this.state.depth) % 10 === 0 && !this.state.lastLoggedDepth) {
+				this.state.lastLoggedDepth = Math.floor(this.state.depth);
+				const displayTime = UIManager.getDisplayTime(this.state.gameFrameCount);
+				const currentDays = displayTime.totalHours / 24;
 				this.state.performanceLog.depths.push(Math.floor(this.state.depth));
 				this.state.performanceLog.days.push(currentDays);
 				this.state.performanceLog.costs.push(this.state.totalCost);
+    
+				console.log('Logged:', {
+					depth: Math.floor(this.state.depth),
+					days: currentDays.toFixed(2),
+					cost: Math.floor(this.state.totalCost)
+				});
+			}
+    
+			// ADD THESE 4 LINES HERE:
+			// Reset flag when we pass to next 10 ft increment
+			if (Math.floor(this.state.depth) % 10 !== 0) {
+				this.state.lastLoggedDepth = null;
 			}
 			
 			this.state.logCounter = 0;
@@ -1001,8 +1088,8 @@ class GameEngine {
 			} else if (this.state.drillingMode === 'rotating') {
 				this.state.rotateDriftTimer++;
 				
-				if (this.state.rotateDriftTimer >= CONSTANTS.ROTATE_DRIFT_CHANGE_INTERVAL * 2) {
-					if (Math.random() < 0.3) {
+				if (this.state.rotateDriftTimer >= CONSTANTS.ROTATE_DRIFT_CHANGE_INTERVAL * 0.5) {
+					if (Math.random() < 0.3) { // ← 50% chance to flip direction
 						this.state.formationDriftDirection *= -1;
 					}
 					this.state.rotateDriftTimer = 0;
@@ -1044,30 +1131,9 @@ class GameEngine {
         if (this.state.dirtOffset < -40) this.state.dirtOffset = 0;
     }
 
-    checkFormationSpeech(formation) {
-		const well = this.currentWellType;
-		
-		if (well === 'powder') {
-			if (formation.name === 'Fox Hills' && !this.state.speechTriggered['foxHills']) {
-				this.state.speechTriggered['foxHills'] = true;
-				SpeechBubble.show('powder', 'foxHills');
-			}
-			if (formation.name === 'Teapot' && !this.state.speechTriggered['teapot']) {
-				this.state.speechTriggered['teapot'] = true;
-				SpeechBubble.show('powder', 'teapot');
-			}
-			if (formation.name === 'Parkman' && !this.state.speechTriggered['parkman']) {
-				this.state.speechTriggered['parkman'] = true;
-				SpeechBubble.show('powder', 'parkman');
-			}
-		}
-		
-		if (well === 'williston') {
-			if (formation.name === 'Kibbey' && !this.state.speechTriggered['kibbey']) {
-				this.state.speechTriggered['kibbey'] = true;
-				SpeechBubble.show('williston', 'kibbey');
-			}
-		}
+	checkFormationSpeech(formation) {
+		// Check formation-based triggers (configured in SpeechBubble.js)
+		SpeechBubble.checkFormationTriggers(this.currentWellType, formation, this.state.speechTriggered);
 	}
 
 	draw() {

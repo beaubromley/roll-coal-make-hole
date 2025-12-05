@@ -88,11 +88,11 @@
                     <div class="well-image">
                         <img src="images/well-stack.png" alt="STACK Play" onerror="this.style.display='none'">
                     </div>
-                    <h3>ANADARKO - MERAMEC</h3>
+                    <h3>ANADARKO - WOODFORD</h3>
                     <div class="well-details">
                         <p><strong>Location:</strong> Oklahoma</p>
                         <p><strong>Target Depth:</strong> 20,500 ft MD</p>
-                        <p><strong>Profile:</strong> 2-Mile Meramec</p>
+                        <p><strong>Profile:</strong> 2-Mile Woodford</p>
                         <p><strong>Challenges:</strong> Intermediate losses, Gas Kicks, and lateral structure.</p>
                         <p><strong>Difficulty:</strong> ★★★★☆</p>
                     </div>
@@ -178,19 +178,49 @@
             <button id="back-to-menu-button" class="menu-button">BACK TO MENU</button>
         </div>
     </div>
+	
+	<!-- Armageddon Victory Screen -->
+	<div id="armageddon-victory-screen">
+		<div id="armageddon-victory-content">
+			<img src="images/armageddon-victory.png" id="armageddon-victory-image" alt="Victory">
+			<div id="armageddon-victory-text">
+				<h1>MISSION ACCOMPLISHED</h1>
+				<p>The world is saved.</p>
+				<p>Thanks to the courage of our brave drillers.</p>
+				<button id="armageddon-continue-btn" class="menu-button">CONTINUE [SPACE]</button>
+			</div>
+		</div>
+	</div>
 
-    <!-- Name Entry Screen -->
-    <div id="name-entry-screen">
-        <div id="name-entry-content">
-            <h2>NEW HIGH SCORE!</h2>
-            <p id="score-details"></p>
-            <div id="name-entry-form">
-                <label for="player-name">ENTER YOUR NAME:</label>
-                <input type="text" id="player-name" maxlength="10" placeholder="DRILLER">
-                <button id="submit-score-button" class="menu-button">SUBMIT</button>
-            </div>
-        </div>
-    </div>
+	<!-- Name Entry Screen -->
+	<div id="name-entry-screen">
+		<div id="name-entry-content">
+			<h2>NEW HIGH SCORE!</h2>
+			<p id="score-details"></p>
+			
+			<!-- Performance Reports -->
+			<div id="final-reports">
+				<div class="final-report-title">FINAL PERFORMANCE</div>
+				<div class="final-reports-container">
+					<div class="report-chart">
+						<div class="chart-title">DEPTH vs TIME</div>
+						<canvas id="chart-final-days" width="320" height="200"></canvas>  <!-- CHANGED from 160 to 200 -->
+					</div>
+					<div class="report-chart">
+						<div class="chart-title">DEPTH vs COST</div>
+						<canvas id="chart-final-cost" width="320" height="200"></canvas>  <!-- CHANGED from 160 to 200 -->
+					</div>
+				</div>
+			</div>
+			
+			<div id="name-entry-form">
+				<label for="player-name">ENTER YOUR NAME:</label>
+				<input type="text" id="player-name" maxlength="10" placeholder="DRILLER">
+				<button id="submit-score-button" class="menu-button">SUBMIT</button>
+			</div>
+		</div>
+	</div>
+
 
     <!-- Game Container -->
     <div id="game-container">
@@ -261,11 +291,11 @@
         <!-- Driller's Console (NEW) -->
 		<div id="drillers-console">
 			<div id="console-header">
-				<div id="console-tabs">
-					<button class="console-tab active" data-tab="controls">CONTROLS</button>
-					<button class="console-tab" data-tab="reports">REPORTS</button>
+				<span>DRILLER'S CONSOLE</span>
+				<div class="console-header-buttons">
+					<button id="console-pause-btn">⏸ PAUSE</button>
+					<button id="console-minimize-btn">−</button>
 				</div>
-				<button id="console-minimize-btn">−</button>
 			</div>
 			
 			<!-- Controls Tab -->
@@ -347,20 +377,6 @@
 					</div>
 				</div>
 			</div>
-			
-			<!-- Reports Tab -->
-			<div id="console-reports" class="console-tab-content">
-				<div class="reports-container">
-					<div class="report-chart">
-						<div class="chart-title">DEPTH vs TIME</div>
-						<canvas id="chart-depth-days" width="360" height="180"></canvas>
-					</div>
-					<div class="report-chart">
-						<div class="chart-title">DEPTH vs COST</div>
-						<canvas id="chart-depth-cost" width="360" height="180"></canvas>
-					</div>
-				</div>
-			</div>
 		</div>
 
 		<!-- Console Maximize Button (when minimized) -->
@@ -382,14 +398,30 @@
             <p style="margin-top: 15px; font-size: 12px;">Press UP ARROW to add WOB and start drilling</p>
         </div>
 
-        <!-- Pause Overlay -->
-        <div id="pause-overlay">
-            <div id="pause-text">
-                ⏸ PAUSED ⏸
-                <div style="font-size: 12px; margin-top: 20px;">Press P to Resume</div>
-                <button id="quit-to-menu-button" class="menu-button" style="margin-top: 30px;">QUIT TO MENU [ESC]</button>
-            </div>
-        </div>
+		<!-- Pause Overlay -->
+		<div id="pause-overlay">
+			<div id="pause-text">
+				⏸ PAUSED ⏸
+				<div style="font-size: 12px; margin-top: 20px;">Press P to Resume</div>
+				
+				<!-- Performance Reports -->
+				<div id="pause-reports">
+					<div class="pause-report-title">PERFORMANCE REPORTS</div>
+					<div class="pause-reports-container">
+						<div class="report-chart">
+							<div class="chart-title">DEPTH vs TIME</div>
+							<canvas id="chart-depth-days" width="360" height="240"></canvas>  <!-- CHANGED from 180 to 240 -->
+						</div>
+						<div class="report-chart">
+							<div class="chart-title">DEPTH vs COST</div>
+							<canvas id="chart-depth-cost" width="360" height="240"></canvas>  <!-- CHANGED from 180 to 240 -->
+						</div>
+					</div>
+				</div>
+				
+				<button id="quit-to-menu-button" class="menu-button" style="margin-top: 30px;">QUIT TO MENU [ESC]</button>
+			</div>
+		</div>
 
         <!-- Deviation Warning -->
         <div id="deviation-warning">

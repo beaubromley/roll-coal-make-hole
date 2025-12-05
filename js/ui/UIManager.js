@@ -29,48 +29,62 @@ class UIManager {
         }
     }
 
-    static updateStats(state, formation) {
-        document.getElementById('costDisplay').innerText = '$' + Math.floor(state.totalCost).toLocaleString();
-        document.getElementById('healthDisplay').innerText = Math.floor(state.bitHealth);
-        document.getElementById('motorHealthDisplay').innerText = Math.floor(state.motorHealth);
-        document.getElementById('motorSpikesDisplay').innerText = state.motorSpikeCount;
-        document.getElementById('formationDisplay').innerText = formation.name.toUpperCase();
-        document.getElementById('kickRiskDisplay').innerText = Math.floor(state.kickRisk) + '%';
-        document.getElementById('lossRateDisplay').innerText = Math.floor(state.currentLossRate);
-        document.getElementById('lcmDisplay').innerText = Math.floor(state.lcmConcentration);
-        document.getElementById('ecdDisplay').innerText = state.ecd.toFixed(1);
-        
-        const slideFtPercent = state.depth > 0 ? (state.totalSlideDepth / state.depth * 100) : 0;
-        
-        document.getElementById('slideFtDisplay').innerText = slideFtPercent.toFixed(1);
+	static updateStats(state, formation) {
+		document.getElementById('costDisplay').innerText = '$' + Math.floor(state.totalCost).toLocaleString();
+		document.getElementById('healthDisplay').innerText = Math.floor(state.bitHealth);
+		document.getElementById('motorHealthDisplay').innerText = Math.floor(state.motorHealth);
+		document.getElementById('motorSpikesDisplay').innerText = state.motorSpikeCount;
+		document.getElementById('formationDisplay').innerText = formation.name.toUpperCase();
+		document.getElementById('kickRiskDisplay').innerText = Math.floor(state.kickRisk) + '%';
+		document.getElementById('lossRateDisplay').innerText = Math.floor(state.currentLossRate);
+		document.getElementById('lcmDisplay').innerText = Math.floor(state.lcmConcentration);
+		document.getElementById('ecdDisplay').innerText = state.ecd.toFixed(1);
+		
+		const slideFtPercent = state.depth > 0 ? (state.totalSlideDepth / state.depth * 100) : 0;
+		
+		document.getElementById('slideFtDisplay').innerText = slideFtPercent.toFixed(1);
 
-        const spikesElement = document.getElementById('motorSpikesDisplay');
-        if (state.motorSpikeCount >= CONSTANTS.MOTOR_MIN_SPIKES_TO_FAIL) {
-            spikesElement.style.color = '#ff1744';
-        } else if (state.motorSpikeCount >= CONSTANTS.MOTOR_MIN_SPIKES_TO_FAIL * 0.7) {
-            spikesElement.style.color = '#ffeb3b';
-        } else {
-            spikesElement.style.color = '#fff';
-        }
-        
-        const lossElement = document.getElementById('lossRateDisplay');
-        if (state.currentLossRate > 200) {
-            lossElement.style.color = '#ff1744';
-        } else if (state.currentLossRate > 100) {
-            lossElement.style.color = '#ffeb3b';
-        } else if (state.currentLossRate > 0) {
-            lossElement.style.color = '#ffa726';
-        } else {
-            lossElement.style.color = '#fff';
-        }
+		const spikesElement = document.getElementById('motorSpikesDisplay');
+		if (state.motorSpikeCount >= CONSTANTS.MOTOR_MIN_SPIKES_TO_FAIL) {
+			spikesElement.style.color = '#ff1744';
+		} else if (state.motorSpikeCount >= CONSTANTS.MOTOR_MIN_SPIKES_TO_FAIL * 0.7) {
+			spikesElement.style.color = '#ffeb3b';
+		} else {
+			spikesElement.style.color = '#fff';
+		}
+		
+		const lossElement = document.getElementById('lossRateDisplay');
+		if (state.currentLossRate > 200) {
+			lossElement.style.color = '#ff1744';
+		} else if (state.currentLossRate > 100) {
+			lossElement.style.color = '#ffeb3b';
+		} else if (state.currentLossRate > 0) {
+			lossElement.style.color = '#ffa726';
+		} else {
+			lossElement.style.color = '#fff';
+		}
 
-        let totalHours = Math.floor(state.gameFrameCount / CONSTANTS.FRAMES_PER_GAME_HOUR);
-        let currentHour = totalHours % 24;
-        let currentDay = Math.floor(totalHours / 24) + 1;
-        let timeStr = (currentHour < 10 ? "0" : "") + currentHour + ":00";
-        document.getElementById('timeDisplay').innerText = `Day ${currentDay} ${timeStr}`;
-    }
+		// REPLACE THESE LINES:
+		// let totalHours = Math.floor(state.gameFrameCount / CONSTANTS.FRAMES_PER_GAME_HOUR);
+		// let currentHour = totalHours % 24;
+		// let currentDay = Math.floor(totalHours / 24) + 1;
+		// let timeStr = (currentHour < 10 ? "0" : "") + currentHour + ":00";
+		// document.getElementById('timeDisplay').innerText = `Day ${currentDay} ${timeStr}`;
+		
+		// WITH THIS:
+		const displayTime = this.getDisplayTime(state.gameFrameCount);
+		const timeStr = (displayTime.hours < 10 ? "0" : "") + displayTime.hours + ":00";
+		document.getElementById('timeDisplay').innerText = `Day ${displayTime.days + 1} ${timeStr}`;
+	}
 
+	static getDisplayTime(gameFrameCount) {
+		const actualHours = gameFrameCount / CONSTANTS.FRAMES_PER_GAME_HOUR;  // REMOVED Math.floor
+		const displayHours = actualHours * CONSTANTS.TIME_DISPLAY_MULTIPLIER;  // REMOVED Math.floor
+		const days = Math.floor(displayHours / 24);
+		const hours = Math.floor(displayHours % 24);  // ADDED Math.floor here
+		return { days, hours, totalHours: displayHours, gameTime: `${days}d ${hours}h` };
+	}
+	
     static updateModeIndicator(state) {
         const indicator = document.getElementById('mode-indicator');
         if (state.isMotorStalled) {
@@ -129,10 +143,21 @@ class UIManager {
         }
     }
 
-    static togglePause(isPaused) {
-        document.getElementById('pause-overlay').style.display = isPaused ? 'flex' : 'none';
-    }
-
+	static togglePause(isPaused) {
+		const pauseOverlay = document.getElementById('pause-overlay');
+		if (isPaused) {
+			pauseOverlay.style.display = 'flex';
+			// Draw charts when pausing - use setTimeout to ensure DOM is ready
+			setTimeout(() => {
+				if (window.game && window.game.state) {
+					DrillersConsole.drawPauseCharts(window.game.state);
+				}
+			}, 100);
+		} else {
+			pauseOverlay.style.display = 'none';
+		}
+	}
+	
     static showToast(message, type = 'default') {
         const toast = document.createElement('div');
         toast.className = 'toast-notification';

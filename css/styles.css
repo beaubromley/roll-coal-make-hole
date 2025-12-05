@@ -423,36 +423,38 @@ body {
 
 #name-entry-content {
     text-align: center;
-    max-width: 500px;
-    padding: 40px;
+    max-width: 700px;  /* CHANGED from 500px to allow side-by-side charts */
+    padding: 30px;  /* CHANGED from 40px */
     background: rgba(0, 0, 0, 0.9);
     border: 4px solid #ffd700;
     box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+    max-height: 90vh;  /* ADD THIS - limits height */
+    overflow-y: auto;  /* ADD THIS - allows scrolling if needed */
 }
 
 #name-entry-content h2 {
-    font-size: 28px;
+    font-size: 24px;  /* CHANGED from 28px */
     color: #ffd700;
-    margin-bottom: 20px;
+    margin-bottom: 15px;  /* CHANGED from 20px */
     text-shadow: 3px 3px #000, 0 0 20px #ffd700;
 }
 
 #score-details {
-    font-size: 11px;
+    font-size: 9px;  /* CHANGED from 11px */
     color: #ccc;
-    margin-bottom: 30px;
-    line-height: 1.8;
+    margin-bottom: 15px;  /* CHANGED from 30px */
+    line-height: 1.6;  /* CHANGED from 1.8 */
     white-space: pre-line;
 }
 
 #name-entry-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;  /* CHANGED from 15px */
 }
 
 #name-entry-form label {
-    font-size: 12px;
+    font-size: 10px;  /* CHANGED from 12px */
     color: #76ff03;
 }
 
@@ -695,9 +697,10 @@ canvas {
     background: rgba(0,0,0,0.8);
     display: none;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;  /* CHANGED from center */
     align-items: center;
     z-index: 15;
+    padding-top: 50px;  /* ADD THIS - pushes content down from top */
 }
 
 #pause-text {
@@ -773,7 +776,6 @@ canvas {
     color: #76ff03;
 }
 
-/* Speech Bubble Styles */
 .speech-bubble {
     position: absolute;
     left: 20px;
@@ -785,10 +787,16 @@ canvas {
     display: flex;
     gap: 15px;
     align-items: flex-start;
-    z-index: 9;
+    z-index: 1001;
     animation: bubbleSlideIn 0.3s ease-out;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-    transition: bottom 0.3s ease-out;
+    transition: bottom 0.3s ease-out, transform 0.2s ease-out;  /* ADD transform transition */
+    cursor: pointer;  /* ADD cursor */
+}
+
+.speech-bubble:hover {
+    transform: scale(1.02);  /* ADD hover effect */
+    border-color: #fff;  /* ADD border highlight */
 }
 
 @keyframes bubbleSlideIn {
@@ -1021,55 +1029,6 @@ body.console-minimized #console-maximize-btn {
     transform: scale(0.95);
 }
 
-/* Console Tabs */
-#console-tabs {
-    display: flex;
-    gap: 10px;
-}
-
-.console-tab {
-    background: #333;
-    color: #76ff03;
-    border: 2px solid #76ff03;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 8px;
-    padding: 8px 15px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.console-tab:hover {
-    background: #4a4a4a;
-}
-
-.console-tab.active {
-    background: #76ff03;
-    color: #000;
-    border-color: #fff;
-}
-
-.console-tab-content {
-    display: none;
-}
-
-.console-tab-content.active {
-    display: flex;
-}
-
-/* Reports Tab */
-#console-reports {
-    padding: 10px;  /* CHANGED from 15px */
-    justify-content: space-around;
-    gap: 15px;  /* CHANGED from 20px */
-}
-
-.reports-container {
-    display: flex;
-    gap: 20px;
-    width: 100%;
-    justify-content: center;
-}
-
 .report-chart {
     display: flex;
     flex-direction: column;
@@ -1088,3 +1047,206 @@ body.console-minimized #console-maximize-btn {
     background: #1a1a1a;
     border: 2px solid #4a4a4a;
 }
+
+/* Pause Screen Reports */
+#pause-reports {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #76ff03;
+}
+
+.pause-report-title {
+    font-size: 10px;
+    color: #76ff03;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.pause-reports-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Final Reports (Name Entry Screen) */
+#final-reports {
+    margin: 15px 0;  /* CHANGED from 20px 0 */
+    padding: 10px;  /* CHANGED from 15px */
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #ffd700;
+}
+
+.final-report-title {
+    font-size: 9px;  /* CHANGED from 10px */
+    color: #ffd700;
+    margin-bottom: 10px;  /* CHANGED from 15px */
+    text-align: center;
+}
+
+.final-reports-container {
+    display: flex;
+    gap: 10px;  /* CHANGED from 15px */
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Chart Styles (shared) */
+.report-chart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.chart-title {
+    font-size: 8px;
+    color: #76ff03;
+    text-align: center;
+}
+
+#chart-depth-days,
+#chart-depth-cost,
+#chart-final-days,
+#chart-final-cost {
+    background: #1a1a1a;
+    border: 2px solid #4a4a4a;
+}
+
+.console-header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+#console-pause-btn {
+    background: #333;
+    color: #76ff03;
+    border: 2px solid #76ff03;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#console-pause-btn:hover {
+    background: #76ff03;
+    color: #000;
+}
+
+#console-pause-btn.paused {
+    background: #ffeb3b;
+    color: #000;
+    border-color: #ffeb3b;
+}
+
+#console-minimize-btn {
+    background: #333;
+    color: #76ff03;
+    border: 2px solid #76ff03;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 16px;
+    padding: 5px 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#console-minimize-btn:hover {
+    background: #76ff03;
+    color: #000;
+}
+
+/* Armageddon Victory Screen */
+#armageddon-victory-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    animation: fadeIn 2s ease-in;
+    overflow: hidden;  /* ADD THIS */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+#armageddon-victory-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;  /* CHANGED from 30px */
+    z-index: 3001;
+    position: relative;
+    max-height: 90vh;  /* ADD THIS - limits to 90% of viewport */
+    justify-content: center;  /* ADD THIS */
+}
+
+#armageddon-victory-image {
+    width: 600px;  /* CHANGED from 800px */
+    height: 600px;  /* CHANGED from 800px */
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    animation: victoryPulse 3s ease-in-out infinite;
+}
+
+@keyframes victoryPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+#armageddon-victory-text {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;  /* CHANGED from 15px */
+    align-items: center;
+}
+
+#armageddon-victory-text h1 {
+    font-size: 32px;  /* CHANGED from 36px */
+    color: #ffd700;
+    text-shadow: 0 0 20px #ffd700, 3px 3px #000;
+    margin: 0;
+    animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+    0%, 100% { text-shadow: 0 0 20px #ffd700, 3px 3px #000; }
+    50% { text-shadow: 0 0 40px #ffd700, 0 0 60px #ff8800, 3px 3px #000; }
+}
+
+#armageddon-victory-text p {
+    font-size: 12px;  /* CHANGED from 14px */
+    color: #fff;
+    margin: 0;
+    text-shadow: 2px 2px #000;
+}
+
+#armageddon-continue-btn {
+    margin-top: 15px;  /* CHANGED from 20px */
+    font-size: 12px;  /* CHANGED from 14px */
+    padding: 12px 30px;  /* CHANGED from 15px 40px */
+    background: #ffd700;
+    color: #000;
+    border: 3px solid #fff;
+    font-family: 'Press Start 2P', monospace;
+    animation: pulse 1.5s infinite;
+    z-index: 3002;
+    position: relative;
+    cursor: pointer;
+}
+
+#armageddon-continue-btn:hover {
+    background: #fff;
+    box-shadow: 0 0 20px #ffd700;
+}
+

@@ -6,6 +6,146 @@ All notable changes to Roll Coal Make Hole will be documented in this file.
 
 
 
+\## \[1.3.2] - 2025-12-05
+
+
+
+\### Added
+
+\- \*\*Driller's Console\*\*: Clickable UI overlay with full drilling controls
+
+&nbsp; - Click-and-hold support for WOB, Flow, MW, and LCM adjustments
+
+&nbsp; - Mode buttons for Slide Left, Rotate, Slide Right with visual feedback
+
+&nbsp; - Pause button integrated into console header
+
+&nbsp; - Minimize/maximize functionality (defaults to open)
+
+&nbsp; - All keyboard shortcuts still functional
+
+\- \*\*Performance Reports\*\*: Real-time charts on pause screen
+
+&nbsp; - Depth vs. Time chart tracking drilling efficiency
+
+&nbsp; - Depth vs. Cost chart monitoring spending trends
+
+&nbsp; - Final reports shown on high score entry screen
+
+&nbsp; - Charts log every 10 ft for detailed tracking
+
+&nbsp; - Inverted Y-axis (depth increases downward - realistic)
+
+&nbsp; - Smart axis labels (show full numbers <1000, then switch to "k" format)
+
+\- \*\*Armageddon Victory Screen\*\*: Epic explosion animation after bomb placement
+
+&nbsp; - Custom 800x800px pixel art victory image
+
+&nbsp; - Click anywhere or press SPACE to continue
+
+&nbsp; - Shows before high score entry
+
+\- \*\*Time Display Multiplier\*\*: Adjustable time acceleration (2.67x default)
+
+&nbsp; - Gameplay feels the same but wells complete in realistic timeframes
+
+&nbsp; - 3 real days = ~8 displayed days
+
+&nbsp; - All stats, charts, and scores show multiplied time
+
+\- Clickable OK buttons on all blocking notifications (SPACE key still works)
+
+\- Click-to-dismiss speech bubbles (also auto-dismiss after duration)
+
+\- Custom speech bubble duration support (Harry's 750 ft speech lasts 10 seconds)
+
+\- Well Planner warning at 45+ ft deviation
+
+\- Manager motivation speech at 15,000 ft (Powder River)
+
+\- Engineer surface record speech at 4,600 ft (Eagle Ford)
+
+\- Additional depth-based speeches for Williston and Eagle Ford wells
+
+\- New portraits: Manager, Well Planner, Supervisor
+
+
+
+\### Changed
+
+\- \*\*Reorganized Speech System\*\*: All triggers now configured in SpeechBubble.js
+
+&nbsp; - Depth-based triggers in `depthTriggers` array
+
+&nbsp; - Formation-based triggers in `formationTriggers` array
+
+&nbsp; - Easy to add new speeches - just add one line to config
+
+&nbsp; - Cleaner GameEngine code
+
+\- Speech bubbles stack at 250px to clear Driller's Console
+
+\- Speech bubble cooldown (10 sec) doesn't apply to Armageddon
+
+\- Formation drift now scales with ROP (0 WOB = 0 drift)
+
+\- Rotary drift direction flips 50% of the time (was 30%)
+
+\- Motor stalls now cause 10-20% motor health damage
+
+\- Time penalties properly added and displayed:
+
+&nbsp; - Trips: Actual trip time added to game clock
+
+&nbsp; - Casing: 2 hours per 1000 ft of depth
+
+&nbsp; - Stuck pipe: 3 days penalty
+
+\- Final production casing message simplified (no bit/motor info)
+
+\- Kick notifications clarify MW must increase to proceed
+
+\- Charts display smooth curves with NPT impacts naturally included
+
+\- More compact UI throughout (Name Entry, Driller's Console)
+
+
+
+\### Fixed
+
+\- Chart data logging consistency (all use display time multiplier)
+
+\- Time no longer "jogs backward" at casing points
+
+\- Performance logging properly tracks after trips, casing, and kicks
+
+\- Trip animations no longer pause immediately (animate first, then pause)
+
+\- Null checks in all renderer draw methods
+
+\- Speech bubble triggers fire correctly for all event types
+
+\- Final data points include production casing costs
+
+
+
+\### Technical
+
+\- Added `TIME\_DISPLAY\_MULTIPLIER` constant (2.67)
+
+\- New `UIManager.getDisplayTime()` helper method
+
+\- New `DrillersConsole.js` module for clickable controls
+
+\- Enhanced `SpeechBubble.js` with trigger config arrays
+
+\- Added `tripReason`, `lastLoggedDepth` to GameState
+
+\- Performance log tracks depths, days, costs separately
+
+
+
 \## \[1.3.1] - 2025-12-03
 
 

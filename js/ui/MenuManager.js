@@ -288,9 +288,14 @@ class MenuManager {
             `${ftPerDay.toLocaleString()} ft/day\n` +
             `$${costPerFt.toLocaleString()}/ft`;
         
-        document.getElementById('name-entry-screen').style.display = 'flex';
-        document.getElementById('player-name').value = '';
-        document.getElementById('player-name').focus();
+		document.getElementById('name-entry-screen').style.display = 'flex';
+		document.getElementById('player-name').value = '';
+		document.getElementById('player-name').focus();
+		
+		// Draw final performance charts
+		if (window.game && window.game.state) {
+			DrillersConsole.drawFinalCharts(window.game.state);
+		}
     }
 
     static submitScore() {
@@ -380,37 +385,37 @@ class MenuManager {
 	static loadHighScores() {
 		const defaultScores = {
 			powder: [
-				{ name: "BASSO, TAYLOR", cost: 1635414, gameTime: "8d 8h", ftPerDay: 2029, costPerFt: 96.52, date: "5/16/2024" },
-				{ name: "BROMLEY, BEAU", cost: 1146834, gameTime: "8d 16h", ftPerDay: 1404, costPerFt: 94.43, date: "9/20/2017" }
+				{ name: "TAYLOR B", cost: 2654300, gameTime: "13d 13h", ftPerDay: 2029, costPerFt: 96.52, date: "5/16/2024" },
+				{ name: "BEAU B", cost: 2596825, gameTime: "19d 14h", ftPerDay: 1404, costPerFt: 94.43, date: "9/20/2017" }
 			],
 			williston: [
-				{ name: "HARCLERODE, BRIAN", cost: 1864168, gameTime: "8d 9h", ftPerDay: 2543, costPerFt: 87.48, date: "9/2/2025" },
-				{ name: "WRIGHT, LACEY", cost: 1902685, gameTime: "9d 10h", ftPerDay: 2238, costPerFt: 90.43, date: "9/23/2025" }
+				{ name: "BRIAN H", cost: 1880820, gameTime: "8d 10h", ftPerDay: 2543, costPerFt: 87.48, date: "9/2/2025" },
+				{ name: "LACEY W", cost: 1944245, gameTime: "9d 14h", ftPerDay: 2238, costPerFt: 90.43, date: "9/23/2025" }
 			],
 			eagleford: [
-				{ name: "WILLIMON, JOHN DAVID", cost: 1971576, gameTime: "4d 22h", ftPerDay: 3117, costPerFt: 128.55, date: "5/31/2025" },
-				{ name: "COLEMAN, LOGAN", cost: 1549819, gameTime: "5d 12h", ftPerDay: 2816, costPerFt: 100.07, date: "10/30/2024" },
-				{ name: "GILBERT, TERRY", cost: 2073725, gameTime: "17d 12h", ftPerDay: 317, costPerFt: 373.24, date: "12/27/2012" }
+				{ name: "JOHN DAVID W", cost: 2506725, gameTime: "6d 6h", ftPerDay: 3117, costPerFt: 128.55, date: "5/31/2025" },
+				{ name: "LOGAN C", cost: 1951365, gameTime: "6d 22h", ftPerDay: 2816, costPerFt: 100.07, date: "10/30/2024" },
+				{ name: "TERRY G", cost: 7278180, gameTime: "61d 12h", ftPerDay: 317, costPerFt: 373.24, date: "12/27/2012" }
 			],
 			stack: [
-				{ name: "BOUZEK, JARED", cost: 1979356, gameTime: "11d 4h", ftPerDay: 1792, costPerFt: 98.87, date: "7/25/2025" },
-				{ name: "GLAZE, GARRETT", cost: 1595705, gameTime: "11d 4h", ftPerDay: 1755, costPerFt: 81.38, date: "9/3/2018" },
-				{ name: "MATALIK, MARK", cost: 791150, gameTime: "11d 10h", ftPerDay: 763, costPerFt: 90.94, date: "5/29/2007" }
+				{ name: "JARED B", cost: 2026835, gameTime: "11d 10h", ftPerDay: 1792, costPerFt: 98.87, date: "7/25/2025" },
+				{ name: "GARRETT G", cost: 1668290, gameTime: "11d 16h", ftPerDay: 1755, costPerFt: 81.38, date: "9/3/2018" },
+				{ name: "MARK M", cost: 1864270, gameTime: "26d 20h", ftPerDay: 763, costPerFt: 90.94, date: "5/29/2007" }
 			],
 			delaware: [
-				{ name: "TURNER, KERRY", cost: 2713413, gameTime: "9d 2h", ftPerDay: 2113, costPerFt: 141.15, date: "8/11/2025" },
-				{ name: "SCHILLING, JOHN", cost: 2364139, gameTime: "9d 3h", ftPerDay: 2065, costPerFt: 125.39, date: "8/28/2024" },
-				{ name: "PORRAZ, ISAC", cost: 3125578, gameTime: "9d 12h", ftPerDay: 2031, costPerFt: 162.03, date: "6/26/2025" },
-				{ name: "MILLIGAN, DALLAS", cost: 1923842, gameTime: "9d 14h", ftPerDay: 1997, costPerFt: 100.34, date: "11/27/2025" },
-				{ name: "WARDHANA, KRISNA", cost: 2070085, gameTime: "10d 8h", ftPerDay: 1812, costPerFt: 110.58, date: "12/28/2023" },
-				{ name: "GRIFFIN, JAMES", cost: 2767027, gameTime: "10d 15h", ftPerDay: 1806, costPerFt: 144.12, date: "9/22/2025" },
-				{ name: "VORA, KUMAR", cost: 2484266, gameTime: "11d 20h", ftPerDay: 1360, costPerFt: 154.18, date: "5/24/2024" },
-				{ name: "DZURISIN, RYAN", cost: 3179038, gameTime: "12d 15h", ftPerDay: 1514, costPerFt: 166.21, date: "1/5/2024" },
-				{ name: "SHEPARD, DEVAN", cost: 3925970, gameTime: "16d 16h", ftPerDay: 1439, costPerFt: 163.82, date: "4/19/2025" },
-				{ name: "FISHER, JONATHAN", cost: 2248159, gameTime: "20d 8h", ftPerDay: 740, costPerFt: 149.20, date: "8/17/2015" }
+				{ name: "KERRY T", cost: 3034725, gameTime: "10d 4h", ftPerDay: 2113, costPerFt: 141.15, date: "8/11/2025" },
+				{ name: "JOHN S", cost: 2695885, gameTime: "10d 9h", ftPerDay: 2065, costPerFt: 125.39, date: "8/28/2024" },
+				{ name: "ISAC P", cost: 3483645, gameTime: "10d 14h", ftPerDay: 2031, costPerFt: 162.03, date: "6/26/2025" },
+				{ name: "DALLAS M", cost: 2157310, gameTime: "10d 18h", ftPerDay: 1997, costPerFt: 100.34, date: "11/27/2025" },
+				{ name: "KRISNA W", cost: 2377470, gameTime: "11d 20h", ftPerDay: 1812, costPerFt: 110.58, date: "12/28/2023" },
+				{ name: "JAMES G", cost: 3098580, gameTime: "11d 21h", ftPerDay: 1806, costPerFt: 144.12, date: "9/22/2025" },
+				{ name: "KUMAR V", cost: 3314870, gameTime: "15d 19h", ftPerDay: 1360, costPerFt: 154.18, date: "5/24/2024" },
+				{ name: "RYAN D", cost: 3573515, gameTime: "14d 4h", ftPerDay: 1514, costPerFt: 166.21, date: "1/5/2024" },
+				{ name: "DEVAN S", cost: 3522130, gameTime: "14d 22h", ftPerDay: 1439, costPerFt: 163.82, date: "4/19/2025" },
+				{ name: "JONATHAN F", cost: 3207800, gameTime: "29d 1h", ftPerDay: 740, costPerFt: 149.2, date: "8/17/2015" }
 			],
 			armageddon: [
-				{ name: "STAMPER, HARRY", cost: 300000000000, gameTime: "8h", ftPerDay: 2400, costPerFt: 375000000, date: "7/1/1998" }
+				{ name: "HARRY S", cost: 3e+11, gameTime: "0d 8h", ftPerDay: 2400, costPerFt: 375000000, date: "7/1/1998" }
 			]
 		};
         

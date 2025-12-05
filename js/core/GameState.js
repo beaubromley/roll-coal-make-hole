@@ -40,7 +40,8 @@ class GameState {
 		
 		this.isTripping = false;
 		this.tripTimeRemaining = 0;
-		
+		this.tripReason = null;  // ADD THIS LINE
+
 		this.isKickActive = false;
 		this.kickControlTimeRemaining = 0;
 		this.isInKickZone = false;

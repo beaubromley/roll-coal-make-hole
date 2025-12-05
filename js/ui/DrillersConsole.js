@@ -6,21 +6,12 @@ class DrillersConsole {
         this.isMinimized = false;
         this.holdInterval = null;
         this.holdTimeout = null;
-        this.currentTab = 'controls';
 
         // Chart canvases
         this.chartDepthDays = document.getElementById('chart-depth-days');
         this.chartDepthCost = document.getElementById('chart-depth-cost');
-        this.ctxDays = this.chartDepthDays?.getContext('2d');
-        this.ctxCost = this.chartDepthCost?.getContext('2d');
-
-        // Tab buttons
-        document.querySelectorAll('.console-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabName = tab.getAttribute('data-tab');
-                this.switchTab(tabName);
-            });
-        });
+        this.chartFinalDays = document.getElementById('chart-final-days');
+        this.chartFinalCost = document.getElementById('chart-final-cost');
 
         // Minimize/Maximize buttons
         document.getElementById('console-minimize-btn').addEventListener('click', () => {
@@ -30,6 +21,11 @@ class DrillersConsole {
         document.getElementById('console-maximize-btn').addEventListener('click', () => {
             this.maximize();
         });
+
+		// Pause button
+		document.getElementById('console-pause-btn').addEventListener('click', () => {
+			this.togglePause();
+		});
 
         // Mode buttons (Slide Left, Rotate, Slide Right)
         document.querySelectorAll('.mode-btn').forEach(btn => {
@@ -53,7 +49,7 @@ class DrillersConsole {
                 this.holdTimeout = setTimeout(() => {
                     this.holdInterval = setInterval(() => {
                         this.handleParamClick(param, direction);
-                    }, 50); // Repeat every 50ms (fast)
+                    }, 50);
                 }, 300);
             });
 
@@ -87,30 +83,6 @@ class DrillersConsole {
         });
     }
 
-    static switchTab(tabName) {
-        this.currentTab = tabName;
-
-        // Update tab buttons
-        document.querySelectorAll('.console-tab').forEach(tab => {
-            tab.classList.remove('active');
-            if (tab.getAttribute('data-tab') === tabName) {
-                tab.classList.add('active');
-            }
-        });
-
-        // Update tab content
-        document.querySelectorAll('.console-tab-content').forEach(content => {
-            content.classList.remove('active');
-        });
-
-        if (tabName === 'controls') {
-            document.getElementById('console-content').classList.add('active');
-        } else if (tabName === 'reports') {
-            document.getElementById('console-reports').classList.add('active');
-            this.drawCharts();
-        }
-    }
-
     static stopHold() {
         if (this.holdTimeout) {
             clearTimeout(this.holdTimeout);
@@ -131,6 +103,14 @@ class DrillersConsole {
         this.isMinimized = false;
         document.body.classList.remove('console-minimized');
     }
+	
+	static togglePause() {
+    if (!this.game || !this.game.state || !this.game.state.hasStarted || this.game.state.isGameOver || this.game.state.waitingForAcknowledge) return;
+    
+    // Simulate P key press
+    const event = new KeyboardEvent('keydown', { code: 'KeyP' });
+    window.dispatchEvent(event);
+	}
 
     static handleModeClick(mode) {
         if (!this.game || !this.game.state || this.game.state.isPaused || this.game.state.waitingForAcknowledge) return;
@@ -172,20 +152,34 @@ class DrillersConsole {
         window.dispatchEvent(event);
     }
 
-    static drawCharts() {
-        if (!this.game || !this.game.state) return;
+    static drawPauseCharts(state) {
+        if (!state || !this.chartDepthDays || !this.chartDepthCost) return;
 
-        const perfLog = this.game.state.performanceLog;
+        const perfLog = state.performanceLog;
         
         if (perfLog.depths.length < 2) {
-            // Not enough data yet
-            this.drawNoDataMessage(this.ctxDays, 'Insufficient data - drill more!');
-            this.drawNoDataMessage(this.ctxCost, 'Insufficient data - drill more!');
+            this.drawNoDataMessage(this.chartDepthDays.getContext('2d'), 'Insufficient data');
+            this.drawNoDataMessage(this.chartDepthCost.getContext('2d'), 'Insufficient data');
             return;
         }
 
-        this.drawDepthVsDaysChart(perfLog);
-        this.drawDepthVsCostChart(perfLog);
+        this.drawDepthVsDaysChart(this.chartDepthDays.getContext('2d'), perfLog);
+        this.drawDepthVsCostChart(this.chartDepthCost.getContext('2d'), perfLog);
+    }
+
+    static drawFinalCharts(state) {
+        if (!state || !this.chartFinalDays || !this.chartFinalCost) return;
+
+        const perfLog = state.performanceLog;
+        
+        if (perfLog.depths.length < 2) {
+            this.drawNoDataMessage(this.chartFinalDays.getContext('2d'), 'Insufficient data');
+            this.drawNoDataMessage(this.chartFinalCost.getContext('2d'), 'Insufficient data');
+            return;
+        }
+
+        this.drawDepthVsDaysChart(this.chartFinalDays.getContext('2d'), perfLog);
+        this.drawDepthVsCostChart(this.chartFinalCost.getContext('2d'), perfLog);
     }
 
     static drawNoDataMessage(ctx, message) {
@@ -200,115 +194,176 @@ class DrillersConsole {
         ctx.fillText(message, ctx.canvas.width / 2, ctx.canvas.height / 2);
     }
 
-    static drawDepthVsDaysChart(perfLog) {
-        if (!this.ctxDays) return;
+    static drawDepthVsDaysChart(ctx, perfLog) {
+		if (!ctx) return;
 
-        const ctx = this.ctxDays;
-        const width = ctx.canvas.width;
-        const height = ctx.canvas.height;
+		const width = ctx.canvas.width;
+		const height = ctx.canvas.height;
 
-        // Clear
-        ctx.fillStyle = '#1a1a1a';
-        ctx.fillRect(0, 0, width, height);
+		// Clear
+		ctx.fillStyle = '#1a1a1a';
+		ctx.fillRect(0, 0, width, height);
 
-        // Draw grid
-        this.drawChartGrid(ctx, width, height);
+		// Draw grid
+		this.drawChartGrid(ctx, width, height);
 
-        // Get data ranges
-        const maxDepth = Math.max(...perfLog.depths);
-        const maxDays = Math.max(...perfLog.days);
+		// Get data ranges with 10% padding
+		const maxDepth = Math.max(...perfLog.depths);
+		const maxDays = Math.max(...perfLog.days);
+		const depthPadding = maxDepth * 0.1;
+		const daysPadding = maxDays * 0.1;
 
-        // Draw line
-        ctx.strokeStyle = '#76ff03';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
+		// Draw axis tick labels
+		ctx.fillStyle = '#76ff03';
+		ctx.font = '6px "Press Start 2P"';
+		
+		// Y-axis (depth) labels - 4 ticks
+		ctx.textAlign = 'right';
+		for (let i = 0; i <= 4; i++) {
+			const depth = (maxDepth / 4) * i;
+			const y = 20 + ((depth / (maxDepth + depthPadding)) * (height - 40));
+			
+			// Show full numbers if this tick is < 1000, otherwise use "k" format
+			let label;
+			if (depth < 1000) {
+				label = Math.floor(depth).toString();
+			} else {
+				label = `${Math.floor(depth / 1000)}k`;
+			}
+			ctx.fillText(label, 38, y + 3);
+		}
+		
+		// X-axis (days) labels - 4 ticks
+		ctx.textAlign = 'center';
+		for (let i = 0; i <= 4; i++) {
+			const days = (maxDays / 4) * i;
+			const x = (days / (maxDays + daysPadding)) * (width - 40) + 20;
+			ctx.fillText(days.toFixed(1), x, height - 22);
+		}
 
-        for (let i = 0; i < perfLog.depths.length; i++) {
-            const x = (perfLog.days[i] / maxDays) * (width - 40) + 20;
-            const y = 20 + ((perfLog.depths[i] / maxDepth) * (height - 40));
+		// Draw line
+		ctx.strokeStyle = '#76ff03';
+		ctx.lineWidth = 2;
+		ctx.beginPath();
 
-            if (i === 0) {
-                ctx.moveTo(x, y);
-            } else {
-                ctx.lineTo(x, y);
-            }
-        }
-        ctx.stroke();
+		for (let i = 0; i < perfLog.depths.length; i++) {
+			const x = (perfLog.days[i] / (maxDays + daysPadding)) * (width - 40) + 20;
+			const y = 20 + ((perfLog.depths[i] / (maxDepth + depthPadding)) * (height - 40));
 
-        // Draw axes labels
-        ctx.fillStyle = '#76ff03';
-        ctx.font = '7px "Press Start 2P"';
-        ctx.textAlign = 'center';
-        ctx.fillText('Days', width / 2, height - 5);
-        
-        ctx.save();
-        ctx.translate(10, height / 2);
-        ctx.rotate(-Math.PI / 2);
-        ctx.fillText('Depth (ft)', 0, 0);
-        ctx.restore();
+			if (i === 0) {
+				ctx.moveTo(x, y);
+			} else {
+				ctx.lineTo(x, y);
+			}
+		}
+		ctx.stroke();
 
-        // Draw current values
-        ctx.textAlign = 'right';
-        ctx.fillStyle = '#fff';
-        ctx.font = '6px "Press Start 2P"';
-        ctx.fillText(`${maxDepth.toLocaleString()} ft`, width - 5, 15);
-        ctx.fillText(`${maxDays.toFixed(1)} days`, width - 5, height - 25);
-    }
+		// Draw axes titles
+		ctx.fillStyle = '#76ff03';
+		ctx.font = '7px "Press Start 2P"';
+		ctx.textAlign = 'center';
+		ctx.fillText('Days', width / 2, height - 5);
+		
+		ctx.save();
+		ctx.translate(10, height / 2);
+		ctx.rotate(-Math.PI / 2);
+		ctx.fillText('Depth (ft)', 0, 0);
+		ctx.restore();
 
-    static drawDepthVsCostChart(perfLog) {
-        if (!this.ctxCost) return;
+		// Draw max values in corner
+		ctx.textAlign = 'right';
+		ctx.fillStyle = '#fff';
+		ctx.font = '6px "Press Start 2P"';
+		ctx.fillText(`${maxDepth.toLocaleString()} ft`, width - 5, height - 15);
+		ctx.fillText(`${maxDays.toFixed(1)} days`, width - 5, 15);
+	}
 
-        const ctx = this.ctxCost;
-        const width = ctx.canvas.width;
-        const height = ctx.canvas.height;
+    static drawDepthVsCostChart(ctx, perfLog) {
+		if (!ctx) return;
 
-        // Clear
-        ctx.fillStyle = '#1a1a1a';
-        ctx.fillRect(0, 0, width, height);
+		const width = ctx.canvas.width;
+		const height = ctx.canvas.height;
 
-        // Draw grid
-        this.drawChartGrid(ctx, width, height);
+		// Clear
+		ctx.fillStyle = '#1a1a1a';
+		ctx.fillRect(0, 0, width, height);
 
-        // Get data ranges
-        const maxDepth = Math.max(...perfLog.depths);
-        const maxCost = Math.max(...perfLog.costs);
+		// Draw grid
+		this.drawChartGrid(ctx, width, height);
 
-        // Draw line
-        ctx.strokeStyle = '#ffeb3b';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
+		// Get data ranges with 10% padding
+		const maxDepth = Math.max(...perfLog.depths);
+		const maxCost = Math.max(...perfLog.costs);
+		const depthPadding = maxDepth * 0.1;
+		const costPadding = maxCost * 0.1;
 
-        for (let i = 0; i < perfLog.depths.length; i++) {
-            const x = (perfLog.costs[i] / maxCost) * (width - 40) + 20;
-            const y = 20 + ((perfLog.depths[i] / maxDepth) * (height - 40));
+		// Draw axis tick labels
+		ctx.fillStyle = '#ffeb3b';
+		ctx.font = '6px "Press Start 2P"';
+		
+		// Y-axis (depth) labels - 4 ticks
+		ctx.textAlign = 'right';
+		for (let i = 0; i <= 4; i++) {
+			const depth = (maxDepth / 4) * i;
+			const y = 20 + ((depth / (maxDepth + depthPadding)) * (height - 40));
+			
+			// Show full numbers if this tick is < 1000, otherwise use "k" format
+			let label;
+			if (depth < 1000) {
+				label = Math.floor(depth).toString();
+			} else {
+				label = `${Math.floor(depth / 1000)}k`;
+			}
+			ctx.fillText(label, 38, y + 3);
+		}
 
-            if (i === 0) {
-                ctx.moveTo(x, y);
-            } else {
-                ctx.lineTo(x, y);
-            }
-        }
-        ctx.stroke();
+		
+		// X-axis (cost) labels - 4 ticks
+		ctx.textAlign = 'center';
+		for (let i = 0; i <= 4; i++) {
+			const cost = (maxCost / 4) * i;
+			const x = (cost / (maxCost + costPadding)) * (width - 40) + 20;
+			const costM = cost / 1000000;
+			ctx.fillText(`$${costM.toFixed(1)}M`, x, height - 22);
+		}
 
-        // Draw axes labels
-        ctx.fillStyle = '#ffeb3b';
-        ctx.font = '7px "Press Start 2P"';
-        ctx.textAlign = 'center';
-        ctx.fillText('Cost ($)', width / 2, height - 5);
-        
-        ctx.save();
-        ctx.translate(10, height / 2);
-        ctx.rotate(-Math.PI / 2);
-        ctx.fillText('Depth (ft)', 0, 0);
-        ctx.restore();
+		// Draw line
+		ctx.strokeStyle = '#ffeb3b';
+		ctx.lineWidth = 2;
+		ctx.beginPath();
 
-        // Draw current values
-        ctx.textAlign = 'right';
-        ctx.fillStyle = '#fff';
-        ctx.font = '6px "Press Start 2P"';
-        ctx.fillText(`${maxDepth.toLocaleString()} ft`, width - 5, 15);
-        ctx.fillText(`$${(maxCost / 1000000).toFixed(1)}M`, width - 5, height - 25);
-    }
+		for (let i = 0; i < perfLog.depths.length; i++) {
+			const x = (perfLog.costs[i] / (maxCost + costPadding)) * (width - 40) + 20;
+			const y = 20 + ((perfLog.depths[i] / (maxDepth + depthPadding)) * (height - 40));
+
+			if (i === 0) {
+				ctx.moveTo(x, y);
+			} else {
+				ctx.lineTo(x, y);
+			}
+		}
+		ctx.stroke();
+
+		// Draw axes titles
+		ctx.fillStyle = '#ffeb3b';
+		ctx.font = '7px "Press Start 2P"';
+		ctx.textAlign = 'center';
+		ctx.fillText('Cost ($)', width / 2, height - 5);
+		
+		ctx.save();
+		ctx.translate(10, height / 2);
+		ctx.rotate(-Math.PI / 2);
+		ctx.fillText('Depth (ft)', 0, 0);
+		ctx.restore();
+
+		// Draw max values in corner
+		ctx.textAlign = 'right';
+		ctx.fillStyle = '#fff';
+		ctx.font = '6px "Press Start 2P"';
+		ctx.fillText(`${maxDepth.toLocaleString()} ft`, width - 5, height - 15);
+		ctx.fillText(`$${(maxCost / 1000000).toFixed(1)}M`, width - 5, 15);
+	}
+
 
     static drawChartGrid(ctx, width, height) {
         ctx.strokeStyle = '#2a2a2a';
@@ -340,30 +395,35 @@ class DrillersConsole {
         ctx.stroke();
     }
 
-    static update(state) {
-        if (!state) return;
+	static update(state) {
+		if (!state) return;
 
-        // Update display values
-        document.getElementById('console-wob-display').innerText = state.wob;
-        document.getElementById('console-flow-display').innerText = state.flowRate;
-        document.getElementById('console-mw-display').innerText = state.baseMudWeight.toFixed(1);
-        document.getElementById('console-lcm-display').innerText = Math.floor(state.lcmConcentration);
+		// Update display values
+		document.getElementById('console-wob-display').innerText = state.wob;
+		document.getElementById('console-flow-display').innerText = state.flowRate;
+		document.getElementById('console-mw-display').innerText = state.baseMudWeight.toFixed(1);
+		document.getElementById('console-lcm-display').innerText = Math.floor(state.lcmConcentration);
 
-        // Update active mode button
-        document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-        if (state.drillingMode === 'sliding') {
-            if (state.slideDirection === -1) {
-                document.querySelector('[data-mode="slide-left"]')?.classList.add('active');
-            } else {
-                document.querySelector('[data-mode="slide-right"]')?.classList.add('active');
-            }
-        } else {
-            document.querySelector('[data-mode="rotate"]')?.classList.add('active');
-        }
+		// Update pause button appearance
+		const pauseBtn = document.getElementById('console-pause-btn');
+		if (state.isPaused) {
+			pauseBtn.classList.add('paused');
+			pauseBtn.innerHTML = '▶ RESUME';
+		} else {
+			pauseBtn.classList.remove('paused');
+			pauseBtn.innerHTML = '⏸ PAUSE';
+		}
 
-        // Update charts if on reports tab
-        if (this.currentTab === 'reports') {
-            this.drawCharts();
-        }
-    }
+		// Update active mode button
+		document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+		if (state.drillingMode === 'sliding') {
+			if (state.slideDirection === -1) {
+				document.querySelector('[data-mode="slide-left"]')?.classList.add('active');
+			} else {
+				document.querySelector('[data-mode="slide-right"]')?.classList.add('active');
+			}
+		} else {
+			document.querySelector('[data-mode="rotate"]')?.classList.add('active');
+		}
+	}
 }
