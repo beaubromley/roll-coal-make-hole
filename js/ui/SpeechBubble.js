@@ -9,10 +9,13 @@ class SpeechBubble {
 		powder: {
 			beforeCasing1: [],
 			atCasing1: [
-				{ speaker: "BLM Inspector", portrait: "portrait-inspector.png", message: "I'll be watching your cement job!" }
+				{ speaker: "BLM Inspector", portrait: "portrait-inspector.png", message: "I'll be watching your cement job! Hope you brought a packoff stage tool." }
 			],
 			foxHills: [
 				{ speaker: "BLM Inspector", portrait: "portrait-inspector.png", message: "Fox Hills ahead! Protect the beloved." }
+			],
+			coalLosses: [
+				{ speaker: "Drilling Engineer", portrait: "portrait-engineer.png", message: "Don't heal it, just drill to TD at 1750'!" }
 			],
 			foxHillsLosses: [
 				{ speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "At this rate, I'm gettin' my bonus. Keep it up!" }
@@ -24,10 +27,10 @@ class SpeechBubble {
 				{ speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Parkman's drinking mud like it's happy hour." }
 			],
 			motivation: [
-				{ speaker: "BU VP", portrait: "portrait-manager.png", message: "YOU PLAY TO WIN THE GAME." }
+				{ speaker: "BU Vice President", portrait: "portrait-manager.png", message: "YOU PLAY TO WIN THE GAME." }
 			],
 			trust: [
-				{ speaker: "Engineering Supervisor", portrait: "portrait-supervisor.png", message: "Trust the engineering." }
+				{ speaker: "Engineering Supervisor", portrait: "portrait-supervisor2.png", message: "Trust the engineering." }
 			],
             beforeCasing2: [],
             atCasing2: [],
@@ -44,9 +47,7 @@ class SpeechBubble {
         },
         
         williston: {
-            beforeCasing1: [
-                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's coming up. Don't forget to stop." }
-            ],
+            beforeCasing1: [],
             atCasing1: [
                 { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "This 9-5/8\" is praying we don't see Dakota flows." }
             ],
@@ -62,12 +63,8 @@ class SpeechBubble {
             toolfaceFlop: [
                 { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Toolface is floppin' more than a pancake at IHOP." }
             ],
-            beforeCasing2: [
-                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's near. Don't mess up." }
-            ],
-            atCasing2: [
-                { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Engineers said set casing here, so get ready to move it tomorrow." }
-            ],
+            beforeCasing2: [],
+            atCasing2: [],
             geosteering: [
                 { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Geosteering says we might be high or we might be low." }
             ],
@@ -81,12 +78,10 @@ class SpeechBubble {
         },
         
         eagleford: {
-            beforeCasing1: [
-                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Casing point's coming up." }
-            ],
+            beforeCasing1: [],
             atCasing1: [],
             surfaceRecord: [
-                { speaker: "DUTCHMAN", portrait: "portrait-engineer.png", message: "Congrats on a new surface hole record!" }
+                { speaker: "Drilling Dutchman", portrait: "portrait-dutchman.png", message: "Congrats on a new surface hole record!" }
             ],
             flexure: [
                 { speaker: "Geophysicist", portrait: "portrait-geophysicist.png", message: "Don't get flexed on by that flexure." }
@@ -95,18 +90,19 @@ class SpeechBubble {
                 { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Midway's up. I think we may lose here sometimes." }
             ],
             stepout: [
-                { speaker: "Engineering Supervisor", portrait: "portrait-supervisor.png", message: "Stepouts don't matter." }
+                { speaker: "Engineering Supervisor", portrait: "portrait-supervisor2.png", message: "Stepouts don't matter." }
             ],
             curveStart: [
                 { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Long curve ahead. Can I kick off early, or you wanna risk it?" }
+            ],
+            surfaceExcess: [
+                { speaker: "King Wormhand III", portrait: "portrait-engineer2.png", message: "I'm planning 500% excess on this one." }
             ],
             slideFaster: [
                 { speaker: "Engineering Manager", portrait: "portrait-manager.png", message: "Slide faster..." }
             ],
             slideInitiated: [],
-            beforeTD: [
-                { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Don't miss that depth. Can't stop here." }
-            ],
+            beforeTD: [],
             atTD: [
                 { speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "Hex Grip don't fail me now. Lotta pipe to lay down." }
             ]
@@ -127,8 +123,18 @@ class SpeechBubble {
             whisperer: [
                 { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Where's that Woodford Whisperer when you need him?" }
             ],
-            beforeTD: [],
-            atTD: []
+            eng: [
+                { speaker: "Engineer", portrait: "portrait-engineer.png", message: "Hey I got us a free drillout run here." }
+            ],
+            supt: [
+                { speaker: "Superintendent", portrait: "portrait-superintendent.png", message: "You're not bad for a worm hand." }
+            ],
+            beforeTD: [
+                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Let's rotate this sucker out." }
+            ],
+            atTD: [
+                { speaker: "Engineer", portrait: "portrait-engineer.png", message: "Do I get my quarter zip now?" }
+            ]
         },
         
         delaware: {
@@ -139,8 +145,11 @@ class SpeechBubble {
             curveStart: [
                 { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Deep curve coming up. Can I kick off early, or you wanna steer?" }
             ],
+            aces: [
+                { speaker: "Engineering Supervisor", portrait: "portrait-supervisor3.png", message: "Man, that casing cost like 5 ACEs." }
+            ],
             beforeCasing2: [],
-            atCasing2: [],
+            atCasing2: [], // "3.5 bbls back" - Supt
             beforeTD: [],
             atTD: [
                 { speaker: "Engineer", portrait: "portrait-engineer.png", message: "I'm gonna have to update this WCDM." }
@@ -150,22 +159,23 @@ class SpeechBubble {
         armageddon: [
             { depth: 50, speaker: "President", portrait: "portrait-president.png", message: "We are faced with the very gravest of challenges." },
             { depth: 100, speaker: "Chick", portrait: "portrait-chick.png", message: "You know, Harry, I swore I'd never drill again after that last one." },
+            { depth: 150, speaker: "Bear", portrait: "portrait-bear.png", message: "If this thing blows, I want my last meal to be a Twinkie." },
             { depth: 200, speaker: "Bear", portrait: "portrait-bear.png", message: "You stick that drill in the ground, and you make it sing!" },
             { depth: 250, speaker: "Rockhound", portrait: "portrait-rockhound.png", message: "I'm not crazy, I'm just a little unwell." },
             { depth: 300, speaker: "Max", portrait: "portrait-max.png", message: "I got a bad feeling about this rock, Harry." },
             { depth: 400, speaker: "Harry Stamper", portrait: "portrait-harry.png", message: "I can't do it alone, Colonel. I need your help." },
             { depth: 500, speaker: "Rockhound", portrait: "portrait-rockhound.png", message: "Guess what guys, it's time to embrace the horror! Look, we've got front row tickets to the end of the earth!" },
-            { depth: 600, speaker: "Chick", portrait: "portrait-chick.png", message: "Harry, you ever miss a depth?" },
-            { depth: 650, speaker: "Harry Stamper", portrait: "portrait-harry.png", message: "Not once, Chick. Not once." },
-            { depth: 700, speaker: "Bear", portrait: "portrait-bear.png", message: "If this thing blows, I want my last meal to be a Twinkie." },
-            { depth: 750, speaker: "Harry Stamper", portrait: "portrait-harry.png", message: "I have been drilling holes in the earth for 30 years. And I have never, NEVER missed a depth that I have aimed for. And by God, I am not gonna miss this one, I will make 800 feet.", duration: 8000 },  // ADD duration: 10000 (10 seconds)
+            { depth: 550, speaker: "Chick", portrait: "portrait-chick.png", message: "Harry, you ever miss a depth?" },
+            { depth: 600, speaker: "Harry Stamper", portrait: "portrait-harry.png", message: "Not once, Chick. Not once." },
+            { depth: 625, speaker: "Harry Stamper", portrait: "portrait-harry.png", message: "I have been drilling holes in the earth for 30 years. And I have never, NEVER missed a depth that I have aimed for. And by God, I am not gonna miss this one, I will make 800 feet.", duration: 8000 },  // ADD duration: 10000 (10 seconds)
 			{ depth: 798, speaker: "President", portrait: "portrait-president.png", message: "Mission accomplished. Godspeed, gentlemen." },
 			{ depth: 799, speaker: "Harry Stamper", portrait: "portrait-harry.png", message: "Yeah one more thing, um... none of them wanna pay taxes again." }
         ],
         
 		general: {
 			bitDull: [
-				{ speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If you make this bit last 2 more hours, my relief said he'd love to trip it." },
+				{ speaker: "Superintendent", portrait: "portrait-superintendent.png", message: "How many runs did this bit have on it?" },
+				{ speaker: "Superintendent", portrait: "portrait-superintendent.png", message: "#dullterra" },
 				{ speaker: "Superintendent", portrait: "portrait-superintendent.png", message: "This bit isn't gonna make it. Y'all running with the bull or something?" }
 			],
 			bitTrip: [
@@ -179,15 +189,12 @@ class SpeechBubble {
                 { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Motor's gettin' weak, can't hold toolface worth a dang." },
                 { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Motor's got less grip than a greased pig." }
             ],
-            slideInitiated: [
-                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Why don't you try AutoSlide. I'm done." },
-				{ speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Can I interest you in a RSS? Only 10 easy payments of LIH." }
-            ],
+            slideInitiated: [],
             lossesModerate: [
-                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "At this rate, I'm gettin' my bonus. Keep it up!" }
+                // { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "At this rate, I'm gettin' my bonus. Keep it up!" }
             ],
             lossesHeavy: [
-                { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "I'm about to start selling mud futures." }
+                // { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "I'm about to start selling mud futures." }
             ],
             gasDetected: [
                 { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Gas! Don't make me call the incident command." }
@@ -215,6 +222,7 @@ class SpeechBubble {
 	// Depth-based triggers (organized by well)
 	static depthTriggers = {
 		powder: [
+			{ depth: 875, event: 'coalLosses', range: 50 },
 			{ depth: 9400, event: 'curveStart', range: 50 },
 			{ depth: 12000, event: 'trust', range: 50 },
 			{ depth: 15000, event: 'motivation', range: 50 }
@@ -222,9 +230,10 @@ class SpeechBubble {
 		williston: [
 			{ depth: 10651, event: 'curveStart', range: 50 },
 			{ depth: 16000, event: 'geosteering', range: 50 },
-			{ depth: 18000, event: 'seismic', range: 50 }
+			{ depth: 18500, event: 'seismic', range: 50 }
 		],
 		eagleford: [
+			{ depth: 2500, event: 'surfaceExcess', range: 50 },
 			{ depth: 4600, event: 'surfaceRecord', range: 50 },
 			{ depth: 6200, event: 'stepout', range: 50 },
 			{ depth: 7000, event: 'midway', range: 50 },
@@ -232,12 +241,15 @@ class SpeechBubble {
 			{ depth: 12300, event: 'curveStart', range: 50 }
 		],
 		stack: [
+			{ depth: 1800, event: 'eng', range: 50 },
+			{ depth: 2200, event: 'supt', range: 50 },
 			{ depth: 9600, event: 'curveStart', range: 50 },
 			{ depth: 12200, event: 'whisperer', range: 50 },
 			{ depth: 19900, event: 'rcmh', range: 50 }
 		],
 		delaware: [
-			{ depth: 11400, event: 'curveStart', range: 50 }
+			{ depth: 11400, event: 'curveStart', range: 50 },
+			{ depth: 11700, event: 'aces', range: 50 }
 		]
 	};
 

@@ -60,7 +60,7 @@ class Renderer {
         
         const distanceToBoundary = boundaryDepth - state.depth;
         
-        if (distanceToBoundary > 500 || distanceToBoundary < 0) return null;
+        if (distanceToBoundary > 1200 || distanceToBoundary < 0) return null;
         
         const screenY = (CONSTANTS.DRILL_Y + 50) + (distanceToBoundary * 0.5);
         

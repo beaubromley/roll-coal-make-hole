@@ -35,6 +35,30 @@ const WELL_CONFIGS = {
         ],
         formations: [
             { 
+                limit: 700,
+                name: "Top Soil",
+                color: "#f4a460",
+                particle: "#deb887",
+                hardness: 0.3,
+                abrasiveness: 0.3,
+                driftTendency: 0.2,
+                toolfaceFlopFactor: 1.2,
+                kickZone: { start: 50, end: 1750, minMW: 8.0 },
+                lossZone: { start: 50, end: 1750, maxMW: 15.0, maxLossRate: 15 }
+            },
+            { 
+                limit: 1500,
+                name: "Wyodak Coal",
+                color: "#1c1c1c",
+                particle: "#3a3a3a",
+                hardness: 0.3,
+                abrasiveness: 0.2,
+                driftTendency: -0.2,
+                toolfaceFlopFactor: 1.6,
+                kickZone: { start: 850, end: 1750, minMW: 0.0 },
+                lossZone: { start: 850, end: 1750, maxMW: 2.0, maxLossRate: 100 }
+            },
+            { 
                 limit: 4810,
                 name: "Shallow Sands",
                 color: "#f4a460",
@@ -43,8 +67,8 @@ const WELL_CONFIGS = {
                 abrasiveness: 0.3,
                 driftTendency: 0.2,
                 toolfaceFlopFactor: 1.2,
-                kickZone: { start: 50, end: 8575, minMW: 8.0 },
-                lossZone: { start: 50, end: 8575, maxMW: 15.0, maxLossRate: 150 }
+                kickZone: { start: 1750, end: 8575, minMW: 8.0 },
+                lossZone: { start: 1750, end: 8575, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 5591,
@@ -56,7 +80,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.2,
                 toolfaceFlopFactor: 1.6,
                 kickZone: { start: 4860, end: 8575, minMW: 8.0 },
-                lossZone: { start: 5400, end: 8575, maxMW: 11.0, maxLossRate: 200 }
+                lossZone: { start: 4860, end: 8575, maxMW: 11.0, maxLossRate: 50 }
             },
             { 
                 limit: 5981,
@@ -68,7 +92,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.2,
                 toolfaceFlopFactor: 1.5,
                 kickZone: { start: 5641, end: 8575, minMW: 8.0 },
-                lossZone: { start: 5641, end: 8575, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 5641, end: 8575, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 6381,
@@ -80,7 +104,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.3,
                 toolfaceFlopFactor: 1.7,
                 kickZone: { start: 5731, end: 8575, minMW: 8.0 },
-                lossZone: { start: 5731, end: 8575, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 5731, end: 8575, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 6913,
@@ -91,8 +115,8 @@ const WELL_CONFIGS = {
                 abrasiveness: 1.0,
                 driftTendency: 0.4,
                 toolfaceFlopFactor: 1.9,
-                kickZone: { start: 6431, end: 8575, minMW: 8.0 },
-                lossZone: { start: 6700, end: 8575, maxMW: 11.2, maxLossRate: 250 }
+                kickZone: { start: 6401, end: 8575, minMW: 8.0 },
+                lossZone: { start: 6700, end: 8575, maxMW: 11.2, maxLossRate: 90 }
             },
             { 
                 limit: 7307,
@@ -103,8 +127,8 @@ const WELL_CONFIGS = {
                 abrasiveness: 0.8,
                 driftTendency: -0.2,
                 toolfaceFlopFactor: 1.6,
-                kickZone: { start: 6963, end: 8575, minMW: 8.0 },
-                lossZone: { start: 7100, end: 8575, maxMW: 11.3, maxLossRate: 220 }
+                kickZone: { start: 6923, end: 8575, minMW: 8.0 },
+                lossZone: { start: 7100, end: 8575, maxMW: 11.3, maxLossRate: 80 }
             },
             { 
                 limit: 7781,
@@ -116,7 +140,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.3,
                 toolfaceFlopFactor: 1.8,
                 kickZone: { start: 7357, end: 8575, minMW: 8.0 },
-                lossZone: { start: 7357, end: 8575, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 7357, end: 8575, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 8590,
@@ -128,7 +152,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.4,
                 toolfaceFlopFactor: 2.0,
                 kickZone: { start: 7831, end: 8575, minMW: 8.0 },
-                lossZone: { start: 7831, end: 8575, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 7831, end: 8575, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 9689,
@@ -140,7 +164,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.3,
                 toolfaceFlopFactor: 2.2,
                 kickZone: { start: 8598, end: 27451, minMW: 8.0 },
-                lossZone: { start: 8598, end: 27451, maxMW: 15.0, maxLossRate: 150 },
+                lossZone: { start: 8598, end: 27451, maxMW: 15.0, maxLossRate: 15 },
                 instabilityZone: { start: 8598, end: 27451, minMW: 9.5 }
             },
             { 
@@ -149,11 +173,11 @@ const WELL_CONFIGS = {
                 color: "#8b7d6b",
                 particle: "#fffafa",
                 hardness: 0.7,
-                abrasiveness: 0.7,
+                abrasiveness: 0.3,
                 driftTendency: 0.2,
                 toolfaceFlopFactor: 2.0,
                 kickZone: { start: 9739, end: 27451, minMW: 8.0 },
-                lossZone: { start: 9739, end: 27451, maxMW: 15.0, maxLossRate: 150 },
+                lossZone: { start: 9739, end: 27451, maxMW: 15.0, maxLossRate: 15 },
                 instabilityZone: { start: 9739, end: 27451, minMW: 9.5 }
             }
         ],
@@ -187,7 +211,9 @@ const WELL_CONFIGS = {
             { depth: 15000, x: 700 },
             { depth: 17000, x: 690 },
             { depth: 17250, x: 600 },
-            { depth: 17500, x: 500 },
+            { depth: 17400, x: 400 },
+            { depth: 17500, x: 200 },
+            { depth: 17600, x: 400 },
             { depth: 17750, x: 600 },
             { depth: 18000, x: 690 },
             { depth: 19000, x: 710 },
@@ -204,7 +230,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.1,
                 toolfaceFlopFactor: 1.3,
                 kickZone: { start: 50, end: 1735, minMW: 8.0 },
-                lossZone: { start: 50, end: 1735, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 50, end: 1735, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 4510,
@@ -216,7 +242,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.2,
                 toolfaceFlopFactor: 1.8,
                 kickZone: { start: 1835, end: 11000, minMW: 8.0 },
-                lossZone: { start: 1835, end: 11000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 1835, end: 11000, maxMW: 11.0, maxLossRate: 70 }
             },
             { 
                 limit: 4908,
@@ -228,7 +254,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.2,
                 toolfaceFlopFactor: 2.0,
                 kickZone: { start: 4560, end: 11000, minMW: 8.0 },
-                lossZone: { start: 4560, end: 11000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 4560, end: 11000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 5283,
@@ -240,7 +266,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.3,
                 toolfaceFlopFactor: 1.7,
                 kickZone: { start: 4958, end: 11000, minMW: 8.0 },
-                lossZone: { start: 4958, end: 11000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 4958, end: 11000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 6163,
@@ -252,7 +278,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.5,
                 toolfaceFlopFactor: 1.6,
                 kickZone: { start: 5333, end: 11000, minMW: 8.0 },
-                lossZone: { start: 5333, end: 11000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 5333, end: 11000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 7467,
@@ -264,7 +290,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.3,
                 toolfaceFlopFactor: 2.0,
                 kickZone: { start: 6213, end: 11000, minMW: 8.0 },
-                lossZone: { start: 6213, end: 11000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 6213, end: 11000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 7640,
@@ -276,7 +302,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.4,
                 toolfaceFlopFactor: 1.9,
                 kickZone: { start: 7517, end: 11000, minMW: 8.0 },
-                lossZone: { start: 7517, end: 11000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 7517, end: 11000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 8995,
@@ -284,71 +310,59 @@ const WELL_CONFIGS = {
                 color: "#8b7355",
                 particle: "#a0826d",
                 hardness: 0.8,
-                abrasiveness: 7,
+                abrasiveness: 8,
                 driftTendency: -0.2,
                 toolfaceFlopFactor: 1.7,
                 kickZone: { start: 7690, end: 11000, minMW: 8.0 },
-                lossZone: { start: 7690, end: 11000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 7690, end: 11000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 9110,
                 name: "Charles Salt",
                 color: "#f0e68c",
                 particle: "#fafad2",
-                hardness: 0.85,
+                hardness: 0.35,
                 abrasiveness: 0.65,
                 driftTendency: 0.6,
                 toolfaceFlopFactor: 1.8,
                 kickZone: { start: 9045, end: 11000, minMW: 8.0 },
-                lossZone: { start: 9045, end: 11000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 9045, end: 11000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
-                limit: 9210,
+                limit: 9610,
                 name: "Mission Canyon",
                 color: "#d3d3d3",
                 particle: "#dcdcdc",
-                hardness: 2.0,
+                hardness: 0.7,
                 abrasiveness: 1.7,
                 driftTendency: 0.7,
                 toolfaceFlopFactor: 2.5,
-                kickZone: { start: 9160, end: 11000, minMW: 8.0 },
-                lossZone: { start: 8950, end: 11000, maxMW: 10.8, maxLossRate: 300 }
+                kickZone: { start: 9660, end: 11000, minMW: 8.0 },
+                lossZone: { start: 9650, end: 11000, maxMW: 10.8, maxLossRate: 100 }
             },
             { 
-                limit: 9743,
+                limit: 10143,
                 name: "Lodgepole",
                 color: "#a9a9a9",
                 particle: "#c0c0c0",
-                hardness: 1.8,
+                hardness: 0.6,
                 abrasiveness: 1.6,
                 driftTendency: -0.5,
                 toolfaceFlopFactor: 2.3,
                 kickZone: { start: 9260, end: 11000, minMW: 8.0 },
-                lossZone: { start: 9260, end: 11000, maxMW: 15.0, maxLossRate: 150 }
-            },
-            { 
-                limit: 10494,
-                name: "Scallion",
-                color: "#8fbc8f",
-                particle: "#90ee90",
-                hardness: 0.9,
-                abrasiveness: 0.9,
-                driftTendency: 0.3,
-                toolfaceFlopFactor: 2.0,
-                kickZone: { start: 9793, end: 11000, minMW: 8.0 },
-                lossZone: { start: 9793, end: 11000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 9260, end: 11000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 10498,
                 name: "Upper Bakken",
                 color: "#556b2f",
                 particle: "#6b8e23",
-                hardness: 0.6,
+                hardness: 0.5,
                 abrasiveness: 0.6,
                 driftTendency: -0.4,
                 toolfaceFlopFactor: 1.8,
                 kickZone: { start: 10544, end: 11000, minMW: 8.0 },
-                lossZone: { start: 10544, end: 11000, maxMW: 15.0, maxLossRate: 150 },
+                lossZone: { start: 10544, end: 11000, maxMW: 15.0, maxLossRate: 15 },
                 instabilityZone: { start: 10544, end: 11000, minMW: 10.4 }
             },
             { 
@@ -356,12 +370,12 @@ const WELL_CONFIGS = {
                 name: "Middle Bakken",
                 color: "#8b7d6b",
                 particle: "#bdb76b",
-                hardness: 1.4,
+                hardness: 0.5,
                 abrasiveness: 1.2,
                 driftTendency: 0.3,
                 toolfaceFlopFactor: 2.0,
                 kickZone: { start: 10548, end: 11000, minMW: 8.0 },
-                lossZone: { start: 10548, end: 11000, maxMW: 15.0, maxLossRate: 150 },
+                lossZone: { start: 10548, end: 11000, maxMW: 15.0, maxLossRate: 15 },
                 instabilityZone: { start: 10548, end: 11000, minMW: 9.0 }
             },
             { 
@@ -373,9 +387,9 @@ const WELL_CONFIGS = {
                 abrasiveness: 0.5,
                 driftTendency: -0.2,
                 toolfaceFlopFactor: 1.7,
-                kickZone: { start: 10600, end: 21451, minMW: 11.5 },
-                lossZone: { start: 10563, end: 21451, maxMW: 15.0, maxLossRate: 150 },
-                instabilityZone: { start: 10563, end: 21451, minMW: 8.5 }
+                kickZone: { start: 11000, end: 21451, minMW: 8.0 },
+                lossZone: { start: 11000, end: 21451, maxMW: 15.0, maxLossRate: 15 },
+                instabilityZone: { start: 11000, end: 21451, minMW: 8.5 }
             }
         ],
         normalPressureMW: 11.0
@@ -434,7 +448,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.1,
                 toolfaceFlopFactor: 1.0,
                 kickZone: { start: 50, end: 4500, minMW: 8.0 },
-                lossZone: { start: 50, end: 4500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 50, end: 4500, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 929,
@@ -446,7 +460,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.2,
                 toolfaceFlopFactor: 1.1,
                 kickZone: { start: 729, end: 4500, minMW: 8.0 },
-                lossZone: { start: 729, end: 4500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 729, end: 4500, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 1169,
@@ -458,7 +472,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.2,
                 toolfaceFlopFactor: 1.2,
                 kickZone: { start: 979, end: 4500, minMW: 8.0 },
-                lossZone: { start: 979, end: 4500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 979, end: 4500, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 4550,
@@ -470,7 +484,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.3,
                 toolfaceFlopFactor: 1.3,
                 kickZone: { start: 1219, end: 4500, minMW: 8.0 },
-                lossZone: { start: 1219, end: 4500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 1219, end: 4500, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 5259,
@@ -482,7 +496,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.3,
                 toolfaceFlopFactor: 1.4,
                 kickZone: { start: 4600, end: 19500, minMW: 8.0 },
-                lossZone: { start: 3500, end: 19500, maxMW: 13.0, maxLossRate: 1000 }
+                lossZone: { start: 3500, end: 19500, maxMW: 12.9, maxLossRate: 100 }
             },
             { 
                 limit: 9127,
@@ -494,7 +508,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.2,
                 toolfaceFlopFactor: 1.5,
                 kickZone: { start: 5309, end: 19500, minMW: 8.0 },
-                lossZone: { start: 7000, end: 19500, maxMW: 13.5, maxLossRate: 200 }
+                lossZone: { start: 7000, end: 19500, maxMW: 13.5, maxLossRate: 70 }
             },
             { 
                 limit: 10894,
@@ -506,7 +520,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.2,
                 toolfaceFlopFactor: 1.3,
                 kickZone: { start: 9177, end: 19500, minMW: 8.0 },
-                lossZone: { start: 9177, end: 19500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 9177, end: 19500, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 12111,
@@ -518,7 +532,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.4,
                 toolfaceFlopFactor: 6.8,
                 kickZone: { start: 10944, end: 19500, minMW: 8.0 },
-                lossZone: { start: 10944, end: 19500, maxMW: 15.0, maxLossRate: 50 }
+                lossZone: { start: 10944, end: 19500, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 12460,
@@ -530,7 +544,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.3,
                 toolfaceFlopFactor: 1.6,
                 kickZone: { start: 11961, end: 19500, minMW: 8.0 },
-                lossZone: { start: 11961, end: 19500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 11961, end: 19500, maxMW: 15.0, maxLossRate: 30 }
             },
             { 
                 limit: 12705,
@@ -542,7 +556,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.3,
                 toolfaceFlopFactor: 1.5,
                 kickZone: { start: 12210, end: 19500, minMW: 8.0 },
-                lossZone: { start: 12210, end: 19500, maxMW: 15.0, maxLossRate: 150 },
+                lossZone: { start: 12210, end: 19500, maxMW: 15.0, maxLossRate: 15 },
                 instabilityZone: { start: 12210, end: 19500, minMW: 11.5 }
             },
             { 
@@ -555,7 +569,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.2,
                 toolfaceFlopFactor: 1.6,
                 kickZone: { start: 13000, end: 14000, minMW: 10.0 },
-                lossZone: { start: 12755, end: 19500, maxMW: 15.0, maxLossRate: 150 },
+                lossZone: { start: 12755, end: 19500, maxMW: 15.0, maxLossRate: 15 },
                 instabilityZone: { start: 12755, end: 19500, minMW: 12.1 }
             }
         ],
@@ -612,7 +626,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.2,
                 toolfaceFlopFactor: 1.0,
                 kickZone: { start: 50, end: 650, minMW: 8.0 },
-                lossZone: { start: 50, end: 650, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 50, end: 650, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 2700,
@@ -624,7 +638,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.2,
                 toolfaceFlopFactor: 1.2,
                 kickZone: { start: 750, end: 10000, minMW: 8.0 },
-                lossZone: { start: 750, end: 10000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 750, end: 10000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 3685,
@@ -636,7 +650,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.4,
                 toolfaceFlopFactor: 1.3,
                 kickZone: { start: 2750, end: 10000, minMW: 8.0 },
-                lossZone: { start: 2750, end: 10000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 2750, end: 10000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 4560,
@@ -648,7 +662,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.3,
                 toolfaceFlopFactor: 1.4,
                 kickZone: { start: 3735, end: 10000, minMW: 8.0 },
-                lossZone: { start: 3735, end: 10000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 3735, end: 10000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 5473,
@@ -660,7 +674,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.3,
                 toolfaceFlopFactor: 1.5,
                 kickZone: { start: 4610, end: 10000, minMW: 8.0 },
-                lossZone: { start: 4610, end: 10000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 4610, end: 10000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 6573,
@@ -672,7 +686,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.5,
                 toolfaceFlopFactor: 1.6,
                 kickZone: { start: 5523, end: 10000, minMW: 8.0 },
-                lossZone: { start: 5523, end: 10000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 5523, end: 10000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 8213,
@@ -684,7 +698,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.4,
                 toolfaceFlopFactor: 1.8,
                 kickZone: { start: 6623, end: 10000, minMW: 8.0 },
-                lossZone: { start: 6623, end: 10000, maxMW: 9.5, maxLossRate: 200 }
+                lossZone: { start: 6623, end: 10000, maxMW: 9.5, maxLossRate: 100 }
             },
             { 
                 limit: 8555,
@@ -696,7 +710,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.6,
                 toolfaceFlopFactor: 2.2,
                 kickZone: { start: 8263, end: 10000, minMW: 8.0 },
-                lossZone: { start: 8263, end: 10000, maxMW: 15.0, maxLossRate: 150 },
+                lossZone: { start: 8263, end: 10000, maxMW: 15.0, maxLossRate: 15 },
                 instabilityZone: { start: 8263, end: 10000, minMW: 9.1 }
             },
             { 
@@ -709,7 +723,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.2,
                 toolfaceFlopFactor: 2.0,
                 kickZone: { start: 9000, end: 10000, minMW: 9.3 },
-                lossZone: { start: 8605, end: 10000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 8605, end: 10000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 9340,
@@ -721,7 +735,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.4,
                 toolfaceFlopFactor: 2.1,
                 kickZone: { start: 9257, end: 10000, minMW: 8.0 },
-                lossZone: { start: 9257, end: 10000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 9257, end: 10000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 9478,
@@ -733,7 +747,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.3,
                 toolfaceFlopFactor: 2.3,
                 kickZone: { start: 9390, end: 10000, minMW: 8.0 },
-                lossZone: { start: 9390, end: 10000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 9390, end: 10000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 9609,
@@ -745,7 +759,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.2,
                 toolfaceFlopFactor: 2.4,
                 kickZone: { start: 9528, end: 10000, minMW: 8.0 },
-                lossZone: { start: 9528, end: 10000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 9528, end: 10000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 10015,
@@ -757,7 +771,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.2,
                 toolfaceFlopFactor: 2.0,
                 kickZone: { start: 9865, end: 10000, minMW: 8.0 },
-                lossZone: { start: 9865, end: 10000, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 9865, end: 10000, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 10200,
@@ -769,7 +783,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.4,
                 toolfaceFlopFactor: 2.5,
                 kickZone: { start: 9659, end: 20451, minMW: 12.5 },
-                lossZone: { start: 9659, end: 20451, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 9659, end: 20451, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 10385,
@@ -781,7 +795,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.5,
                 toolfaceFlopFactor: 2.6,
                 kickZone: { start: 10000, end: 20451, minMW: 12.0 },
-                lossZone: { start: 9929, end: 20451, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 9929, end: 20451, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 10680,
@@ -793,7 +807,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.6,
                 toolfaceFlopFactor: 3.5,
                 kickZone: { start: 10135, end: 20451, minMW: 8.0 },
-                lossZone: { start: 10135, end: 20451, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 10135, end: 20451, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 11470,
@@ -805,7 +819,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.7,
                 toolfaceFlopFactor: 2.2,
                 kickZone: { start: 10730, end: 20451, minMW: 8.0 },
-                lossZone: { start: 10730, end: 20451, maxMW: 15.0, maxLossRate: 150 },
+                lossZone: { start: 10730, end: 20451, maxMW: 15.0, maxLossRate: 15 },
                 instabilityZone: { start: 10730, end: 20451, minMW: 9.0 }
             },
             { 
@@ -818,7 +832,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.8,
                 toolfaceFlopFactor: 2.0,
                 kickZone: { start: 11520, end: 20451, minMW: 8.0 },
-                lossZone: { start: 11520, end: 20451, maxMW: 15.0, maxLossRate: 150 },
+                lossZone: { start: 11520, end: 20451, maxMW: 15.0, maxLossRate: 15 },
                 instabilityZone: { start: 11520, end: 20451, minMW: 9.0 }
             },
             { 
@@ -831,7 +845,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.4,
                 toolfaceFlopFactor: 1.8,
                 kickZone: { start: 11997, end: 20451, minMW: 8.0 },
-                lossZone: { start: 11997, end: 20451, maxMW: 15.0, maxLossRate: 150 },
+                lossZone: { start: 11997, end: 20451, maxMW: 15.0, maxLossRate: 15 },
                 instabilityZone: { start: 11997, end: 20451, minMW: 11.5 }
             }
         ],
@@ -843,7 +857,7 @@ const WELL_CONFIGS = {
         targetDepth: 21500,
         casingPoints: [
             { depth: 750, name: "Surface Casing", cost: 65000 },
-            { depth: 11500, name: "Intermediate Casing", cost: 550000 },
+            { depth: 11500, name: "Intermediate Casing", cost: 625000 },
             { depth: 21500, name: "Production Casing", cost: 625000 }
         ],
         startingMW: [
@@ -866,18 +880,18 @@ const WELL_CONFIGS = {
             { depth: 14500, x: 730 },
 			{ depth: 15000, x: 630 },
             { depth: 15500, x: 680 },
-            { depth: 16000, x: 710 },
-            { depth: 16500, x: 730 },
-			{ depth: 17000, x: 630 },
-            { depth: 17500, x: 680 },
-            { depth: 18000, x: 710 },
-            { depth: 18500, x: 730 },
-			{ depth: 19000, x: 630 },
-            { depth: 19500, x: 680 },
-            { depth: 20000, x: 710 },
-            { depth: 20500, x: 730 },
-			{ depth: 21000, x: 630 },
-            { depth: 21500, x: 680 }
+            { depth: 16000, x: 610 },
+            { depth: 16500, x: 530 },
+			{ depth: 17000, x: 430 },
+            { depth: 17500, x: 380 },
+            { depth: 18000, x: 210 },
+            { depth: 18500, x: 230 },
+			{ depth: 19000, x: 230 },
+            { depth: 19500, x: 280 },
+            { depth: 20000, x: 210 },
+            { depth: 20500, x: 330 },
+			{ depth: 21000, x: 230 },
+            { depth: 21500, x: 280 }
         ],
         formations: [
             { 
@@ -890,7 +904,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.1,
                 toolfaceFlopFactor: 1.0,
                 kickZone: { start: 50, end: 669, minMW: 8.0 },
-                lossZone: { start: 50, end: 669, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 50, end: 669, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 1066,
@@ -902,7 +916,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.3,
                 toolfaceFlopFactor: 1.2,
                 kickZone: { start: 769, end: 11500, minMW: 8.0 },
-                lossZone: { start: 769, end: 11500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 769, end: 11500, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 4294,
@@ -914,7 +928,7 @@ const WELL_CONFIGS = {
                 driftTendency: 0.5,
                 toolfaceFlopFactor: 1.5,
                 kickZone: { start: 1116, end: 11500, minMW: 8.0 },
-                lossZone: { start: 1116, end: 11500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 1116, end: 11500, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 4519,
@@ -926,7 +940,7 @@ const WELL_CONFIGS = {
                 driftTendency: -0.3,
                 toolfaceFlopFactor: 1.8,
                 kickZone: { start: 4344, end: 11500, minMW: 8.0 },
-                lossZone: { start: 4344, end: 11500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 4344, end: 11500, maxMW: 12.0, maxLossRate: 15 }
             },
             { 
                 limit: 5450,
@@ -938,127 +952,127 @@ const WELL_CONFIGS = {
                 driftTendency: 0.4,
                 toolfaceFlopFactor: 2.0,
                 kickZone: { start: 4569, end: 11500, minMW: 8.0 },
-                lossZone: { start: 4569, end: 11500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 4569, end: 11500, maxMW: 12.0, maxLossRate: 15 }
             },
             { 
                 limit: 6821,
                 name: "Delaware",
                 color: "#8b6914",
                 particle: "#daa520",
-                hardness: 1.8,
+                hardness: 0.8,
                 abrasiveness: 1.6,
                 driftTendency: -0.5,
                 toolfaceFlopFactor: 2.2,
-                kickZone: { start: 6000, end: 11500, minMW: 8.0 },
-                lossZone: { start: 5500, end: 11500, maxMW: 14.0, maxLossRate: 500 }
+                kickZone: { start: 6000, end: 11500, minMW: 10.8 },
+                lossZone: { start: 5500, end: 11500, maxMW: 12.0, maxLossRate: 30 }
             },
             { 
                 limit: 8156,
                 name: "Brushy Canyon",
                 color: "#654321",
                 particle: "#8b7355",
-                hardness: 1.3,
+                hardness: 0.7,
                 abrasiveness: 1.2,
                 driftTendency: 0.6,
                 toolfaceFlopFactor: 2.5,
                 kickZone: { start: 6871, end: 11500, minMW: 10.5 },
-                lossZone: { start: 7500, end: 11500, maxMW: 12.0, maxLossRate: 350 }
+                lossZone: { start: 7500, end: 11500, maxMW: 12.0, maxLossRate: 100 }
             },
             { 
                 limit: 8375,
                 name: "1st BSPG Lime",
                 color: "#d3d3d3",
                 particle: "#dcdcdc",
-                hardness: 2.2,
+                hardness: 1.1,
                 abrasiveness: 1.8,
                 driftTendency: 0.7,
                 toolfaceFlopFactor: 2.8,
                 kickZone: { start: 8206, end: 11500, minMW: 8.0 },
-                lossZone: { start: 8206, end: 11500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 8206, end: 11500, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 8514,
                 name: "Avalon A",
                 color: "#696969",
                 particle: "#a9a9a9",
-                hardness: 1.0,
+                hardness: 0.6,
                 abrasiveness: 1.0,
                 driftTendency: -0.4,
                 toolfaceFlopFactor: 2.3,
                 kickZone: { start: 8425, end: 11500, minMW: 8.0 },
-                lossZone: { start: 8425, end: 11500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 8425, end: 11500, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 8935,
                 name: "Avalon B",
                 color: "#778899",
                 particle: "#b0c4de",
-                hardness: 1.1,
+                hardness: 0.5,
                 abrasiveness: 1.1,
                 driftTendency: 0.5,
                 toolfaceFlopFactor: 2.4,
                 kickZone: { start: 8564, end: 11500, minMW: 8.0 },
-                lossZone: { start: 8564, end: 11500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 8564, end: 11500, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 9207,
                 name: "Avalon C",
                 color: "#708090",
                 particle: "#c0c0c0",
-                hardness: 1.0,
+                hardness: 0.5,
                 abrasiveness: 1.0,
                 driftTendency: -0.3,
                 toolfaceFlopFactor: 2.2,
                 kickZone: { start: 8985, end: 11500, minMW: 8.0 },
-                lossZone: { start: 8985, end: 11500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 8985, end: 11500, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 9474,
                 name: "1st BSPG Sand",
                 color: "#f5deb3",
                 particle: "#ffe4b5",
-                hardness: 0.7,
+                hardness: 0.4,
                 abrasiveness: 0.9,
                 driftTendency: 0.4,
                 toolfaceFlopFactor: 2.0,
                 kickZone: { start: 9257, end: 11500, minMW: 8.0 },
-                lossZone: { start: 9257, end: 11500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 9257, end: 11500, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 9716,
                 name: "2nd BSPG Lime",
                 color: "#bebebe",
                 particle: "#d3d3d3",
-                hardness: 2.0,
+                hardness: 1.0,
                 abrasiveness: 1.7,
                 driftTendency: 0.6,
                 toolfaceFlopFactor: 2.6,
                 kickZone: { start: 9524, end: 11500, minMW: 8.0 },
-                lossZone: { start: 9524, end: 11500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 9524, end: 11500, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 10031,
                 name: "2nd BSPG Sand",
                 color: "#deb887",
                 particle: "#f5deb3",
-                hardness: 0.8,
+                hardness: 0.7,
                 abrasiveness: 1.0,
                 driftTendency: -0.2,
                 toolfaceFlopFactor: 2.1,
                 kickZone: { start: 9766, end: 11500, minMW: 8.0 },
-                lossZone: { start: 9766, end: 11500, maxMW: 9.5, maxLossRate: 400 }
+                lossZone: { start: 9766, end: 11500, maxMW: 9.5, maxLossRate: 100 }
             },
             { 
                 limit: 10579,
                 name: "3rd BSPG Lime",
                 color: "#a9a9a9",
                 particle: "#c0c0c0",
-                hardness: 2.1,
+                hardness: 1.2,
                 abrasiveness: 1.8,
                 driftTendency: 0.7,
                 toolfaceFlopFactor: 2.7,
                 kickZone: { start: 10081, end: 11500, minMW: 8.0 },
-                lossZone: { start: 10081, end: 11500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 10081, end: 11500, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 11330,
@@ -1070,19 +1084,19 @@ const WELL_CONFIGS = {
                 driftTendency: 0.3,
                 toolfaceFlopFactor: 2.0,
                 kickZone: { start: 10629, end: 11500, minMW: 8.0 },
-                lossZone: { start: 10629, end: 11500, maxMW: 15.0, maxLossRate: 150 }
+                lossZone: { start: 10629, end: 11500, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 11773,
                 name: "Wolfcamp X",
                 color: "#2b2b2b",
                 particle: "#4a4a4a",
-                hardness: 0.9,
+                hardness: 0.8,
                 abrasiveness: 1.0,
                 driftTendency: -0.5,
                 toolfaceFlopFactor: 1.9,
                 kickZone: { start: 11380, end: 21451, minMW: 8.0 },
-                lossZone: { start: 11380, end: 21451, maxMW: 15.0, maxLossRate: 150 },
+                lossZone: { start: 11380, end: 21451, maxMW: 15.0, maxLossRate: 15 },
                 instabilityZone: { start: 11380, end: 11723, minMW: 9.0 }
             },
             { 
@@ -1090,12 +1104,12 @@ const WELL_CONFIGS = {
                 name: "Wolfcamp Y",
                 color: "#1a1a1a",
                 particle: "#3d3d3d",
-                hardness: 0.8,
+                hardness: 0.7,
                 abrasiveness: 0.9,
                 driftTendency: 0.6,
                 toolfaceFlopFactor: 1.8,
                 kickZone: { start: 11823, end: 21451, minMW: 8.0 },
-                lossZone: { start: 11823, end: 21451, maxMW: 15.0, maxLossRate: 150 },
+                lossZone: { start: 11823, end: 21451, maxMW: 15.0, maxLossRate: 15 },
                 instabilityZone: { start: 11823, end: 21451, minMW: 11.7 }
             }
         ],
@@ -1136,36 +1150,36 @@ const WELL_CONFIGS = {
                 name: "Asteroid Crust",
                 color: "#4a0000",
                 particle: "#6a0000",
-                hardness: 5.0,
+                hardness: 7.0,
                 abrasiveness: 0.25,
                 driftTendency: 0.9,
                 toolfaceFlopFactor: 3.0,
-                kickZone: { start: 50, end: 800, minMW: 8.0 },
-                lossZone: { start: 50, end: 800, maxMW: 9.0, maxLossRate: 1000 }
+                kickZone: { start: 35, end: 800, minMW: 8.0 },
+                lossZone: { start: 35, end: 800, maxMW: 1.0, maxLossRate: 100 }
             },
             { 
                 limit: 400,
                 name: "Metallic Core",
                 color: "#1a1a1a",
                 particle: "#2a2a2a",
-                hardness: 7.0,
+                hardness: 10.0,
                 abrasiveness: 0.5,
                 driftTendency: -0.9,
                 toolfaceFlopFactor: 10.0,
-                kickZone: { start: 250, end: 800, minMW: 12.0 },
-                lossZone: { start: 250, end: 800, maxMW: 15.0, maxLossRate: 150 }
+                kickZone: { start: 315, end: 800, minMW: 12.0 },
+                lossZone: { start: 250, end: 800, maxMW: 15.0, maxLossRate: 15 }
             },
             { 
                 limit: 801,
                 name: "Vibranium",
                 color: "#000000",
                 particle: "#0a0a0a",
-                hardness: 10.0,
+                hardness: 15.0,
                 abrasiveness: 1.0,
                 driftTendency: 0.9,
                 toolfaceFlopFactor: 12.0,
-                kickZone: { start: 600, end: 800, minMW: 17.0 },
-                lossZone: { start: 500, end: 800, maxMW: 10.0, maxLossRate: 1500 }
+                kickZone: { start: 615, end: 800, minMW: 14.5 },
+                lossZone: { start: 500, end: 800, maxMW: 10.0, maxLossRate: 15 }
             }
         ],
         normalPressureMW: 15.0

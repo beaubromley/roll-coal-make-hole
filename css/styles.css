@@ -1250,3 +1250,56 @@ body.console-minimized #console-maximize-btn {
     box-shadow: 0 0 20px #ffd700;
 }
 
+#loss-indicator {
+    position: absolute;
+    top: 280px;
+    right: 10px;
+    background: rgba(255, 152, 0, 0.95);
+    padding: 12px 15px;
+    border: 3px solid #ff9800;
+    font-size: 10px;
+    color: #fff;
+    display: none;
+    text-align: center;
+    min-width: 150px;
+    animation: lossFlash 1s ease-in-out infinite;
+}
+
+@keyframes lossFlash {
+    0%, 100% { border-color: #ff9800; }
+    50% { border-color: #ff5722; }
+}
+
+.loss-title {
+    font-size: 9px;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+#loss-rate-text {
+    font-size: 11px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 3px;
+}
+
+#loss-percentage-text {
+    font-size: 8px;
+    color: #ffeb3b;
+}
+
+#loss-indicator.severe {
+    background: rgba(255, 23, 68, 0.95);
+    border-color: #ff1744;
+}
+
+@keyframes lossFlash {
+    0%, 100% { 
+        border-color: #ff9800;
+        box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+    }
+    50% { 
+        border-color: #ff5722;
+        box-shadow: 0 0 20px rgba(255, 87, 34, 0.8);
+    }
+}

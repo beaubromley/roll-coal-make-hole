@@ -467,7 +467,7 @@ class GameEngine {
 		this.state.spikeMultiplier = 1.0;
 		
 		this.state.totalCost += casingPoint.cost;
-    
+
 		// ADD TIME PENALTY: 2 hours per 1000 ft of depth
 		const casingHours = (casingPoint.depth / 1000) * 2;
 		const casingFrames = casingHours * CONSTANTS.FRAMES_PER_GAME_HOUR;
@@ -479,6 +479,12 @@ class GameEngine {
 		this.state.performanceLog.depths.push(Math.floor(this.state.depth));
 		this.state.performanceLog.days.push(currentDays);
 		this.state.performanceLog.costs.push(this.state.totalCost);
+    
+		// RESET LCM EFFECTIVENESS FOR NEW HOLE SECTION
+		this.state.totalLCMLbs = 0;
+		
+		// RESET LOSS WARNING FLAG FOR NEW HOLE SECTION
+		this.lossWarningShown = false;
 		
 		// SET MUD WEIGHT FOR NEXT SECTION
 		this.state.baseMudWeight = this.state.getStartingMWForSection(casingPoint.depth);
@@ -602,7 +608,8 @@ class GameEngine {
 					`Total Depth: ${totalDepth.toLocaleString()} ft\n` +
 					`Final Cost: $${finalCost.toLocaleString()}\n` +
 					`Time: ${gameTime}\n` +
-					`Mud Lost: ${Math.floor(this.state.totalMudLost)} bbls\n\n` +
+					`Mud Lost: ${Math.floor(this.state.totalMudLost)} bbls\n` +
+					`LCM Used: ${Math.floor(this.state.totalLCMLbs).toLocaleString()} lbs\n\n` +
 					`Performance:\n` +
 					`${ftPerDay.toLocaleString()} ft/day\n` +
 					`$${costPerFt.toLocaleString()}/ft`,
@@ -674,10 +681,20 @@ class GameEngine {
         const costPerFrame = (CONSTANTS.SPREAD_RATE_PER_DAY / 24) / CONSTANTS.FRAMES_PER_GAME_HOUR;
         this.state.totalCost += costPerFrame;
 
-        if (this.state.lcmConcentration > 0) {
-            this.state.lcmConcentration = Math.max(0, this.state.lcmConcentration - CONSTANTS.LCM_DECAY_RATE);
-            this.updateTotalMudWeight();
-        }
+		if (this.state.lcmConcentration > 0) {
+			// Base decay rate
+			let decayRate = CONSTANTS.LCM_DECAY_RATE;
+			
+			// Increase decay based on loss rate (losing mud = losing LCM faster)
+			if (this.state.currentLossRate > 0) {
+				// Add 0.001 per 100 bbl/hr loss rate
+				const lossDecayMultiplier = this.state.currentLossRate / 100 * 0.004;
+				decayRate += lossDecayMultiplier;
+			}
+			
+			this.state.lcmConcentration = Math.max(0, this.state.lcmConcentration - decayRate);
+			this.updateTotalMudWeight();
+		}
 
         if (this.state.isTripping) {
             document.getElementById('statusDisplay').innerText = "TRIPPING";
@@ -768,8 +785,8 @@ class GameEngine {
 		SpeechBubble.checkDepthTriggers(this.currentWellType, this.state.depth, this.state.speechTriggered);
 
 		// Before TD check (all wells)
-		if (this.state.depth >= this.state.wellConfig.targetDepth - 200 && 
-			this.state.depth < this.state.wellConfig.targetDepth - 190) {
+		if (this.state.depth >= this.state.wellConfig.targetDepth - 500 && 
+			this.state.depth < this.state.wellConfig.targetDepth - 490) {
 			if (!this.state.speechTriggered['beforeTD']) {
 				this.state.speechTriggered['beforeTD'] = true;
 				SpeechBubble.show(this.currentWellType, 'beforeTD');
@@ -913,51 +930,54 @@ class GameEngine {
 			this.currentInstabilitySeverity = 'none';
 		}
 
-        const lossZone = DrillingMechanics.checkLossZone(this.state.depth, formation);
+        const lossZone = DrillingMechanics.checkAllLossZones(this.state.depth, this.state.wellConfig.formations);
+
         this.state.isInLossZone = lossZone !== null;
         
         if (this.state.isInLossZone) {
-            const lossResult = DrillingMechanics.calculateLossRate(
-                this.state.mudWeight, 
-                lossZone, 
-                this.state.lcmConcentration
-            );
-            this.state.currentLossRate = lossResult.lossRate;
-            this.state.lossHealPercentage = lossResult.healPercentage;
-            
-            if (this.state.currentLossRate > 0) {
-                this.handleLossEvent(lossZone);
-                
-                if (this.state.currentLossRate > 400 && Math.random() < 0.01) {
-                    SpeechBubble.show(this.currentWellType, 'lossesHeavy');
-                } else if (this.state.currentLossRate > 250 && Math.random() < 0.01) {
-                    SpeechBubble.show(this.currentWellType, 'lossesModerate');
-                }
-                
-                this.lossToastTimer++;
-                if (this.lossToastTimer >= 180) {
-                    UIManager.showToast(
-                        `⚠ LOSSES: ${Math.floor(this.state.currentLossRate)} bbl/hr\n` +
-                        `Healed: ${Math.floor(this.state.lossHealPercentage)}%`,
-                        'warning'
-                    );
-                    this.lossToastTimer = 0;
-                }
-            } else {
-                this.lossToastTimer = 0;
-            }
-            
-            const lossPerFrame = this.state.currentLossRate / CONSTANTS.FRAMES_PER_GAME_HOUR;
-            this.state.totalMudLost += lossPerFrame;
-            
-            const mudCostPerFrame = lossPerFrame * CONSTANTS.MUD_COST_PER_BBL;
-            this.state.totalCost += mudCostPerFrame;
-        } else {
-            this.state.currentLossRate = 0;
-            this.state.lossHealPercentage = 0;
-            this.lossWarningShown = false;
-            this.lossToastTimer = 0;
-        }
+			const lossResult = DrillingMechanics.calculateLossRate(
+				this.state.mudWeight, 
+				lossZone, 
+				this.state.lcmConcentration,
+				this.state.flowRate,
+				this.state.totalLCMLbs
+			);
+			this.state.currentLossRate = lossResult.lossRate;
+			this.state.lossHealPercentage = lossResult.healPercentage;
+			
+			if (this.state.currentLossRate > 0) {
+				this.handleLossEvent(lossZone);
+				
+				if (this.state.currentLossRate > 400 && Math.random() < 0.01) {
+					SpeechBubble.show(this.currentWellType, 'lossesHeavy');
+				} else if (this.state.currentLossRate > 250 && Math.random() < 0.01) {
+					SpeechBubble.show(this.currentWellType, 'lossesModerate');
+				}
+				
+				this.lossToastTimer++;
+				if (this.lossToastTimer >= 180) {
+					UIManager.showToast(
+						`⚠ LOSSES: ${Math.floor(this.state.currentLossRate)} bbl/hr\n` +
+						`Healed: ${Math.floor(this.state.lossHealPercentage)}%`,
+						'warning'
+					);
+					this.lossToastTimer = 0;
+				}
+			} else {
+				this.lossToastTimer = 0;
+			}
+			
+			const lossPerFrame = this.state.currentLossRate / CONSTANTS.FRAMES_PER_GAME_HOUR;
+			this.state.totalMudLost += lossPerFrame;
+
+			// CALCULATE LCM USAGE - MAKE SURE THESE LINES ARE HERE
+			const totalLCMConcentration = 5 + this.state.lcmConcentration;
+			const lcmLbsPerFrame = lossPerFrame * totalLCMConcentration;
+			this.state.totalLCMLbs += lcmLbsPerFrame;
+
+			const mudCostPerFrame = lossPerFrame * CONSTANTS.MUD_COST_PER_BBL;
+			this.state.totalCost += mudCostPerFrame;
+		}
         
         document.getElementById('statusDisplay').innerText = "DRILLING";
         
@@ -1021,10 +1041,7 @@ class GameEngine {
             rop *= CONSTANTS.SLIDING_ROP_FACTOR;
         }
         
-        if (this.state.isInLossZone && this.state.currentLossRate > 0) {
-            const lossROPFactor = 1 - (this.state.currentLossRate / 500);
-            rop *= Math.max(0.1, lossROPFactor);
-        }
+
         
         let damage = DrillingMechanics.calculateDamage(this.state.wob, formation);
         let feetPerFrame = rop / CONSTANTS.FRAMES_PER_GAME_HOUR;
@@ -1053,12 +1070,6 @@ class GameEngine {
 				this.state.performanceLog.depths.push(Math.floor(this.state.depth));
 				this.state.performanceLog.days.push(currentDays);
 				this.state.performanceLog.costs.push(this.state.totalCost);
-    
-				console.log('Logged:', {
-					depth: Math.floor(this.state.depth),
-					days: currentDays.toFixed(2),
-					cost: Math.floor(this.state.totalCost)
-				});
 			}
     
 			// ADD THESE 4 LINES HERE:
@@ -1160,6 +1171,7 @@ class GameEngine {
 		UIManager.updateDigitalReadouts(this.state, rop);
 		UIManager.updateStats(this.state, formation);
 		UIManager.updateModeIndicator(this.state);
+		UIManager.updateLossIndicator(this.state);  // ADD THIS LINE
 		
 		// Update Driller's Console
 		DrillersConsole.update(this.state); // ADD THIS LINE

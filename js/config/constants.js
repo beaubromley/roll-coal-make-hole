@@ -43,16 +43,16 @@ const CONSTANTS = {
     
     // Instability Constants
     STUCK_PIPE_COST: 1000000,
-    INSTABILITY_TIME_MINOR: 18000,  // 2 minutes (0.1 ppg under)
-    INSTABILITY_TIME_MODERATE: 2250, // 30 seconds (0.5 ppg under)
-    INSTABILITY_TIME_SEVERE: 750,    // 10 seconds (1.0+ ppg under)
+    INSTABILITY_TIME_MINOR: 1500,  // 20 seconds (0.1 ppg under)
+    INSTABILITY_TIME_MODERATE: 750, // 10 seconds (0.5 ppg under)
+    INSTABILITY_TIME_SEVERE: 375,    // 5 seconds (1.0+ ppg under)
     
     // Mud Loss Constants
     MUD_COST_PER_BBL: 100,
-    LCM_COST_PER_10_LB: 10000,
+    LCM_COST_PER_10_LB: 20000,
     MW_CHANGE_COST: 5000,
     LCM_MW_INCREASE_RATIO: 30,
-    LCM_DECAY_RATE: 0.002,
+    LCM_DECAY_RATE: 0.02,
     DEFAULT_LOSS_RATE: 150,
     
     // Limits

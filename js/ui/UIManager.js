@@ -5,7 +5,7 @@ class UIManager {
         document.getElementById('wob-readout').innerText = state.wob + ' klbs';
         document.getElementById('dp-readout').innerText = Math.floor(state.diffPressure) + ' psi';
         document.getElementById('flow-readout').innerText = state.flowRate + ' gpm';
-        document.getElementById('mw-readout').innerText = state.mudWeight.toFixed(1) + ' ppg';
+        document.getElementById('mw-readout').innerText = state.baseMudWeight.toFixed(1) + ' ppg';
         
         const dpElement = document.getElementById('dp-readout');
         if (state.diffPressure >= CONSTANTS.MOTOR_STALL_DP) {
@@ -35,11 +35,19 @@ class UIManager {
 		document.getElementById('motorHealthDisplay').innerText = Math.floor(state.motorHealth);
 		document.getElementById('motorSpikesDisplay').innerText = state.motorSpikeCount;
 		document.getElementById('formationDisplay').innerText = formation.name.toUpperCase();
-		document.getElementById('kickRiskDisplay').innerText = Math.floor(state.kickRisk) + '%';
-		document.getElementById('lossRateDisplay').innerText = Math.floor(state.currentLossRate);
+		document.getElementById('kickRiskDisplay').innerText = Math.floor(state.kickRisk) + '%';// Calculate loss percentage of flow rate
+		const flowRateBBLperHR = (state.flowRate * 60) / 42;
+		const lossPercentage = flowRateBBLperHR > 0 ? (state.currentLossRate / flowRateBBLperHR * 100) : 0;
+
+		document.getElementById('lossRateDisplay').innerText = 
+			`${Math.floor(state.currentLossRate)} (${Math.floor(lossPercentage)}%)`;
 		document.getElementById('lcmDisplay').innerText = Math.floor(state.lcmConcentration);
-		document.getElementById('ecdDisplay').innerText = state.ecd.toFixed(1);
-		
+		document.getElementById('emwDisplay').innerText = state.mudWeight.toFixed(1);
+
+		// ADD THESE TWO LINES:
+		document.getElementById('totalMudLostDisplay').innerText = Math.floor(state.totalMudLost);
+		document.getElementById('totalLCMDisplay').innerText = Math.floor(state.totalLCMLbs).toLocaleString();
+
 		const slideFtPercent = state.depth > 0 ? (state.totalSlideDepth / state.depth * 100) : 0;
 		
 		document.getElementById('slideFtDisplay').innerText = slideFtPercent.toFixed(1);
@@ -243,4 +251,28 @@ class UIManager {
             warning.remove();
         }, 3000);
     }
+	
+	static updateLossIndicator(state) {
+		const lossIndicator = document.getElementById('loss-indicator');
+		
+		if (state.isInLossZone && state.currentLossRate > 0) {
+			lossIndicator.style.display = 'block';
+			
+			// Calculate percentage
+			const flowRateBBLperHR = (state.flowRate * 60) / 42;
+			const lossPercentage = flowRateBBLperHR > 0 ? (state.currentLossRate / flowRateBBLperHR * 100) : 0;
+			
+			document.getElementById('loss-rate-text').innerText = `${Math.floor(state.currentLossRate)} bbl/hr`;
+			document.getElementById('loss-percentage-text').innerText = `${Math.floor(lossPercentage)}% of flow`;
+			
+			// Change color for severe losses
+			if (state.currentLossRate > 500) {
+				lossIndicator.classList.add('severe');
+			} else {
+				lossIndicator.classList.remove('severe');
+			}
+		} else {
+			lossIndicator.style.display = 'none';
+		}
+	}
 }

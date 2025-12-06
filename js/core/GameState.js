@@ -50,6 +50,7 @@ class GameState {
 		this.currentLossRate = 0;
 		this.lossHealPercentage = 0;
 		this.totalMudLost = 0;
+		this.totalLCMLbs = 0;
 		
 		this.isInInstabilityZone = false;
 		

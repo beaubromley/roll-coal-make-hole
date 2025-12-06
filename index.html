@@ -36,7 +36,7 @@
                         <p><strong>Location:</strong> Wyoming</p>
                         <p><strong>Target Depth:</strong> 27,500 ft MD</p>
                         <p><strong>Profile:</strong> 3-Mile Lateral</p>
-                        <p><strong>Challenges:</strong> Fox Hills losses. Otherwise, snow bank.</p>
+                        <p><strong>Challenges:</strong> Wyodak Coal losses. Otherwise, snow bank.</p>
                         <p><strong>Difficulty:</strong> ★☆☆☆☆</p>
                     </div>
                     <div class="well-highscore" id="highscore-powder">
@@ -266,27 +266,38 @@
 
         <div class="mode-indicator" id="mode-indicator">ROTATING</div>
 
-        <!-- Bottom Stats -->
-        <div id="bottom-stats">
-            <div class="stat-group">
-                <div><span class="label">COST:</span> <span id="costDisplay" class="value cost">$0</span></div>
-                <div><span class="label">STATUS:</span> <span id="statusDisplay" class="value">READY</span></div>
-                <div><span class="label">BIT HEALTH:</span> <span id="healthDisplay" class="value">100</span>%</div>
-                <div><span class="label">MOTOR HEALTH:</span> <span id="motorHealthDisplay" class="value">100</span>%</div>
-            </div>
-            <div class="stat-group">
-                <div><span class="label">KICK RISK:</span> <span id="kickRiskDisplay" class="value risk">0</span>%</div>
-                <div><span class="label">MOTOR SPIKES:</span> <span id="motorSpikesDisplay" class="value">0</span></div>
-                <div><span class="label">MUD LOSSES:</span> <span id="lossRateDisplay" class="value">0</span> bbl/hr</div>
-                <div><span class="label">LCM:</span> <span id="lcmDisplay" class="value">0</span> lb/bbl</div>
-            </div>
-            <div class="stat-group">
-                <div><span class="label">FORMATION:</span> <span id="formationDisplay" class="value" style="color:#ffd54f">SURFACE</span></div>
-                <div><span class="label">ECD:</span> <span id="ecdDisplay" class="value">0.0</span> ppg</div>
-                <div><span class="label">TIME:</span> <span id="timeDisplay" class="value">Day 1 00:00</span></div>
-                <div><span class="label">SLIDE FT %:</span> <span id="slideFtDisplay" class="value">0</span>%</div>
-            </div>
-        </div>
+		<!-- Loss Rate Indicator -->
+		<div id="loss-indicator">
+			<div class="loss-title">⚠ MUD LOSSES ⚠</div>
+			<div id="loss-rate-text">0 bbl/hr</div>
+			<div id="loss-percentage-text">0%</div>
+		</div>
+
+		<!-- Bottom Stats -->
+		<div id="bottom-stats">
+			<div class="stat-group">
+				<div><span class="label">COST:</span> <span id="costDisplay" class="value cost">$0</span></div>
+				<div><span class="label">STATUS:</span> <span id="statusDisplay" class="value">READY</span></div>
+				<div><span class="label">BIT HEALTH:</span> <span id="healthDisplay" class="value">100</span>%</div>
+				<div><span class="label">MOTOR HEALTH:</span> <span id="motorHealthDisplay" class="value">100</span>%</div>
+			</div>
+			<div class="stat-group">
+				<div><span class="label">KICK RISK:</span> <span id="kickRiskDisplay" class="value risk">0</span>%</div>
+				<div><span class="label">MOTOR SPIKES:</span> <span id="motorSpikesDisplay" class="value">0</span></div>
+				<div><span class="label">MUD LOSSES:</span> <span id="lossRateDisplay" class="value">0</span> bbl/hr</div>
+				<div><span class="label">LCM:</span> <span id="lcmDisplay" class="value">0</span> lb/bbl</div>
+			</div>
+			<div class="stat-group">
+				<div><span class="label">FORMATION:</span> <span id="formationDisplay" class="value" style="color:#ffd54f">SURFACE</span></div>
+				<div><span class="label">EMW:</span> <span id="emwDisplay" class="value">0.0</span> ppg</div>  <!-- CHANGED from ECD -->
+				<div><span class="label">MUD LOST:</span> <span id="totalMudLostDisplay" class="value">0</span> bbls</div>  <!-- ADD THIS -->
+				<div><span class="label">LCM USED:</span> <span id="totalLCMDisplay" class="value">0</span> lbs</div>  <!-- ADD THIS -->
+			</div>
+			<div class="stat-group">
+				<div><span class="label">TIME:</span> <span id="timeDisplay" class="value">Day 1 00:00</span></div>
+				<div><span class="label">SLIDE FT %:</span> <span id="slideFtDisplay" class="value">0</span>%</div>
+			</div>
+		</div>
 
         <!-- Driller's Console (NEW) -->
 		<div id="drillers-console">

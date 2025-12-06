@@ -164,22 +164,48 @@ class DrillingMechanics {
         }
         return null;
     }
+	
+	static checkAllLossZones(depth, formations) {
+		// Check all formations for active loss zones at this depth
+		let activeLossZone = null;
+		let lowestMaxMW = Infinity;
+		
+		for (let formation of formations) {
+			if (formation.lossZone) {
+				const zone = formation.lossZone;
+				if (depth >= zone.start && depth <= zone.end) {
+					// If multiple zones active, use the one with lowest maxMW (most restrictive)
+					if (zone.maxMW < lowestMaxMW) {
+						lowestMaxMW = zone.maxMW;
+						activeLossZone = zone;
+					}
+				}
+			}
+		}
+		
+		return activeLossZone;
+	}
 
-    static calculateLossRate(mudWeight, lossZone, lcmConcentration) {
-        if (!lossZone) return { lossRate: 0, healPercentage: 0 };
-        
-        const mwDifferential = Math.max(0, mudWeight - lossZone.maxMW);
-        if (mwDifferential === 0) return { lossRate: 0, healPercentage: 0 };
-        
-        const baseLossRate = (mwDifferential / 2.0) * lossZone.maxLossRate;
-        
-        const lcmNeeded = mwDifferential * 50;
-        const healPercentage = Math.min(100, (lcmConcentration / lcmNeeded) * 100);
-        
-        const actualLossRate = baseLossRate * (1 - healPercentage / 100);
-        
-        return { lossRate: actualLossRate, healPercentage: healPercentage };
-    }
+	static calculateLossRate(mudWeight, lossZone, lcmConcentration, flowRate, totalLCMLbs) {
+		if (!lossZone) return { lossRate: 0, healPercentage: 0 };
+		
+		const mwDifferential = Math.max(0, mudWeight - lossZone.maxMW);
+		if (mwDifferential === 0) return { lossRate: 0, healPercentage: 0 };
+		
+		// Calculate flow rate in bbl/hr
+		const flowRateBBLperHR = (flowRate * 60) / 42;
+		
+		const lossPercentage = Math.min(lossZone.maxLossRate, (mwDifferential / 2.0) * lossZone.maxLossRate);
+		const baseLossRate = flowRateBBLperHR * (lossPercentage / 100);
+		
+		// Healing based on TOTAL LCM pumped through losses (1000 lbs per 1.0 ppg differential)
+		const lcmNeeded = mwDifferential * 100000;
+		const healPercentage = Math.min(100, (totalLCMLbs / lcmNeeded) * 100);
+		
+		const actualLossRate = baseLossRate * (1 - healPercentage / 100);
+		
+		return { lossRate: actualLossRate, healPercentage: healPercentage };
+	}
 
     static checkKickZone(depth, formation) {
         if (!formation.kickZone) return null;
