@@ -2,6 +2,23 @@
 
 All notable changes to Roll Coal Make Hole will be documented in this file.
 
+## [1.3.4] - 2025-12-09
+
+### Added
+- Ben Affleck victory quote on Armageddon completion screen
+- Additional character portraits (Ben Affleck, various crew)
+- New speech bubble content across multiple wells
+- Victory screen speech bubble with fade-in/fade-out animation
+
+### Changed
+- Updated speech bubble dialogue for various crew members
+- Improved speech bubble timing and positioning on victory screen
+- Enhanced Armageddon end sequence presentation
+
+### Fixed
+- Victory screen speech bubble no longer glitches on initial render
+- Speech bubble positioning uses forced layout calculation
+
 ## [1.3.3] - 2025-12-05
 
 ### Added

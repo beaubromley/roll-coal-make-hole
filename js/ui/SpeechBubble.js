@@ -57,21 +57,21 @@ class SpeechBubble {
             missionLosses: [
                 { speaker: "Mud Engineer", portrait: "portrait-mudengineer.png", message: "Mission Canyon's weak over here." }
             ],
-            curveStart: [
-                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Curve time! Can I kick off early, or you wanna trust geosteering?" }
-            ],
+            curveStart: [],
             toolfaceFlop: [
                 { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Toolface is floppin' more than a pancake at IHOP." }
             ],
             beforeCasing2: [],
             atCasing2: [],
             geosteering: [
-                { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Geosteering says we might be high or we might be low." }
+                { speaker: "Geosteering", portrait: "portrait-geosteering.png", message: "We might be high or we might be low." }
             ],
             seismic: [
                 { speaker: "Geophysicist", portrait: "portrait-geophysicist.png", message: "Hey did you guys know we had seismic?" }
             ],
-            beforeTD: [],
+            beforeTD: [
+			{ speaker: "Drilling Manager", portrait: "portrait-manager1.png", message: "Book the Edge savings!" }
+			],
             atTD: [
                 { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Good well, men." }
             ]
@@ -99,7 +99,7 @@ class SpeechBubble {
                 { speaker: "King Wormhand III", portrait: "portrait-engineer2.png", message: "I'm planning 500% excess on this one." }
             ],
             slideFaster: [
-                { speaker: "Engineering Manager", portrait: "portrait-manager.png", message: "Slide faster..." }
+                { speaker: "Engineering Manager", portrait: "portrait-manager2.png", message: "Slide faster..." }
             ],
             slideInitiated: [],
             beforeTD: [],
@@ -119,6 +119,15 @@ class SpeechBubble {
             ],
             rcmh: [
                 { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Roll Coal Make Hole, almost at TD!" }
+            ],
+            ac_alert: [
+                { speaker: "Well Planner", portrait: "portrait-worried-wellplanner.png", message: "CENTER TO CENTER IS < 1 FT!" }
+            ],
+            ac_answer: [
+                { speaker: "Engineer", portrait: "portrait-engineer3.png", message: "Eh, I've seen worse. I'll just file an MOC." }
+            ],
+            ac_answer2: [
+                { speaker: "Engineering Supervisor", portrait: "portrait-supervisor2.png", message: "Oh look, I just got that MOC. I guess we're good now. Approved." }
             ],
             whisperer: [
                 { speaker: "Company Man", portrait: "portrait-companyman.png", message: "Where's that Woodford Whisperer when you need him?" }
@@ -145,15 +154,28 @@ class SpeechBubble {
             curveStart: [
                 { speaker: "Directional Driller", portrait: "portrait-directional.png", message: "Deep curve coming up. Can I kick off early, or you wanna steer?" }
             ],
+            goodRun: [
+                { speaker: "Engineer", portrait: "portrait-engineer.png", message: "Good run so far!" }
+            ],
+            dontDisagree: [
+                { speaker: "Drilling Manager", portrait: "portrait-manager2.png", message: "I don't disagree." }
+            ],
             aces: [
                 { speaker: "Engineering Supervisor", portrait: "portrait-supervisor3.png", message: "Man, that casing cost like 5 ACEs." }
+            ],
+            uturn: [
+                { speaker: "Well Planner", portrait: "portrait-wellplanner.png", message: "This is the 270th U-Turn lateral in the world. So innovative." }
+            ],
+            geosteering: [
+                { speaker: "Geosteering", portrait: "portrait-geosteering.png", message: "I can't tell where we're at." }
+            ],
+            wcdm: [
+                { speaker: "Engineer", portrait: "portrait-engineer.png", message: "I'm gonna have to update this WCDM." }
             ],
             beforeCasing2: [],
             atCasing2: [], // "3.5 bbls back" - Supt
             beforeTD: [],
-            atTD: [
-                { speaker: "Engineer", portrait: "portrait-engineer.png", message: "I'm gonna have to update this WCDM." }
-            ]
+            atTD: []
         },
         
         armageddon: [
@@ -179,7 +201,6 @@ class SpeechBubble {
 				{ speaker: "Superintendent", portrait: "portrait-superintendent.png", message: "This bit isn't gonna make it. Y'all running with the bull or something?" }
 			],
 			bitTrip: [
-				{ speaker: "Floorhand", portrait: "portrait-floorhand.png", message: "If I trip one more time, I'm going to work at Starbucks." },
 				{ speaker: "Company Man", portrait: "portrait-companyman.png", message: "Can't make hole off bottom!" }
 			],
 			deviationWarning: [
@@ -241,15 +262,24 @@ class SpeechBubble {
 			{ depth: 12300, event: 'curveStart', range: 50 }
 		],
 		stack: [
-			{ depth: 1800, event: 'eng', range: 50 },
-			{ depth: 2200, event: 'supt', range: 50 },
+			{ depth: 1800, event: 'ac_alert', range: 50 },
+			{ depth: 2200, event: 'ac_answer', range: 50 },
 			{ depth: 9600, event: 'curveStart', range: 50 },
 			{ depth: 12200, event: 'whisperer', range: 50 },
+			{ depth: 18000, event: 'ac_answer2', range: 50 },
 			{ depth: 19900, event: 'rcmh', range: 50 }
 		],
 		delaware: [
-			{ depth: 11400, event: 'curveStart', range: 50 },
-			{ depth: 11700, event: 'aces', range: 50 }
+			{ depth: 7400, event: 'goodRun', range: 50 },
+			{ depth: 7600, event: 'dontDisagree', range: 50 },
+			{ depth: 11200, event: 'curveStart', range: 50 },
+			{ depth: 11700, event: 'aces', range: 50 },
+			{ depth: 16500, event: 'uturn', range: 50 },
+			{ depth: 16750, event: 'dontDisagree', range: 50 },
+			{ depth: 17000, event: 'geosteering', range: 50 },
+			{ depth: 17250, event: 'dontDisagree', range: 50 },
+			{ depth: 21000, event: 'wcdm', range: 50 },
+			{ depth: 21200, event: 'dontDisagree', range: 50 }
 		]
 	};
 

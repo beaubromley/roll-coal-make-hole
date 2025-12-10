@@ -636,8 +636,16 @@ class GameEngine {
 		const victoryScreen = document.getElementById('armageddon-victory-screen');
 		victoryScreen.style.display = 'flex';
 		
+		// Show Harry's final speech bubble on victory screen
+		setTimeout(() => {
+			this.showVictoryBubble();
+		}, 1000);  // 1 second delay for dramatic effect
+		
 		const handleContinue = () => {
 			victoryScreen.style.display = 'none';
+			
+			// Clear any victory bubbles
+			document.querySelectorAll('.victory-bubble').forEach(b => b.remove());
 			
 			// Now show high score entry
 			const displayTime = UIManager.getDisplayTime(this.state.gameFrameCount);
@@ -665,9 +673,59 @@ class GameEngine {
 		
 		const continueBtn = document.getElementById('armageddon-continue-btn');
 		continueBtn.addEventListener('click', handleContinue);
-		victoryScreen.addEventListener('click', handleContinue);  // NEW - click anywhere
+		victoryScreen.addEventListener('click', handleContinue);
 		window.addEventListener('keydown', handleSpaceKey);
 	}
+	showVictoryBubble() {
+		const bubble = document.createElement('div');
+		bubble.className = 'victory-bubble';
+		
+		const portrait = document.createElement('img');
+		portrait.src = 'images/portrait-benaffleck.png';
+		portrait.className = 'speech-portrait';
+		
+		const content = document.createElement('div');
+		content.className = 'speech-content';
+		
+		const speaker = document.createElement('div');
+		speaker.className = 'speech-speaker';
+		speaker.innerText = 'BEN AFFLECK';
+		
+		const message = document.createElement('div');
+		message.className = 'speech-message';
+		message.innerText = "I asked Michael why it was easier to train oil drillers to become astronauts than it was to train astronauts to become oil drillers, and he told me to shut the %$&! up. So that was the end of that talk.";
+		
+		content.appendChild(speaker);
+		content.appendChild(message);
+		bubble.appendChild(portrait);
+		bubble.appendChild(content);
+		
+		// Start invisible and hidden
+		bubble.style.opacity = '0';
+		bubble.style.visibility = 'hidden';
+		
+		document.getElementById('armageddon-victory-screen').appendChild(bubble);
+		
+		// Force layout calculation
+		bubble.offsetHeight;
+		
+		// Make visible and fade in after 1 second
+		setTimeout(() => {
+			bubble.style.visibility = 'visible';
+			bubble.style.opacity = '1';
+		}, 1000);
+		
+		// Fade out after 5 seconds (1s delay + 5s visible = 6s total)
+		setTimeout(() => {
+			bubble.style.opacity = '0';
+		}, 6000);
+		
+		// Remove after fade completes
+		setTimeout(() => {
+			bubble.remove();
+		}, 7000);
+	}
+
 
     update() {
         if (!this.isRunning || !this.state) return;

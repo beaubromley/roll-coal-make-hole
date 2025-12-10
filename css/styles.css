@@ -1303,3 +1303,37 @@ body.console-minimized #console-maximize-btn {
         box-shadow: 0 0 20px rgba(255, 87, 34, 0.8);
     }
 }
+
+.victory-bubble {
+    position: absolute;
+    bottom: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.95);
+    border: 3px solid #ffd700;
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 500px;
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    z-index: 3003;
+    animation: bubbleSlideIn 0.5s ease-out;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+}
+
+.victory-bubble .speech-portrait {
+    width: 80px;
+    height: 80px;
+    border: 3px solid #ffd700;
+}
+
+.victory-bubble .speech-speaker {
+    color: #ffd700;
+    font-size: 12px;
+}
+
+.victory-bubble .speech-message {
+    color: #fff;
+    font-size: 14px;
+}
